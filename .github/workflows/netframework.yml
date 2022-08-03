@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    name: Main Build
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      
+      - name: Setup msbuild
+        uses: actions/setup-dotnet@v1.7.2
+        
+      - name: Install dependencies
+        run: dotnet restore "sources/ConsoleTools.Commando/ConsoleTools.Commando.sln"
+        
+      - name: Build 
+        run: dotnet build --configuration Release --no-restore "sources/ConsoleTools.Commando/ConsoleTools.Commando.sln"
+        
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal "sources/ConsoleTools.Commando/ConsoleTools.Commando.sln"
