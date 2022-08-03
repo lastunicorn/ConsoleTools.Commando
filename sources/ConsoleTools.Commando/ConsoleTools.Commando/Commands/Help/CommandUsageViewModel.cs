@@ -23,10 +23,12 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
     public class CommandUsageViewModel
     {
         private readonly CommandInfo commandInfo;
+        private readonly string applicationName;
 
-        public CommandUsageViewModel(CommandInfo commandInfo)
+        public CommandUsageViewModel(CommandInfo commandInfo, string applicationName)
         {
             this.commandInfo = commandInfo;
+            this.applicationName = applicationName;
         }
 
         public override string ToString()
@@ -34,7 +36,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
             if (commandInfo == null)
                 return string.Empty;
 
-            StringBuilder sb = new($"velo {commandInfo.Name}");
+            StringBuilder sb = new($"{applicationName} {commandInfo.Name}");
 
             IEnumerable<CommandParameterViewModel> ordinalParameters = commandInfo.ParameterInfos
                 .Where(x => x.Order != null)

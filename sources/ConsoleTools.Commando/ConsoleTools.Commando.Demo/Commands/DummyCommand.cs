@@ -21,7 +21,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands
     [Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.")]
     public class DummyCommand : ICommand
     {
-        [CommandParameter(Name = "text", ShortName = 't', IsOptional = true)]
+        [CommandParameter(Name = "text", ShortName = 't', IsOptional = false)]
         public string DummyText { get; set; }
 
         public Task Execute()

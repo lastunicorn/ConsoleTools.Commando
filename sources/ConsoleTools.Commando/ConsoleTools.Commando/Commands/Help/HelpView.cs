@@ -26,14 +26,14 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
         public void Display(HelpCommand command)
         {
             if (command.Commands is { Count: > 0 })
-                DisplayCommandsOverview(command.Commands);
+                DisplayCommandsOverview(command);
             else if (command.CommandDetails != null)
                 DisplayCommandDetails(command.CommandDetails);
         }
 
-        private static void DisplayCommandsOverview(IEnumerable<CommandShortInfo> commands)
+        private static void DisplayCommandsOverview(HelpCommand command)
         {
-            Console.WriteLine("usage: velo [command]");
+            Console.WriteLine($"usage: {command.ApplicationName} [command]");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Available commands:");
@@ -48,7 +48,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
             Column column = dataGrid.Columns.Add(new Column());
             column.CellPaddingLeft = 0;
 
-            IEnumerable<ContentRow> rows = commands.Select(CreateContentRow);
+            IEnumerable<ContentRow> rows = command.Commands.Select(CreateContentRow);
             dataGrid.Rows.AddRange(rows);
 
             dataGrid.Display();

@@ -25,10 +25,10 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
         public CommandUsageViewModel Usage { get; }
 
-        public CommandFullInfo(CommandInfo commandInfo)
+        public CommandFullInfo(CommandInfo commandInfo, string applicationName)
         {
             Description = commandInfo.DescriptionLines.ToList();
-            Usage = new CommandUsageViewModel(commandInfo);
+            Usage = new CommandUsageViewModel(commandInfo, applicationName);
         }
     }
 }

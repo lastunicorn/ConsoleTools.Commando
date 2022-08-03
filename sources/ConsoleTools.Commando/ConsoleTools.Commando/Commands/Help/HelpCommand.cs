@@ -25,6 +25,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
     public class HelpCommand : ICommand
     {
         private readonly AvailableCommands availableCommands;
+        private readonly Application application;
 
         [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
         public string CommandName { get; set; }
@@ -32,18 +33,26 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
         public List<CommandShortInfo> Commands { get; private set; }
 
         public CommandFullInfo CommandDetails { get; private set; }
+        
+        public string ApplicationName { get; private set; }
 
-        public HelpCommand(AvailableCommands availableCommands)
+        public HelpCommand(AvailableCommands availableCommands, Application application)
         {
             this.availableCommands = availableCommands ?? throw new ArgumentNullException(nameof(availableCommands));
+            this.application = application ?? throw new ArgumentNullException(nameof(application));
         }
 
         public Task Execute()
         {
             if (CommandName != null)
+            {
                 CommandDetails = GetCommandDetails(CommandName);
+            }
             else
+            {
                 Commands = GetAllCommandDetails();
+                ApplicationName = application.Name;
+            }
 
             return Task.CompletedTask;
         }
@@ -55,7 +64,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
             if (commandInfo == null)
                 throw new CommandNotFoundException(commandName);
 
-            return new CommandFullInfo(commandInfo);
+            return new CommandFullInfo(commandInfo, application.Name);
         }
 
         private List<CommandShortInfo> GetAllCommandDetails()
