@@ -39,6 +39,8 @@ namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
 
             foreach (Type type in availableCommands.GetViewTypes())
                 containerBuilder.RegisterType(type).AsSelf();
+
+            containerBuilder.RegisterType<Application>().AsSelf();
         }
     }
 }

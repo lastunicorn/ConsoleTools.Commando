@@ -2,6 +2,32 @@
 
 It is a presentation layer framework using MVVM that helps to implement a CLI (command line interface).
 
+## How to use (with Autofac)
+
+1. Include `ConsoleTools.Commando.Autofac.DependencyInjection` nuget package.
+
+2. Register `Commando` into `Autofac`.
+
+   ```csharp
+   Assembly presentationAssembly = typeof(SomeCommand).Assembly;
+   containerBuilder.RegisterCommando(presentationAssembly);
+   ```
+
+3. Instantiate the `CommandRouter`
+   ```csharp
+   CommandRouter commandRouter = context.Resolve<CommandRouter>();
+   ```
+
+4. Parse the arguments
+   ```csharp
+   Arguments arguments = new(args);
+   ```
+
+5. Execute
+   ```csharp
+   await commandRouter.Execute(arguments);
+   ```
+
 ## Discussions and Suggestions
 
 https://github.com/lastunicorn/Commando/discussions
