@@ -9,16 +9,15 @@
   - `doc\readme.txt` file;
   - `doc\changelog.txt` file;
   - `sources\Directory.build.props` file;
-  - `sources\AssemblyInfo.Shared.cs` file;
-  - `release\VeloCity.proj` file.
+  - `release\ConsoleTools.Commando.proj` file.
 
 ## Step 1 - Create the release
 
-- Open a Developer Command Prompt for Visual Studio
-- Run the `VeloCity.proj` file:
+- Open a Developer Command Prompt for Visual Studio.
+- Run the `ConsoleTools.Commando.proj` file:
 
 ```
-msbuild VeloCity.proj
+msbuild ConsoleTools.Commando.proj
 ```
 
 The resulted files are located in the `output` directory.
@@ -30,5 +29,4 @@ Increment the version in all files:
 - `doc\readme.txt` file;
 - `doc\changelog.txt` file;
 - `sources\Directory.build.props` file;
-- `sources\AssemblyInfo.Shared.cs` file;
-- `release\VeloCity.proj` file.
+- `release\ConsoleTools.Commando.proj` file.
