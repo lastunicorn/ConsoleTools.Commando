@@ -19,10 +19,10 @@ namespace DustInTheWind.ConsoleTools.Commando
 
             Assembly assembly = Assembly.GetEntryAssembly();
             AssemblyName assemblyName = assembly?.GetName();
-            Name = assemblyName?.Name;
+            Name = assemblyName?.Name ?? string.Empty;
         }
 
-        private static void HandleCommandCreated(object? sender, CommandCreatedEventArgs e)
+        private static void HandleCommandCreated(object sender, CommandCreatedEventArgs e)
         {
             if (e.UnusedArguments.Count <= 0)
                 return;

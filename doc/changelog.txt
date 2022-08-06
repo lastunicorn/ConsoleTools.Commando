@@ -1,0 +1,26 @@
+ConsoleTools Commando
+====================================================================================================
+
+v1.4.0
+----------------------------------------------------------------------------------------------------
+- [feature] Added in the more details about the command being executed in the CommandCreated event.
+
+v1.3.0
+----------------------------------------------------------------------------------------------------
+- [bugfix] Removed the "velo" references from the "help" information.
+
+v1.2.0
+----------------------------------------------------------------------------------------------------
+- unreleased version
+
+v1.1.0
+----------------------------------------------------------------------------------------------------
+- unreleased version
+
+v1.0.0
+----------------------------------------------------------------------------------------------------
+- [feature] Added the Arguments class to parse the command line arguments.
+- [feature] Added commands, command parameters and the binding mechanism.
+- [feature] Added the views mechansim.
+- developped under the VeloCity project.
+- unreleased version
