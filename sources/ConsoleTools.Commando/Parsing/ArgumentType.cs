@@ -14,18 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando.Parsing
 {
-    internal class Arg
+    public enum ArgumentType
     {
-        public bool HasNameMarker { get; }
-
-        public string Value { get; }
-
-        public Arg(string value)
-        {
-            HasNameMarker = value?.StartsWith('-') ?? false;
-            Value = value?.TrimStart('-');
-        }
+        Unknown = 0,
+        Ordinal,
+        Named
     }
 }

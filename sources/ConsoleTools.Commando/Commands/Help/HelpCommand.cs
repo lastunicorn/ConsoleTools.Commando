@@ -18,13 +18,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 {
     [HelpCommand("help", ShortDescription = "Obtain more details and explanation about the available commands.", Order = int.MaxValue)]
     public class HelpCommand : ICommand
     {
-        private readonly CommandCollection commandCollection;
+        private readonly CommandMetadataCollection commandMetadataCollection;
         private readonly Application application;
 
         [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
@@ -36,9 +37,9 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
         
         public string ApplicationName { get; private set; }
 
-        public HelpCommand(CommandCollection commandCollection, Application application)
+        public HelpCommand(CommandMetadataCollection commandMetadataCollection, Application application)
         {
-            this.commandCollection = commandCollection ?? throw new ArgumentNullException(nameof(commandCollection));
+            this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
             this.application = application ?? throw new ArgumentNullException(nameof(application));
         }
 
@@ -59,17 +60,17 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
         private CommandFullInfo GetCommandDetails(string commandName)
         {
-            CommandInfo commandInfo = commandCollection.GetByName(commandName);
+            CommandMetadata commandMetadata = commandMetadataCollection.GetByName(commandName);
 
-            if (commandInfo == null)
+            if (commandMetadata == null)
                 throw new CommandNotFoundException(commandName);
 
-            return new CommandFullInfo(commandInfo, application.Name);
+            return new CommandFullInfo(commandMetadata, application.Name);
         }
 
         private List<CommandShortInfo> GetAllCommandDetails()
         {
-            return commandCollection.GetAllEnabled()
+            return commandMetadataCollection.GetAllEnabled()
                 .Select(x => new CommandShortInfo
                 {
                     Name = x.Name,

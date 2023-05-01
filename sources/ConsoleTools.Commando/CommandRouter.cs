@@ -19,140 +19,127 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Commands.Empty;
+using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public class CommandRouter
 {
-    public class CommandRouter
+    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly ICommandFactory commandFactory;
+
+    public event EventHandler<CommandCreatedEventArgs> CommandCreated;
+
+    public CommandRouter(CommandMetadataCollection commandMetadataCollection, ICommandFactory commandFactory)
     {
-        private readonly CommandCollection commandCollection;
-        private readonly ICommandFactory commandFactory;
+        this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
+        this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
+    }
 
-        public event EventHandler<CommandCreatedEventArgs> CommandCreated;
+    public async Task Execute(GenericCommand genericCommand)
+    {
+        ICommand command = CreateCommandToExecute(genericCommand);
 
-        public CommandRouter(CommandCollection commandCollection, ICommandFactory commandFactory)
+        await command.Execute();
+
+        ExecuteViewsFor(command);
+    }
+
+    private ICommand CreateCommandToExecute(GenericCommand genericCommand)
+    {
+        ICommand command = CreateCommandIfExists(genericCommand)
+                           ?? CreateHelpCommand()
+                           ?? new EmptyCommand();
+
+        CommandCreatedEventArgs args = new()
         {
-            this.commandCollection = commandCollection ?? throw new ArgumentNullException(nameof(commandCollection));
-            this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
-        }
+            Args = genericCommand.UnderlyingArgs,
+            CommandFullName = command.GetType().FullName,
+            UnusedOptions = genericCommand.EnumerateUnusedOptions().ToList(),
+            UnusedOperands = genericCommand.EnumerateUnusedOperands().ToList()
+        };
+        OnCommandCreated(args);
 
-        public async Task Execute(Arguments arguments)
-        {
-            ICommand command = CreateCommand(arguments);
+        return command;
+    }
 
-            await command.Execute();
-
-            ExecuteViewsFor(command);
-        }
-
-        private ICommand CreateCommand(Arguments arguments)
-        {
-            ArgumentsLens argumentsLens = new(arguments);
-
-            ICommand command = CreateCommand(argumentsLens);
-
-            CommandCreatedEventArgs args = new()
-            {
-                Args = arguments.UnderlyingArgs,
-                CommandFullName = command?.GetType().FullName,
-                UnusedArguments = argumentsLens.EnumerateUnusedArguments().ToList()
-            };
-            OnCommandCreated(args);
-
-            return command;
-        }
-
-        private ICommand CreateCommand(ArgumentsLens argumentsLens)
-        {
-            if (argumentsLens.HasUnusedArguments)
-            {
-                Argument commandArgument = argumentsLens.GetCommand();
-                CommandInfo commandInfo = commandCollection.GetByName(commandArgument.Value);
-
-                if (commandInfo == null)
-                    throw new InvalidCommandException();
-
-                ICommand command = commandFactory.Create(commandInfo.Type);
-                SetParameters(command, commandInfo, argumentsLens);
-
-                return command;
-            }
-
-            CommandInfo helpCommandInfo = commandCollection.GetHelpCommand();
-
-            return helpCommandInfo == null
-                ? new EmptyCommand()
-                : commandFactory.Create(helpCommandInfo.Type);
-        }
-
-        private static void SetParameters(ICommand command, CommandInfo commandInfo, ArgumentsLens argumentsLens)
-        {
-            foreach (CommandParameterInfo parameterInfo in commandInfo.ParameterInfos)
-            {
-                Argument argument = FindArgumentFor(argumentsLens, parameterInfo);
-
-                if (argument == null)
-                {
-                    if (!parameterInfo.IsOptional)
-                    {
-                        string parameterName = parameterInfo.DisplayName ?? parameterInfo.Name ?? parameterInfo.Order?.ToString();
-                        throw new ParameterMissingException(parameterName);
-                    }
-                }
-                else
-                {
-                    parameterInfo.SetValue(command, argument.Value);
-                }
-            }
-        }
-
-        private static Argument FindArgumentFor(ArgumentsLens argumentsLens, CommandParameterInfo parameterInfo)
-        {
-            if (parameterInfo.Name != null)
-            {
-                Argument argument = argumentsLens.GetArgument(parameterInfo.Name);
-
-                if (argument != null)
-                    return argument;
-            }
-
-            if (parameterInfo.ShortName != 0)
-            {
-                Argument argument = argumentsLens.GetArgument(parameterInfo.ShortName.ToString());
-
-                if (argument != null)
-                    return argument;
-            }
-
-            if (parameterInfo.Order != null)
-            {
-                Argument argument = argumentsLens.GetArgument(parameterInfo.Order.Value);
-
-                if (argument != null)
-                    return argument;
-            }
-
+    private ICommand CreateCommandIfExists(GenericCommand genericCommand)
+    {
+        if (string.IsNullOrEmpty(genericCommand.Verb))
             return null;
-        }
 
-        private void ExecuteViewsFor(ICommand command)
+        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(genericCommand.Verb);
+
+        if (commandMetadata == null)
+            throw new InvalidCommandException();
+
+        ICommand command = commandFactory.Create(commandMetadata.Type);
+        SetParameters(command, commandMetadata, genericCommand);
+
+        return command;
+    }
+
+    private ICommand CreateHelpCommand()
+    {
+        CommandMetadata helpCommandMetadata = commandMetadataCollection.GetHelpCommand();
+
+        return helpCommandMetadata == null
+            ? null
+            : commandFactory.Create(helpCommandMetadata.Type);
+    }
+
+    private static void SetParameters(ICommand command, CommandMetadata commandMetadata, GenericCommand genericCommand)
+    {
+        genericCommand.Reset();
+
+        foreach (ParameterMetadata parameterMetadata in commandMetadata.Parameters)
+            SetParameter(command, parameterMetadata, genericCommand);
+    }
+
+    private static void SetParameter(ICommand command, ParameterMetadata parameterMetadata, GenericCommand genericCommand)
+    {
+        GenericCommandOption option = genericCommand.GetOptionAndMarkAsUsed(parameterMetadata);
+
+        if (option != null)
         {
-            Type commandType = command.GetType();
-
-            IEnumerable<Type> viewTypes = commandCollection.GetViewTypesForCommand(commandType);
-
-            foreach (Type viewType in viewTypes)
-            {
-                object view = commandFactory.CreateView(viewType);
-
-                MethodInfo displayMethodInfo = viewType.GetMethod(nameof(IView<ICommand>.Display));
-                displayMethodInfo?.Invoke(view, new object[] { command });
-            }
+            parameterMetadata.SetValue(command, option.Value);
+            return;
         }
 
-        protected virtual void OnCommandCreated(CommandCreatedEventArgs e)
+        string operand = genericCommand.GetOperandAndMarkAsUsed(parameterMetadata);
+
+        if (operand != null)
         {
-            CommandCreated?.Invoke(this, e);
+            parameterMetadata.SetValue(command, operand);
+            return;
         }
+
+        if (!parameterMetadata.IsOptional)
+        {
+            string parameterName = parameterMetadata.Name ?? parameterMetadata.Order.ToString();
+            throw new ParameterMissingException(parameterName);
+        }
+    }
+
+    private void ExecuteViewsFor(ICommand command)
+    {
+        Type commandType = command.GetType();
+
+        IEnumerable<Type> viewTypes = commandMetadataCollection.GetViewTypesForCommand(commandType);
+
+        foreach (Type viewType in viewTypes)
+        {
+            object view = commandFactory.CreateView(viewType);
+
+            MethodInfo displayMethodInfo = viewType.GetMethod(nameof(IView<ICommand>.Display));
+            displayMethodInfo?.Invoke(view, new object[] { command });
+        }
+    }
+
+    protected virtual void OnCommandCreated(CommandCreatedEventArgs e)
+    {
+        CommandCreated?.Invoke(this, e);
     }
 }

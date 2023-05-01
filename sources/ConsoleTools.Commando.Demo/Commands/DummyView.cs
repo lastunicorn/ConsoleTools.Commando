@@ -16,13 +16,27 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands
+namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+
+public class DummyView : IView<DummyCommand>
 {
-    public class DummyView : IView<DummyCommand>
+    public void Display(DummyCommand command)
     {
-        public void Display(DummyCommand command)
-        {
-            Console.WriteLine(command.DummyText);
-        }
+        CustomConsole.WriteLine();
+        CustomConsole.WriteLineEmphasized("Display the results");
+
+        CustomConsole.WriteEmphasized("Text: ");
+        CustomConsole.WriteLine(command.Text);
+    }
+
+    public void WriteTitle(string title)
+    {
+        CustomConsole.WriteLine(ConsoleColor.DarkBlue, title);
+    }
+
+    public void WriteValue(string label, object value)
+    {
+        CustomConsole.WriteEmphasized(label + ": ");
+        CustomConsole.WriteLine(ConsoleColor.Gray, value);
     }
 }

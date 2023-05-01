@@ -27,13 +27,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
-
-        public TCommand Create<TCommand>()
-            where TCommand : ICommand
-        {
-            return context.Resolve<TCommand>();
-        }
-
+        
         public ICommand Create(Type commandType)
         {
             if (commandType == null) throw new ArgumentNullException(nameof(commandType));

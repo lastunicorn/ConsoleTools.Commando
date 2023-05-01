@@ -31,8 +31,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <PackageReference Include="ConsoleTools.Controls.Tables" Version="1.1.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="CommandParser\" />
-    </ItemGroup>
-
 </Project>

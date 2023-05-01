@@ -16,15 +16,17 @@
 
 using System;
 using System.Collections.Generic;
+using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public class CommandCreatedEventArgs : EventArgs
 {
-    public class CommandCreatedEventArgs : EventArgs
-    {
-        public string CommandFullName { get; init; }
+    public string CommandFullName { get; init; }
 
-        public string[] Args { get; init; }
+    public string[] Args { get; init; }
 
-        public List<Argument> UnusedArguments { get; init; }
-    }
+    public List<GenericCommandOption> UnusedOptions { get; init; }
+
+    public List<string> UnusedOperands { get; init; }
 }

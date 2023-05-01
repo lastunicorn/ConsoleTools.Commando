@@ -14,28 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando.Parsing
 {
-    public class Argument
+    internal class Arg
     {
-        public string Name { get; set; }
+        public bool HasNameMarker { get; }
 
-        public string Value { get; set; }
+        public string Value { get; }
 
-        public ArgumentType Type { get; set; }
-
-        public override string ToString()
+        public Arg(string value)
         {
-            if (Name != null && Value != null)
-                return $"{Name} = {Value} [{Type}]";
-
-            if (Name != null)
-                return $"{Name} [{Type}]";
-
-            if (Value != null)
-                return $"{Value} [{Type}]";
-
-            return $"null [{Type}]";
+            HasNameMarker = value?.StartsWith('-') ?? false;
+            Value = value?.TrimStart('-');
         }
     }
 }

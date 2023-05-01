@@ -7,7 +7,7 @@ Console forge is a framework developed with the purpose of easily creating and d
 Console Forge has the following internal components:
 
 1) Command Parser
-2) Internal Command Model
+2) Generic Command Model
 3) Command Router
 4) Command Model
 
@@ -15,11 +15,11 @@ Console Forge has the following internal components:
 
 ### 1) Command Parser
 
-The purpose of a Command Parser is to understand the syntax used by the user, parse the provided text and extract a number of important values which are then stored in some internal objects which we will call, from now on, Internal Command Model.
+The purpose of a Command Parser is to understand the syntax used by the user, parse the provided text and extract a number of important values which are then stored in some internal objects which we will call, from now on, Generic Command Model.
 
-### 2) Internal Command Model
+### 2) Generic Command Model
 
-The Internal Command Model contains the following important properties:
+The Generic Command Model contains the following important properties:
 
 - **verb**
   - optional
@@ -38,7 +38,7 @@ The Internal Command Model contains the following important properties:
 
 ### 3) Command Router
 
-This component is responsible for identifying the appropriate Command object to be executed. This is done based on the values from the Internal Command Model.
+This component is responsible for identifying the appropriate Command object to be executed. This is done based on the values from the Generic Command Model.
 
 The role of this component may be easier to understand after we explain the Command Model.
 
@@ -79,7 +79,7 @@ The `Command` attribute is optional and may provide additional information and c
 
 - Command Name
   - Case insensitive.
-  - If provided, the command will be executed only if the verb from the internal model matches this value.
+  - If provided, the command will be executed only if the verb from the generic model matches this value.
 - Short Description
   - This value is displayed by the help command.
 

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Linq;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 using DustInTheWind.ConsoleTools.Controls;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
@@ -25,10 +26,10 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
         public CommandUsageViewModel Usage { get; }
 
-        public CommandFullInfo(CommandInfo commandInfo, string applicationName)
+        public CommandFullInfo(CommandMetadata commandMetadata, string applicationName)
         {
-            Description = commandInfo.DescriptionLines.ToList();
-            Usage = new CommandUsageViewModel(commandInfo, applicationName);
+            Description = commandMetadata.DescriptionLines.ToList();
+            Usage = new CommandUsageViewModel(commandMetadata, applicationName);
         }
     }
 }

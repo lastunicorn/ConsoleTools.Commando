@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando.Parsing
 {
     public class Arguments : IEnumerable<Argument>
     {

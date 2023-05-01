@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Threading.Tasks;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
@@ -21,12 +22,35 @@ namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 [Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.")]
 public class DummyCommand : ICommand
 {
-    [CommandParameter(Name = "text", ShortName = 't', IsOptional = false)]
-    public string DummyText { get; set; }
+    [CommandParameter(Name = "text", ShortName = 't')]
+    public string Text { get; set; }
+
+    [CommandParameter(Name = "flag", ShortName = 'f', IsOptional = true)]
+    public bool Flag { get; set; }
+
+    [CommandParameter(Name = "integer", ShortName = 'i', IsOptional = true)]
+    public int IntegerNumber { get; set; }
+
+    [CommandParameter(Name = "real", ShortName = 'r', IsOptional = true)]
+    public float RealNumber { get; set; }
+
+    public DummyView View { get; set; }
+
+    public DummyCommand(DummyView dummyView)
+    {
+        View = dummyView ?? throw new ArgumentNullException(nameof(dummyView));
+    }
 
     public Task Execute()
     {
-        DummyText += " - text was updated";
+        View.WriteTitle("This is the Dummy Command.");
+
+        View.WriteValue("Text", Text);
+        View.WriteValue("Flag", Flag);
+        View.WriteValue("IntegerNumber", IntegerNumber);
+        View.WriteValue("RealNumber", RealNumber);
+
+        Text = "This is a new text.";
 
         return Task.CompletedTask;
     }

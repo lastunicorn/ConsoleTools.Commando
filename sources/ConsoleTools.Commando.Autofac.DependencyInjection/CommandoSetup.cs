@@ -17,6 +17,8 @@
 using System;
 using System.Reflection;
 using Autofac;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using DustInTheWind.ConsoleTools.Commando.Parsing;
 
 namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
 {
@@ -26,18 +28,19 @@ namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
         {
             containerBuilder.RegisterType<CommandRouter>().AsSelf();
             containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
+            containerBuilder.RegisterType<CommandParser>().As<ICommandParser>();
 
-            CommandCollection commandCollection = new();
-            Assembly commandoAssembly = typeof(CommandCollection).Assembly;
-            commandCollection.LoadFrom(commandoAssembly);
-            commandCollection.LoadFrom(assemblies);
+            CommandMetadataCollection commandMetadataCollection = new();
+            Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;
+            commandMetadataCollection.LoadFrom(commandoAssembly);
+            commandMetadataCollection.LoadFrom(assemblies);
 
-            containerBuilder.RegisterInstance(commandCollection).AsSelf().SingleInstance();
+            containerBuilder.RegisterInstance(commandMetadataCollection).AsSelf().SingleInstance();
 
-            foreach (Type type in commandCollection.GetCommandTypes())
+            foreach (Type type in commandMetadataCollection.GetCommandTypes())
                 containerBuilder.RegisterType(type).AsSelf();
 
-            foreach (Type type in commandCollection.GetViewTypes())
+            foreach (Type type in commandMetadataCollection.GetViewTypes())
                 containerBuilder.RegisterType(type).AsSelf();
 
             containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();

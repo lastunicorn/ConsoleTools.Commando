@@ -17,28 +17,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 {
     public class CommandUsageViewModel
     {
-        private readonly CommandInfo commandInfo;
+        private readonly CommandMetadata commandMetadata;
         private readonly string applicationName;
 
-        public CommandUsageViewModel(CommandInfo commandInfo, string applicationName)
+        public CommandUsageViewModel(CommandMetadata commandMetadata, string applicationName)
         {
-            this.commandInfo = commandInfo;
+            this.commandMetadata = commandMetadata;
             this.applicationName = applicationName;
         }
 
         public override string ToString()
         {
-            if (commandInfo == null)
+            if (commandMetadata == null)
                 return string.Empty;
 
-            StringBuilder sb = new($"{applicationName} {commandInfo.Name}");
+            StringBuilder sb = new($"{applicationName} {commandMetadata.Name}");
 
-            IEnumerable<CommandParameterViewModel> ordinalParameters = commandInfo.ParameterInfos
+            IEnumerable<CommandParameterViewModel> ordinalParameters = commandMetadata.Parameters
                 .Where(x => x.Order != null)
                 .OrderBy(x => x.Order)
                 .Select(x => new CommandParameterViewModel(x));
@@ -49,7 +50,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
                 sb.Append(parameterInfo);
             }
 
-            IEnumerable<CommandParameterViewModel> namedParameters = commandInfo.ParameterInfos
+            IEnumerable<CommandParameterViewModel> namedParameters = commandMetadata.Parameters
                 .Where(x => x.Name != null || x.ShortName != 0)
                 .Select(x => new CommandParameterViewModel(x)
                 {

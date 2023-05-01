@@ -15,27 +15,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 {
     internal class CommandParameterViewModel
     {
-        private readonly CommandParameterInfo commandParameterInfo;
+        private readonly ParameterMetadata parameterMetadata;
 
         public bool DisplayAsNamedParameter { get; set; }
 
-        public CommandParameterViewModel(CommandParameterInfo commandParameterInfo)
+        public CommandParameterViewModel(ParameterMetadata parameterMetadata)
         {
-            this.commandParameterInfo = commandParameterInfo;
+            this.parameterMetadata = parameterMetadata;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new();
 
-            bool isNamedParameter = commandParameterInfo.Order == null || DisplayAsNamedParameter;
-            bool isOptionalParameter = commandParameterInfo.IsOptional;
-            bool hasMultipleNames = isNamedParameter && commandParameterInfo.Name != null && commandParameterInfo.ShortName != 0;
+            bool isNamedParameter = parameterMetadata.Order == null || DisplayAsNamedParameter;
+            bool isOptionalParameter = parameterMetadata.IsOptional;
+            bool hasMultipleNames = isNamedParameter && parameterMetadata.Name != null && parameterMetadata.ShortName != 0;
 
             if (isOptionalParameter)
                 sb.Append('[');
@@ -67,14 +68,14 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
             sb.Append('<');
 
-            if (commandParameterInfo.DisplayName != null)
-                sb.Append(commandParameterInfo.DisplayName.Replace(' ', '-'));
-            else if (commandParameterInfo.Name != null)
-                sb.Append(commandParameterInfo.Name);
-            else if (commandParameterInfo.ShortName != 0)
-                sb.Append(commandParameterInfo.ShortName);
+            if (parameterMetadata.DisplayName != null)
+                sb.Append(parameterMetadata.DisplayName.Replace(' ', '-'));
+            else if (parameterMetadata.Name != null)
+                sb.Append(parameterMetadata.Name);
+            else if (parameterMetadata.ShortName != 0)
+                sb.Append(parameterMetadata.ShortName);
             else
-                sb.Append("param" + commandParameterInfo.Order);
+                sb.Append("param" + parameterMetadata.Order);
 
             sb.Append('>');
 
@@ -85,20 +86,20 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
         {
             StringBuilder sb = new();
 
-            if (commandParameterInfo.Name != null)
+            if (parameterMetadata.Name != null)
             {
-                sb.Append($"-{commandParameterInfo.Name}");
+                sb.Append($"-{parameterMetadata.Name}");
 
                 string valueDescription = SerializeValueDescription();
                 sb.Append(valueDescription);
             }
 
-            if (commandParameterInfo.ShortName != 0)
+            if (parameterMetadata.ShortName != 0)
             {
-                if (commandParameterInfo.Name != null)
+                if (parameterMetadata.Name != null)
                     sb.Append(" | ");
 
-                sb.Append($"-{commandParameterInfo.ShortName}");
+                sb.Append($"-{parameterMetadata.ShortName}");
 
                 string valueDescription = SerializeValueDescription();
                 sb.Append(valueDescription);
@@ -109,19 +110,19 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
         private string SerializeValueDescription()
         {
-            if (commandParameterInfo.ParameterType.IsText())
+            if (parameterMetadata.ParameterType.IsText())
                 return (" <text>");
 
-            if (commandParameterInfo.ParameterType.IsNumber())
+            if (parameterMetadata.ParameterType.IsNumber())
                 return (" <number>");
 
-            if (commandParameterInfo.ParameterType.IsListOfNumbers())
+            if (parameterMetadata.ParameterType.IsListOfNumbers())
                 return (" <list-of-numbers>");
 
-            if (commandParameterInfo.ParameterType.IsListOfTexts())
+            if (parameterMetadata.ParameterType.IsListOfTexts())
                 return (" <list-of-texts>");
 
-            if (commandParameterInfo.ParameterType.IsBoolean())
+            if (parameterMetadata.ParameterType.IsBoolean())
                 return string.Empty;
 
             return (" <value>");
