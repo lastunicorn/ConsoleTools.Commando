@@ -27,20 +27,20 @@ namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
             containerBuilder.RegisterType<CommandRouter>().AsSelf();
             containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
 
-            AvailableCommands availableCommands = new();
-            Assembly commandoAssembly = typeof(AvailableCommands).Assembly;
-            availableCommands.LoadFrom(commandoAssembly);
-            availableCommands.LoadFrom(assemblies);
+            CommandCollection commandCollection = new();
+            Assembly commandoAssembly = typeof(CommandCollection).Assembly;
+            commandCollection.LoadFrom(commandoAssembly);
+            commandCollection.LoadFrom(assemblies);
 
-            containerBuilder.RegisterInstance(availableCommands).AsSelf();
+            containerBuilder.RegisterInstance(commandCollection).AsSelf().SingleInstance();
 
-            foreach (Type type in availableCommands.GetCommandTypes())
+            foreach (Type type in commandCollection.GetCommandTypes())
                 containerBuilder.RegisterType(type).AsSelf();
 
-            foreach (Type type in availableCommands.GetViewTypes())
+            foreach (Type type in commandCollection.GetViewTypes())
                 containerBuilder.RegisterType(type).AsSelf();
 
-            containerBuilder.RegisterType<Application>().AsSelf();
+            containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();
         }
     }
 }

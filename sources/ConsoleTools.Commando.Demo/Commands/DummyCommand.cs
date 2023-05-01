@@ -16,19 +16,18 @@
 
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands
+namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+
+[Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.")]
+public class DummyCommand : ICommand
 {
-    [Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.")]
-    public class DummyCommand : ICommand
+    [CommandParameter(Name = "text", ShortName = 't', IsOptional = false)]
+    public string DummyText { get; set; }
+
+    public Task Execute()
     {
-        [CommandParameter(Name = "text", ShortName = 't', IsOptional = false)]
-        public string DummyText { get; set; }
+        DummyText += " - text was updated";
 
-        public Task Execute()
-        {
-            DummyText += " - text was updated";
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

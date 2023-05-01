@@ -17,18 +17,17 @@
 using System.Threading.Tasks;
 using Autofac;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo
+namespace DustInTheWind.ConsoleTools.Commando.Demo;
+
+internal class Program
 {
-    internal class Program
+    private static async Task Main(string[] args)
     {
-        private static async Task Main(string[] args)
-        {
-            IContainer container = Setup.ConfigureServices();
+        IContainer container = Setup.ConfigureServices();
 
-            await using ILifetimeScope lifetimeScope = container.BeginLifetimeScope();
+        await using ILifetimeScope lifetimeScope = container.BeginLifetimeScope();
 
-            Application application = lifetimeScope.Resolve<Application>();
-            await application.Run(args);
-        }
+        Application application = lifetimeScope.Resolve<Application>();
+        await application.Run(args);
     }
 }

@@ -21,7 +21,7 @@ using System.Reflection;
 
 namespace DustInTheWind.ConsoleTools.Commando
 {
-    public class AvailableCommands
+    public class CommandCollection
     {
         private readonly List<CommandInfo> commandInfos = new();
         private readonly List<Type> viewTypes = new();
@@ -118,22 +118,16 @@ namespace DustInTheWind.ConsoleTools.Commando
         public CommandInfo GetByName(string commandName)
         {
             return commandInfos
-                .OrderBy(x => x.Order)
-                .ThenBy(x => x.Name)
-                .FirstOrDefault(x => x.IsEnabled && x.Name == commandName);
+                .Where(x => x.IsEnabled && x.Name == commandName)
+                .MinBy(x => x.Order);
         }
 
         public IEnumerable<CommandInfo> GetAllEnabled()
         {
             return commandInfos
+                .Where(x => x.IsEnabled)
                 .OrderBy(x => x.Order)
-                .ThenBy(x => x.Name)
-                .Where(x => x.IsEnabled);
-        }
-
-        public CommandInfo GetCommandInfo(string commandName)
-        {
-            return commandInfos.FirstOrDefault(x => x.IsEnabled && x.Name == commandName);
+                .ThenBy(x => x.Name);
         }
 
         public CommandInfo GetHelpCommand()

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>DustInTheWind.ConsoleTools.Commando</AssemblyName>
         <RootNamespace>DustInTheWind.ConsoleTools.Commando</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -29,6 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ItemGroup>
         <PackageReference Include="ConsoleTools.Controls.Menus" Version="1.1.0" />
         <PackageReference Include="ConsoleTools.Controls.Tables" Version="1.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="CommandParser\" />
     </ItemGroup>
 
 </Project>

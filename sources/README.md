@@ -13,20 +13,17 @@ It is a presentation layer framework using MVVM that helps to implement a CLI (c
    containerBuilder.RegisterCommando(presentationAssembly);
    ```
 
-3. Instantiate the `CommandRouter`
+3. Instantiate the `Application`
    ```csharp
-   CommandRouter commandRouter = context.Resolve<CommandRouter>();
+   Application application = container.Resolve<Application>();
    ```
 
-4. Parse the arguments
+4. Execute
+   
    ```csharp
-   Arguments arguments = new(args);
+   await application.Run(args);
    ```
-
-5. Execute
-   ```csharp
-   await commandRouter.Execute(arguments);
-   ```
+   
 
 ## Discussions and Suggestions
 

@@ -25,14 +25,14 @@ namespace DustInTheWind.ConsoleTools.Commando
 {
     public class CommandRouter
     {
-        private readonly AvailableCommands availableCommands;
+        private readonly CommandCollection commandCollection;
         private readonly ICommandFactory commandFactory;
 
         public event EventHandler<CommandCreatedEventArgs> CommandCreated;
 
-        public CommandRouter(AvailableCommands availableCommands, ICommandFactory commandFactory)
+        public CommandRouter(CommandCollection commandCollection, ICommandFactory commandFactory)
         {
-            this.availableCommands = availableCommands ?? throw new ArgumentNullException(nameof(availableCommands));
+            this.commandCollection = commandCollection ?? throw new ArgumentNullException(nameof(commandCollection));
             this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
         }
 
@@ -67,7 +67,7 @@ namespace DustInTheWind.ConsoleTools.Commando
             if (argumentsLens.HasUnusedArguments)
             {
                 Argument commandArgument = argumentsLens.GetCommand();
-                CommandInfo commandInfo = availableCommands.GetCommandInfo(commandArgument.Value);
+                CommandInfo commandInfo = commandCollection.GetByName(commandArgument.Value);
 
                 if (commandInfo == null)
                     throw new InvalidCommandException();
@@ -78,7 +78,7 @@ namespace DustInTheWind.ConsoleTools.Commando
                 return command;
             }
 
-            CommandInfo helpCommandInfo = availableCommands.GetHelpCommand();
+            CommandInfo helpCommandInfo = commandCollection.GetHelpCommand();
 
             return helpCommandInfo == null
                 ? new EmptyCommand()
@@ -139,7 +139,7 @@ namespace DustInTheWind.ConsoleTools.Commando
         {
             Type commandType = command.GetType();
 
-            IEnumerable<Type> viewTypes = availableCommands.GetViewTypesForCommand(commandType);
+            IEnumerable<Type> viewTypes = commandCollection.GetViewTypesForCommand(commandType);
 
             foreach (Type viewType in viewTypes)
             {

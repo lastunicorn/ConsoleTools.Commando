@@ -36,8 +36,15 @@ namespace DustInTheWind.ConsoleTools.Commando
 
         public async Task Run(string[] args)
         {
-            Arguments arguments = new(args);
-            await commandRouter.Execute(arguments);
+            try
+            {
+                Arguments arguments = new(args);
+                await commandRouter.Execute(arguments);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

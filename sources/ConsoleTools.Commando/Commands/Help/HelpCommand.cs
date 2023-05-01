@@ -24,7 +24,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
     [HelpCommand("help", ShortDescription = "Obtain more details and explanation about the available commands.", Order = int.MaxValue)]
     public class HelpCommand : ICommand
     {
-        private readonly AvailableCommands availableCommands;
+        private readonly CommandCollection commandCollection;
         private readonly Application application;
 
         [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
@@ -36,9 +36,9 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
         
         public string ApplicationName { get; private set; }
 
-        public HelpCommand(AvailableCommands availableCommands, Application application)
+        public HelpCommand(CommandCollection commandCollection, Application application)
         {
-            this.availableCommands = availableCommands ?? throw new ArgumentNullException(nameof(availableCommands));
+            this.commandCollection = commandCollection ?? throw new ArgumentNullException(nameof(commandCollection));
             this.application = application ?? throw new ArgumentNullException(nameof(application));
         }
 
@@ -59,7 +59,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
         private CommandFullInfo GetCommandDetails(string commandName)
         {
-            CommandInfo commandInfo = availableCommands.GetByName(commandName);
+            CommandInfo commandInfo = commandCollection.GetByName(commandName);
 
             if (commandInfo == null)
                 throw new CommandNotFoundException(commandName);
@@ -69,7 +69,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 
         private List<CommandShortInfo> GetAllCommandDetails()
         {
-            return availableCommands.GetAllEnabled()
+            return commandCollection.GetAllEnabled()
                 .Select(x => new CommandShortInfo
                 {
                     Name = x.Name,

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleTools.Commando.Demo": {
+      "commandName": "Project",
+      "commandLineArgs": "aaa"
+    }
+  }
+}
