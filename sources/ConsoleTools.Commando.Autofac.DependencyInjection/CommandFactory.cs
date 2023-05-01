@@ -17,31 +17,30 @@
 using System;
 using Autofac;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
+namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection;
+
+internal class CommandFactory : ICommandFactory
 {
-    internal class CommandFactory : ICommandFactory
+    private readonly IComponentContext context;
+
+    public CommandFactory(IComponentContext context)
     {
-        private readonly IComponentContext context;
-
-        public CommandFactory(IComponentContext context)
-        {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-        }
+        this.context = context ?? throw new ArgumentNullException(nameof(context));
+    }
         
-        public ICommand Create(Type commandType)
-        {
-            if (commandType == null) throw new ArgumentNullException(nameof(commandType));
+    public ICommand Create(Type commandType)
+    {
+        if (commandType == null) throw new ArgumentNullException(nameof(commandType));
 
-            bool isCommandType = typeof(ICommand).IsAssignableFrom(commandType);
-            if (!isCommandType)
-                throw new TypeIsNotCommandException(commandType);
+        bool isCommandType = typeof(ICommand).IsAssignableFrom(commandType);
+        if (!isCommandType)
+            throw new TypeIsNotCommandException(commandType);
 
-            return (ICommand)context.Resolve(commandType);
-        }
+        return (ICommand)context.Resolve(commandType);
+    }
 
-        public object CreateView(Type viewType)
-        {
-            return context.Resolve(viewType);
-        }
+    public object CreateView(Type viewType)
+    {
+        return context.Resolve(viewType);
     }
 }

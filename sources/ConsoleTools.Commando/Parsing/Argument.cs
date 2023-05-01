@@ -14,28 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing
+namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+
+public class Argument
 {
-    public class Argument
+    public string Name { get; set; }
+
+    public string Value { get; set; }
+
+    public ArgumentType Type { get; set; }
+
+    public override string ToString()
     {
-        public string Name { get; set; }
+        if (Name != null && Value != null)
+            return $"{Name} = {Value} [{Type}]";
 
-        public string Value { get; set; }
+        if (Name != null)
+            return $"{Name} [{Type}]";
 
-        public ArgumentType Type { get; set; }
+        if (Value != null)
+            return $"{Value} [{Type}]";
 
-        public override string ToString()
-        {
-            if (Name != null && Value != null)
-                return $"{Name} = {Value} [{Type}]";
-
-            if (Name != null)
-                return $"{Name} [{Type}]";
-
-            if (Value != null)
-                return $"{Value} [{Type}]";
-
-            return $"null [{Type}]";
-        }
+        return $"null [{Type}]";
     }
 }

@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing
+namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+
+public enum ArgumentType
 {
-    public enum ArgumentType
-    {
-        Unknown = 0,
-        Ordinal,
-        Named
-    }
+    Unknown = 0,
+    Ordinal,
+    Named
 }

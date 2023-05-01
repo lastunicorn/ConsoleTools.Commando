@@ -63,6 +63,9 @@ public class CommandMetadataCollection
 
     private static bool IsViewType(Type type)
     {
+        if (type.IsAbstract)
+            return false;
+
         Type[] interfaceTypes = type.GetInterfaces();
 
         foreach (Type interfaceType in interfaceTypes)

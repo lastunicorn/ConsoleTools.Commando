@@ -18,18 +18,17 @@ using System.Reflection;
 using Autofac;
 using DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo
+namespace DustInTheWind.ConsoleTools.Commando.Demo;
+
+internal class Setup
 {
-    internal class Setup
+    public static IContainer ConfigureServices()
     {
-        public static IContainer ConfigureServices()
-        {
-            ContainerBuilder containerBuilder = new();
+        ContainerBuilder containerBuilder = new();
 
-            Assembly presentationAssembly = Assembly.GetExecutingAssembly();
-            containerBuilder.RegisterCommando(presentationAssembly);
+        Assembly presentationAssembly = Assembly.GetExecutingAssembly();
+        containerBuilder.RegisterCommando(presentationAssembly);
 
-            return containerBuilder.Build();
-        }
+        return containerBuilder.Build();
     }
 }

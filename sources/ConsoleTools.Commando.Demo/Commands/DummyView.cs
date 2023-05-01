@@ -14,29 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-public class DummyView : IView<DummyCommand>
+public class DummyView : ViewBase<DummyCommand>
 {
-    public void Display(DummyCommand command)
+    public override void Display(DummyCommand command)
     {
-        CustomConsole.WriteLine();
-        CustomConsole.WriteLineEmphasized("Display the results");
-
-        CustomConsole.WriteEmphasized("Text: ");
-        CustomConsole.WriteLine(command.Text);
-    }
-
-    public void WriteTitle(string title)
-    {
-        CustomConsole.WriteLine(ConsoleColor.DarkBlue, title);
-    }
-
-    public void WriteValue(string label, object value)
-    {
-        CustomConsole.WriteEmphasized(label + ": ");
-        CustomConsole.WriteLine(ConsoleColor.Gray, value);
+        WithIndentation("Same values after command finished execution:", () =>
+        {
+            WriteValue("Text", command.Text);
+            WriteValue("Flag", command.Flag);
+            WriteValue("Integer Number", command.IntegerNumber);
+            WriteValue("Real Number", command.RealNumber);
+            WriteValue("Character", command.Character);
+        });
     }
 }

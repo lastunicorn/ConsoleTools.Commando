@@ -16,15 +16,12 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando
-{
-    public class InvalidCommandException : Exception
-    {
-        private const string DefaultMessage = "Invalid Command";
+namespace DustInTheWind.ConsoleTools.Commando;
 
-        public InvalidCommandException()
-            : base(DefaultMessage)
-        {
-        }
+public class InvalidCommandException : Exception
+{
+    public InvalidCommandException()
+        : base(Resources.ErrorMessage_InvalidCommand)
+    {
     }
 }

@@ -16,10 +16,9 @@
 
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public interface ICommand
 {
-    public interface ICommand
-    {
-        Task Execute();
-    }
+    Task Execute();
 }

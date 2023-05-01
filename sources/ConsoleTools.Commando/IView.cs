@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public interface IView<in TCommand>
+    where TCommand : ICommand
 {
-    public interface IView<in TCommand>
-        where TCommand : ICommand
-    {
-        void Display(TCommand command);
-    }
+    void Display(TCommand command);
 }

@@ -16,12 +16,11 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public interface ICommandFactory
 {
-    public interface ICommandFactory
-    {
-        ICommand Create(Type commandType);
+    ICommand Create(Type commandType);
         
-        object CreateView(Type viewType);
-    }
+    object CreateView(Type viewType);
 }

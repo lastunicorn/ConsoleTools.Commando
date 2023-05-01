@@ -20,11 +20,14 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
 {
     public class CommandNotFoundException : Exception
     {
-        private const string DefaultMessage = "The command '{0}' does not exist.";
-
         public CommandNotFoundException(string commandName)
-            : base(string.Format(DefaultMessage, commandName))
+            : base(BuildMessage(commandName))
         {
+        }
+
+        private static string BuildMessage(string commandName)
+        {
+            return string.Format(Resources.ErrorMessage_CommandNotFound, commandName);
         }
     }
 }

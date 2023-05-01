@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public class HelpCommandAttribute : CommandAttribute
 {
-    public class HelpCommandAttribute : CommandAttribute
+    public HelpCommandAttribute(string commandName)
+        : base(commandName)
     {
-        public HelpCommandAttribute(string commandName)
-            : base(commandName)
-        {
-        }
     }
 }

@@ -16,15 +16,14 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
-{
-    internal class TypeIsNotCommandException : Exception
-    {
-        private const string DefaultMessage = "Type {0} does not represent command. A command must implement the {1} interface.";
+namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection;
 
-        public TypeIsNotCommandException(Type type)
-            : base(string.Format(DefaultMessage, type.FullName, typeof(ICommand).FullName))
-        {
-        }
+internal class TypeIsNotCommandException : Exception
+{
+    private const string DefaultMessage = "Type {0} does not represent command. A command must implement the {1} interface.";
+
+    public TypeIsNotCommandException(Type type)
+        : base(string.Format(DefaultMessage, type.FullName, typeof(ICommand).FullName))
+    {
     }
 }

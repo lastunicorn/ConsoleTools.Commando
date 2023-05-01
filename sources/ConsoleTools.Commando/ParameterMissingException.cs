@@ -16,15 +16,17 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando
-{
-    internal class ParameterMissingException : Exception
-    {
-        private const string DefaultMessage = @"Invalid command. Parameter ""{0}"" was not provided.";
+namespace DustInTheWind.ConsoleTools.Commando;
 
-        public ParameterMissingException(string parameterName)
-            : base(string.Format(DefaultMessage, parameterName))
-        {
-        }
+internal class ParameterMissingException : Exception
+{
+    public ParameterMissingException(string parameterName)
+        : base(BuildMessage(parameterName))
+    {
+    }
+
+    private static string BuildMessage(string parameterName)
+    {
+        return string.Format(Resources.ErrorMessage_ParameterMissing, parameterName);
     }
 }

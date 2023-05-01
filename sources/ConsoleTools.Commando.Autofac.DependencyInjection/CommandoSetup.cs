@@ -20,30 +20,29 @@ using Autofac;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection
+namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection;
+
+public static class CommandoSetup
 {
-    public static class CommandoSetup
+    public static void RegisterCommando(this ContainerBuilder containerBuilder, params Assembly[] assemblies)
     {
-        public static void RegisterCommando(this ContainerBuilder containerBuilder, params Assembly[] assemblies)
-        {
-            containerBuilder.RegisterType<CommandRouter>().AsSelf();
-            containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
-            containerBuilder.RegisterType<CommandParser>().As<ICommandParser>();
+        containerBuilder.RegisterType<CommandRouter>().AsSelf();
+        containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
+        containerBuilder.RegisterType<CommandParser>().As<ICommandParser>();
 
-            CommandMetadataCollection commandMetadataCollection = new();
-            Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;
-            commandMetadataCollection.LoadFrom(commandoAssembly);
-            commandMetadataCollection.LoadFrom(assemblies);
+        CommandMetadataCollection commandMetadataCollection = new();
+        Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;
+        commandMetadataCollection.LoadFrom(commandoAssembly);
+        commandMetadataCollection.LoadFrom(assemblies);
 
-            containerBuilder.RegisterInstance(commandMetadataCollection).AsSelf().SingleInstance();
+        containerBuilder.RegisterInstance(commandMetadataCollection).AsSelf().SingleInstance();
 
-            foreach (Type type in commandMetadataCollection.GetCommandTypes())
-                containerBuilder.RegisterType(type).AsSelf();
+        foreach (Type type in commandMetadataCollection.GetCommandTypes())
+            containerBuilder.RegisterType(type).AsSelf();
 
-            foreach (Type type in commandMetadataCollection.GetViewTypes())
-                containerBuilder.RegisterType(type).AsSelf();
+        foreach (Type type in commandMetadataCollection.GetViewTypes())
+            containerBuilder.RegisterType(type).AsSelf();
 
-            containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();
-        }
+        containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();
     }
 }

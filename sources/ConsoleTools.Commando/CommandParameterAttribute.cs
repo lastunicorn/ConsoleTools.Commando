@@ -16,19 +16,18 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando
+namespace DustInTheWind.ConsoleTools.Commando;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public class CommandParameterAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class CommandParameterAttribute : Attribute
-    {
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public char ShortName { get; set; }
+    public char ShortName { get; set; }
 
-        public string DisplayName { get; set; }
+    public string DisplayName { get; set; }
 
-        public int Order { get; set; }
+    public int Order { get; set; }
 
-        public bool IsOptional { get; set; }
-    }
+    public bool IsOptional { get; set; }
 }

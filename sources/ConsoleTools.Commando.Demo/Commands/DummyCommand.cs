@@ -34,6 +34,9 @@ public class DummyCommand : ICommand
     [CommandParameter(Name = "real", ShortName = 'r', IsOptional = true)]
     public float RealNumber { get; set; }
 
+    [CommandParameter(Name = "char", ShortName = 'c', IsOptional = true)]
+    public char Character { get; set; }
+
     public DummyView View { get; set; }
 
     public DummyCommand(DummyView dummyView)
@@ -45,12 +48,21 @@ public class DummyCommand : ICommand
     {
         View.WriteTitle("This is the Dummy Command.");
 
-        View.WriteValue("Text", Text);
-        View.WriteValue("Flag", Flag);
-        View.WriteValue("IntegerNumber", IntegerNumber);
-        View.WriteValue("RealNumber", RealNumber);
+        View.WithIndentation("Initial values:", () =>
+        {
+            View.WriteValue("Text", Text);
+            View.WriteValue("Flag", Flag);
+            View.WriteValue("Integer Number", IntegerNumber);
+            View.WriteValue("Real Number", RealNumber);
+            View.WriteValue("Character", Character);
+        });
+        View.WriteLine();
 
         Text = "This is a new text.";
+        Flag = false;
+        IntegerNumber = 184603;
+        RealNumber = 3.141592653f;
+        Character = '╢';
 
         return Task.CompletedTask;
     }
