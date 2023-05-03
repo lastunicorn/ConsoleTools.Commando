@@ -8,7 +8,6 @@
 - Verify the version to be consistent in all files:
   - `doc\readme.txt` file;
   - `doc\changelog.txt` file;
-  - `sources\Directory.build.props` file;
   - `release\ConsoleTools.Commando.proj` file.
 
 ## Step 1 - Create the release
@@ -28,5 +27,4 @@ Increment the version in all files:
 
 - `doc\readme.txt` file;
 - `doc\changelog.txt` file;
-- `sources\Directory.build.props` file;
 - `release\ConsoleTools.Commando.proj` file.
