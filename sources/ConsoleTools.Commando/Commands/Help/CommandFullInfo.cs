@@ -14,22 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Linq;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using System.Collections.Generic;
 using DustInTheWind.ConsoleTools.Controls;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
+
+public class CommandFullInfo
 {
-    public class CommandFullInfo
-    {
-        public MultilineText Description { get; }
+    public string Name { get; set; }
 
-        public CommandUsageViewModel Usage { get; }
+    public MultilineText Description { get; init; }
 
-        public CommandFullInfo(CommandMetadata commandMetadata, string applicationName)
-        {
-            Description = commandMetadata.DescriptionLines.ToList();
-            Usage = new CommandUsageViewModel(commandMetadata, applicationName);
-        }
-    }
+    public string ApplicationName { get; set; }
+
+    public List<CommandParameterInfo> OptionsInfo { get; set; }
+    
+    public List<CommandParameterInfo> OperandsInfo { get; set; }
 }

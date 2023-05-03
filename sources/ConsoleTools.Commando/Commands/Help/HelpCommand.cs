@@ -15,68 +15,72 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
+
+[HelpCommand("help", ShortDescription = "Obtain more details and explanation about the available commands.", Order = int.MaxValue)]
+internal class HelpCommand : ICommand
 {
-    [HelpCommand("help", ShortDescription = "Obtain more details and explanation about the available commands.", Order = int.MaxValue)]
-    public class HelpCommand : ICommand
+    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly Application application;
+
+    [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
+    public string CommandName { get; set; }
+
+    public CommandsOverviewInfo CommandsOverviewInfo { get; private set; }
+
+    public CommandFullInfo CommandFullInfo { get; private set; }
+
+    public HelpCommand(CommandMetadataCollection commandMetadataCollection, Application application)
     {
-        private readonly CommandMetadataCollection commandMetadataCollection;
-        private readonly Application application;
+        this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
+        this.application = application ?? throw new ArgumentNullException(nameof(application));
+    }
 
-        [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
-        public string CommandName { get; set; }
+    public Task Execute()
+    {
+        if (CommandName != null)
+            CommandFullInfo = GetCommandFullInfo(CommandName);
+        else
+            CommandsOverviewInfo = GetAllCommandsOverview();
 
-        public List<CommandShortInfo> Commands { get; private set; }
+        return Task.CompletedTask;
+    }
 
-        public CommandFullInfo CommandDetails { get; private set; }
-        
-        public string ApplicationName { get; private set; }
+    private CommandFullInfo GetCommandFullInfo(string commandName)
+    {
+        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(commandName);
 
-        public HelpCommand(CommandMetadataCollection commandMetadataCollection, Application application)
+        if (commandMetadata == null)
+            throw new CommandNotFoundException(commandName);
+
+        return new CommandFullInfo
         {
-            this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
-            this.application = application ?? throw new ArgumentNullException(nameof(application));
-        }
+            Name = commandMetadata.Name,
+            Description = commandMetadata.DescriptionLines.ToList(),
+            ApplicationName = application.Name,
+            OptionsInfo = commandMetadata.Parameters
+                .Where(x => x.Order == null)
+                .Select(x => new CommandParameterInfo(x))
+                .ToList(),
+            OperandsInfo = commandMetadata.Parameters
+                .Where(x => x.Order != null)
+                .Select(x => new CommandParameterInfo(x))
+                .ToList()
+        };
+    }
 
-        public Task Execute()
+    private CommandsOverviewInfo GetAllCommandsOverview()
+    {
+        return new CommandsOverviewInfo
         {
-            if (CommandName != null)
-            {
-                CommandDetails = GetCommandDetails(CommandName);
-            }
-            else
-            {
-                Commands = GetAllCommandDetails();
-                ApplicationName = application.Name;
-            }
-
-            return Task.CompletedTask;
-        }
-
-        private CommandFullInfo GetCommandDetails(string commandName)
-        {
-            CommandMetadata commandMetadata = commandMetadataCollection.GetByName(commandName);
-
-            if (commandMetadata == null)
-                throw new CommandNotFoundException(commandName);
-
-            return new CommandFullInfo(commandMetadata, application.Name);
-        }
-
-        private List<CommandShortInfo> GetAllCommandDetails()
-        {
-            return commandMetadataCollection.GetAllEnabled()
-                .Select(x => new CommandShortInfo
-                {
-                    Name = x.Name,
-                    Description = x.DescriptionLines.ToList()
-                })
-                .ToList();
-        }
+            ApplicationName = application.Name,
+            Commands = commandMetadataCollection.GetAllEnabled()
+                .Select(x => new CommandShortInfo(x))
+                .ToList()
+        };
     }
 }

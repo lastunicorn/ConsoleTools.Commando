@@ -16,14 +16,13 @@
 
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Empty
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Empty;
+
+[Command(Enabled = false)]
+internal class EmptyCommand : ICommand
 {
-    [Command(Enabled = false)]
-    internal class EmptyCommand : ICommand
+    public Task Execute()
     {
-        public Task Execute()
-        {
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

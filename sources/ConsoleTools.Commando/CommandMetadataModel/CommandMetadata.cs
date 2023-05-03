@@ -99,6 +99,13 @@ public class CommandMetadata
         return lines;
     }
 
+    public IEnumerable<ParameterMetadata> EnumerateNamedParameters()
+    {
+        return Parameters
+            .Where(x => x.Name != null || x.ShortName != 0);
+
+    }
+
     public override string ToString()
     {
         return Name ?? "param" + Order;

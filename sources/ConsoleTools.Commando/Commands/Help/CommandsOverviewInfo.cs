@@ -14,20 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+using System.Collections.Generic;
 
-public class DummyView : ViewBase<DummyCommand>
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
+
+public class CommandsOverviewInfo
 {
-    public override void Display(DummyCommand command)
-    {
-        WithIndentation("Same values after command finished execution:", () =>
-        {
-            WriteValue("Text", command.Text);
-            WriteValue("Flag", command.Flag);
-            WriteValue("Integer Number", command.IntegerNumber);
-            WriteValue("Real Number", command.RealNumber);
-            WriteValue("Character", command.Character);
-            WriteValue("File Path", command.FilePath);
-        });
-    }
+    public string ApplicationName { get; set; }
+
+    public List<CommandShortInfo> Commands { get; set; }
 }

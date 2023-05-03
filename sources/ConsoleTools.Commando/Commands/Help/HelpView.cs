@@ -14,63 +14,40 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DustInTheWind.ConsoleTools.Controls.Tables;
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
+internal class HelpView : IView<HelpCommand>
 {
-    public class HelpView : IView<HelpCommand>
+    public void Display(HelpCommand command)
     {
-        public void Display(HelpCommand command)
+        if (command.CommandsOverviewInfo != null)
+            DisplayCommandsOverview(command);
+        else if (command.CommandFullInfo != null)
+            DisplayCommandDetails(command);
+    }
+
+    private static void DisplayCommandsOverview(HelpCommand command)
+    {
+        CommandsOverviewControl commandsOverviewControl = new()
         {
-            if (command.Commands is { Count: > 0 })
-                DisplayCommandsOverview(command);
-            else if (command.CommandDetails != null)
-                DisplayCommandDetails(command.CommandDetails);
-        }
+            ApplicationName = command.CommandsOverviewInfo.ApplicationName,
+            Commands = command.CommandsOverviewInfo.Commands
+        };
 
-        private static void DisplayCommandsOverview(HelpCommand command)
+        commandsOverviewControl.Display();
+    }
+
+    private static void DisplayCommandDetails(HelpCommand command)
+    {
+        CommandUsageControl commandUsageControl = new()
         {
-            Console.WriteLine($"usage: {command.ApplicationName} [command]");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("Available commands:");
-            Console.WriteLine();
+            Description = command.CommandFullInfo.Description,
+            ApplicationName = command.CommandFullInfo.ApplicationName,
+            CommandName = command.CommandFullInfo.Name,
+            NamedParameters = command.CommandFullInfo.OptionsInfo,
+            UnnamedParameters = command.CommandFullInfo.OperandsInfo
+        };
 
-            DataGrid dataGrid = new()
-            {
-                Border = { IsVisible = false },
-                Margin = "4 0 0 0"
-            };
-
-            Column column = dataGrid.Columns.Add(new Column());
-            column.CellPaddingLeft = 0;
-
-            IEnumerable<ContentRow> rows = command.Commands.Select(CreateContentRow);
-            dataGrid.Rows.AddRange(rows);
-
-            dataGrid.Display();
-        }
-
-        private static ContentRow CreateContentRow(CommandShortInfo commandShortInfo)
-        {
-            ContentRow row = new();
-
-            row.AddCell(commandShortInfo.Name);
-            row.AddCell(commandShortInfo.Description);
-
-            return row;
-        }
-
-        private static void DisplayCommandDetails(CommandFullInfo commandDetails)
-        {
-            Console.WriteLine("usage:");
-            Console.WriteLine(commandDetails.Usage);
-
-            Console.WriteLine();
-            Console.WriteLine(commandDetails.Description);
-        }
+        commandUsageControl.Display();
     }
 }

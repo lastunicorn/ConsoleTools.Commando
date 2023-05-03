@@ -17,41 +17,45 @@
 using System;
 using System.Collections.Generic;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Help
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
+
+internal static class TypeExtensions
 {
-    internal static class TypeExtensions
+    public static bool IsText(this Type type)
     {
-        public static bool IsText(this Type type)
-        {
-            return type == typeof(string);
-        }
+        return type == typeof(string);
+    }
 
-        public static bool IsListOfTexts(this Type type)
-        {
-            return type == typeof(List<string>);
-        }
+    public static bool IsListOfTexts(this Type type)
+    {
+        return type == typeof(List<string>);
+    }
 
-        public static bool IsNumber(this Type type)
-        {
-            return type == typeof(int) ||
-                   type == typeof(long) ||
-                   type == typeof(short) ||
-                   type == typeof(float) ||
-                   type == typeof(double);
-        }
+    public static bool IsNumber(this Type type)
+    {
+        return type == typeof(int) ||
+               type == typeof(long) ||
+               type == typeof(short) ||
+               type == typeof(float) ||
+               type == typeof(double);
+    }
 
-        public static bool IsListOfNumbers(this Type type)
-        {
-            return type == typeof(List<int>) ||
-                   type == typeof(List<long>) ||
-                   type == typeof(List<short>) ||
-                   type == typeof(List<float>) ||
-                   type == typeof(List<double>);
-        }
+    public static bool IsListOfNumbers(this Type type)
+    {
+        return type == typeof(List<int>) ||
+               type == typeof(List<long>) ||
+               type == typeof(List<short>) ||
+               type == typeof(List<float>) ||
+               type == typeof(List<double>);
+    }
 
-        public static bool IsBoolean(this Type type)
-        {
-            return type == typeof(bool);
-        }
+    public static bool IsBoolean(this Type type)
+    {
+        return type == typeof(bool);
+    }
+
+    public static bool IsCharacter(this Type type)
+    {
+        return type == typeof(char);
     }
 }

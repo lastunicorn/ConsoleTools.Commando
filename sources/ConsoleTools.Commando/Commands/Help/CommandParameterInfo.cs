@@ -14,20 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+using System;
+using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
-public class DummyView : ViewBase<DummyCommand>
+namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
+
+public class CommandParameterInfo
 {
-    public override void Display(DummyCommand command)
+    public string Name { get; set; }
+
+    public char ShortName { get; set; }
+
+    public int? Order { get; set; }
+
+    public bool IsOptional { get; set; }
+
+    public string DisplayName { get; set; }
+
+    public Type ParameterType { get; set; }
+
+    public CommandParameterInfo(ParameterMetadata x)
     {
-        WithIndentation("Same values after command finished execution:", () =>
-        {
-            WriteValue("Text", command.Text);
-            WriteValue("Flag", command.Flag);
-            WriteValue("Integer Number", command.IntegerNumber);
-            WriteValue("Real Number", command.RealNumber);
-            WriteValue("Character", command.Character);
-            WriteValue("File Path", command.FilePath);
-        });
+        Name = x.Name;
+        ShortName = x.ShortName;
+        DisplayName = x.DisplayName;
+        IsOptional = x.IsOptional;
+        Order = x.Order;
+        ParameterType = x.ParameterType;
     }
 }

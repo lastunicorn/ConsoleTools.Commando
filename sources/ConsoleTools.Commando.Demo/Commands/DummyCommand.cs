@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-[Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.")]
+[Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.A dummy command that shows how to use Commando.A dummy command that shows how to use Commando.")]
 public class DummyCommand : ICommand
 {
     [CommandParameter(Name = "text", ShortName = 't')]
@@ -36,6 +36,9 @@ public class DummyCommand : ICommand
 
     [CommandParameter(Name = "char", ShortName = 'c', IsOptional = true)]
     public char Character { get; set; }
+
+    [CommandParameter(Order = 1, IsOptional = true)]
+    public string FilePath { get; set; }
 
     public DummyView View { get; set; }
 
@@ -55,6 +58,7 @@ public class DummyCommand : ICommand
             View.WriteValue("Integer Number", IntegerNumber);
             View.WriteValue("Real Number", RealNumber);
             View.WriteValue("Character", Character);
+            View.WriteValue("File Path", FilePath);
         });
         View.WriteLine();
 
