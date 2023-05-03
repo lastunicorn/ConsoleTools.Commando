@@ -108,7 +108,6 @@ public class CommandMetadata
     {
         return Parameters
             .Where(x => x.Name != null || x.ShortName != 0);
-
     }
 
     public override string ToString()

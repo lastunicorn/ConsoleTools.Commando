@@ -28,6 +28,6 @@ public class CommandFullInfo
     public string ApplicationName { get; set; }
 
     public List<CommandParameterInfo> OptionsInfo { get; set; }
-    
+
     public List<CommandParameterInfo> OperandsInfo { get; set; }
 }

@@ -27,7 +27,7 @@ internal class CommandFactory : ICommandFactory
     {
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
-        
+
     public ICommand Create(Type commandType)
     {
         if (commandType == null) throw new ArgumentNullException(nameof(commandType));

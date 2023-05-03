@@ -21,6 +21,6 @@ namespace DustInTheWind.ConsoleTools.Commando;
 public interface ICommandFactory
 {
     ICommand Create(Type commandType);
-        
+
     object CreateView(Type viewType);
 }

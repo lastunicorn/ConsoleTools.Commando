@@ -103,7 +103,6 @@ public class ParameterMetadata
         //    //Type listType = propertyInfo.PropertyType.GetGenericTypeDefinition();
         //    //return Convert.ChangeType(list, listType);
 
-
         //    TypeConverter typeConverter2 = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
         //    return typeConverter2.ConvertFrom(list);
         //}
