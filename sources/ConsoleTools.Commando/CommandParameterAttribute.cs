@@ -26,8 +26,10 @@ public class CommandParameterAttribute : Attribute
     public char ShortName { get; set; }
 
     public string DisplayName { get; set; }
-
+    
     public int Order { get; set; }
 
     public bool IsOptional { get; set; }
+
+    public string Description { get; set; }
 }

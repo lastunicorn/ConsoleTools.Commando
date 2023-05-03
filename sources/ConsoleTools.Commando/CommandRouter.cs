@@ -20,8 +20,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 using DustInTheWind.ConsoleTools.Commando.Commands.Empty;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
@@ -38,45 +38,45 @@ public class CommandRouter
         this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
     }
 
-    public async Task Execute(GenericCommand genericCommand)
+    public async Task Execute(CommandRequest commandRequest)
     {
-        ICommand command = CreateCommandToExecute(genericCommand);
+        ICommand command = CreateCommandToExecute(commandRequest);
 
         await command.Execute();
 
         ExecuteViewsFor(command);
     }
 
-    private ICommand CreateCommandToExecute(GenericCommand genericCommand)
+    private ICommand CreateCommandToExecute(CommandRequest commandRequest)
     {
-        ICommand command = CreateCommandIfExists(genericCommand)
+        ICommand command = CreateCommandIfExists(commandRequest)
                            ?? CreateHelpCommand()
                            ?? new EmptyCommand();
 
         CommandCreatedEventArgs args = new()
         {
-            Args = genericCommand.UnderlyingArgs,
+            Args = commandRequest.UnderlyingArgs,
             CommandFullName = command.GetType().FullName,
-            UnusedOptions = genericCommand.EnumerateUnusedOptions().ToList(),
-            UnusedOperands = genericCommand.EnumerateUnusedOperands().ToList()
+            UnusedOptions = commandRequest.EnumerateUnusedOptions().ToList(),
+            UnusedOperands = commandRequest.EnumerateUnusedOperands().ToList()
         };
         OnCommandCreated(args);
 
         return command;
     }
 
-    private ICommand CreateCommandIfExists(GenericCommand genericCommand)
+    private ICommand CreateCommandIfExists(CommandRequest commandRequest)
     {
-        if (string.IsNullOrEmpty(genericCommand.Verb))
+        if (string.IsNullOrEmpty(commandRequest.Verb))
             return null;
 
-        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(genericCommand.Verb);
+        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(commandRequest.Verb);
 
         if (commandMetadata == null)
             throw new InvalidCommandException();
 
         ICommand command = commandFactory.Create(commandMetadata.Type);
-        SetParameters(command, commandMetadata, genericCommand);
+        SetParameters(command, commandMetadata, commandRequest);
 
         return command;
     }
@@ -90,17 +90,17 @@ public class CommandRouter
             : commandFactory.Create(helpCommandMetadata.Type);
     }
 
-    private static void SetParameters(ICommand command, CommandMetadata commandMetadata, GenericCommand genericCommand)
+    private static void SetParameters(ICommand command, CommandMetadata commandMetadata, CommandRequest commandRequest)
     {
-        genericCommand.Reset();
+        commandRequest.Reset();
 
         foreach (ParameterMetadata parameterMetadata in commandMetadata.Parameters)
-            SetParameter(command, parameterMetadata, genericCommand);
+            SetParameter(command, parameterMetadata, commandRequest);
     }
 
-    private static void SetParameter(ICommand command, ParameterMetadata parameterMetadata, GenericCommand genericCommand)
+    private static void SetParameter(ICommand command, ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
-        GenericCommandOption option = genericCommand.GetOptionAndMarkAsUsed(parameterMetadata);
+        GenericCommandOption option = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
 
         if (option != null)
         {
@@ -108,7 +108,7 @@ public class CommandRouter
             return;
         }
 
-        string operand = genericCommand.GetOperandAndMarkAsUsed(parameterMetadata);
+        string operand = commandRequest.GetOperandAndMarkAsUsed(parameterMetadata);
 
         if (operand != null)
         {

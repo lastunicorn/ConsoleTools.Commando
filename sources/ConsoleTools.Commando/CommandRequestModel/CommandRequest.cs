@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
-namespace DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
-public class GenericCommand
+public class CommandRequest
 {
     private List<GenericCommandOption> unusedOptions = new();
     private List<string> unusedOperands = new();

@@ -16,7 +16,7 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 public class GenericCommandOption
 {

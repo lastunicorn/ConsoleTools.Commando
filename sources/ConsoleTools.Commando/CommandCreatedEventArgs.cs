@@ -16,7 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 

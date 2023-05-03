@@ -40,7 +40,8 @@ namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
         [Fact]
         public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasTypeOrdinal()
         {
-            arguments[0].Type.Should().Be(ArgumentType.Ordinal);
+            arguments[0].IsNamedArgument.Should().Be(false);
+            arguments[0].IsAnonymousArgument.Should().Be(true);
         }
 
         [Fact]

@@ -21,6 +21,11 @@ using System.Reflection;
 
 namespace DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
+/// <summary>
+/// The metadata model is used to store information about all the available commands that can be
+/// executed. This includes the default commands, provided by the library itself, and, also, the
+/// custom commands created by the consumer of the library.
+/// </summary>
 public class CommandMetadata
 {
     private readonly Type commandType;

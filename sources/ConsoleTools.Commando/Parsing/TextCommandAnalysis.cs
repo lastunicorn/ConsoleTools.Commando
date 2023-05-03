@@ -17,64 +17,60 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
-internal class CommandAnalysis
+internal class TextCommandAnalysis
 {
     private readonly Arguments arguments;
 
-    public CommandAnalysis(string[] args)
+    public TextCommandAnalysis(string[] args)
     {
         if (args == null) throw new ArgumentNullException(nameof(args));
 
         arguments = new Arguments(args);
     }
 
-    public GenericCommand Analyze()
+    public CommandRequest Analyze()
     {
         Argument verbArgument = GetVerb();
 
-        GenericCommand genericCommand = new()
+        CommandRequest commandRequest = new()
         {
             UnderlyingArgs = arguments.UnderlyingArgs,
             Verb = verbArgument?.Value
         };
 
         IEnumerable<GenericCommandOption> options = GetOptions();
-        genericCommand.Options.AddRange(options);
+        commandRequest.Options.AddRange(options);
 
         IEnumerable<string> operands = GetOperands(verbArgument);
-        genericCommand.Operands.AddRange(operands);
+        commandRequest.Operands.AddRange(operands);
 
-        return genericCommand;
+        return commandRequest;
     }
 
     public Argument GetVerb()
     {
-        if (arguments.Count == 0)
-            return null;
+        Argument firstArgument = arguments.FirstOrDefault();
 
-        Argument verbArgument = arguments[0];
-
-        if (verbArgument.Type != ArgumentType.Ordinal)
-            return null;
-
-        return verbArgument;
+        return firstArgument?.IsAnonymousArgument == true
+            ? firstArgument
+            : null;
     }
 
     private IEnumerable<GenericCommandOption> GetOptions()
     {
         return arguments
-            .Where(x => x.Type == ArgumentType.Named)
+            .Where(x => x.IsNamedArgument)
             .Select(x => new GenericCommandOption(x.Name, x.Value));
     }
 
     private IEnumerable<string> GetOperands(Argument verbArgument)
     {
         IEnumerable<Argument> query = arguments
-            .Where(x => x.Type == ArgumentType.Ordinal);
+            .Where(x => x.IsAnonymousArgument);
 
         bool skipFirsArgument = !string.IsNullOrEmpty(verbArgument?.Value);
 

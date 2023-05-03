@@ -21,25 +21,28 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 public class CommandParameterInfo
 {
-    public string Name { get; set; }
+    public string Name { get; }
 
-    public char ShortName { get; set; }
+    public char ShortName { get; }
 
-    public int? Order { get; set; }
+    public int? Order { get; }
 
-    public bool IsOptional { get; set; }
+    public bool IsOptional { get; }
 
-    public string DisplayName { get; set; }
+    public string DisplayName { get; }
 
-    public Type ParameterType { get; set; }
+    public string Description { get; }
 
-    public CommandParameterInfo(ParameterMetadata x)
+    public Type ParameterType { get; }
+
+    public CommandParameterInfo(ParameterMetadata parameterMetadata)
     {
-        Name = x.Name;
-        ShortName = x.ShortName;
-        DisplayName = x.DisplayName;
-        IsOptional = x.IsOptional;
-        Order = x.Order;
-        ParameterType = x.ParameterType;
+        Name = parameterMetadata.Name;
+        ShortName = parameterMetadata.ShortName;
+        DisplayName = parameterMetadata.DisplayName;
+        IsOptional = parameterMetadata.IsOptional;
+        Order = parameterMetadata.Order;
+        Description = parameterMetadata.Description;
+        ParameterType = parameterMetadata.ParameterType;
     }
 }

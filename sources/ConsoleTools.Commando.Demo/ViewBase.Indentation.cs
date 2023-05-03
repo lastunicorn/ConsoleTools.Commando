@@ -2,7 +2,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo;
 
-public partial class ViewBase<T>
+public partial class ViewBase<TCommand>
 {
     private int indentLevel;
 

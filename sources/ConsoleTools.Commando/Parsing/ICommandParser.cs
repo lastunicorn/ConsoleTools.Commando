@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
 public interface ICommandParser
 {
-    GenericCommand Parse(string[] args);
+    CommandRequest Parse(string[] args);
 }

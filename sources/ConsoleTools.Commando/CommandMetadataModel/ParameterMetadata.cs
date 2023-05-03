@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -53,6 +52,8 @@ public class ParameterMetadata
         : customAttribute.Order;
 
     public bool IsOptional => customAttribute.IsOptional;
+
+    public string Description => customAttribute.Description;
 
     public Type ParameterType => propertyInfo.PropertyType;
 

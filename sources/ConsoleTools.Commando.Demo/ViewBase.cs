@@ -2,8 +2,8 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo;
 
-public abstract partial class ViewBase<T> : IView<T>
-    where T : ICommand
+public abstract partial class ViewBase<TCommand> : IView<TCommand>
+    where TCommand : ICommand
 {
     public void WriteLine()
     {
@@ -48,5 +48,5 @@ public abstract partial class ViewBase<T> : IView<T>
         Console.ForegroundColor = oldColor;
     }
 
-    public abstract void Display(T command);
+    public abstract void Display(TCommand command);
 }

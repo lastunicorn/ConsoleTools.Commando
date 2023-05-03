@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <RootNamespace>DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ConsoleTools.Commando.Autofac.DependencyInjection</PackageId>
+        <IncludeReferencedProjects>true</IncludeReferencedProjects>
     </PropertyGroup>
 
     <ItemGroup>

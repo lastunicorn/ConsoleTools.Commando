@@ -26,9 +26,14 @@ public static class CommandoSetup
 {
     public static void RegisterCommando(this ContainerBuilder containerBuilder, params Assembly[] assemblies)
     {
+        RegisterCommando(containerBuilder, typeof(CommandParser), assemblies);
+    }
+
+    public static void RegisterCommando(this ContainerBuilder containerBuilder, Type commandParserType, params Assembly[] assemblies)
+    {
         containerBuilder.RegisterType<CommandRouter>().AsSelf();
         containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
-        containerBuilder.RegisterType<CommandParser>().As<ICommandParser>();
+        containerBuilder.RegisterType(commandParserType).As<ICommandParser>();
 
         CommandMetadataCollection commandMetadataCollection = new();
         Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;

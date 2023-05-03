@@ -55,27 +55,39 @@ public class Arguments : IEnumerable<Argument>
     {
         Argument argument = null;
 
-        foreach (Arg arg in args.Select(x => new Arg(x)))
+        IEnumerable<ChunkAnalysis> chunks = args.Select(x => new ChunkAnalysis(x));
+
+        foreach (ChunkAnalysis chunk in chunks)
         {
-            if (arg.HasNameMarker)
+            if (chunk.HasName)
             {
                 if (argument != null)
                     yield return argument;
 
-                argument = new Argument
+                if (chunk.HasValue)
                 {
-                    Name = arg.Value,
-                    Type = ArgumentType.Named
-                };
+                    argument = new Argument
+                    {
+                        Name = chunk.Name,
+                        Value = chunk.Value
+                    };
+
+                    yield return argument;
+                    argument = null;
+                }
+                else
+                {
+                    argument = new Argument
+                    {
+                        Name = chunk.Name
+                    };
+                }
             }
             else
             {
-                argument ??= new Argument
-                {
-                    Type = ArgumentType.Ordinal
-                };
+                argument ??= new Argument();
 
-                argument.Value = arg.Value;
+                argument.Value = chunk.Value;
 
                 yield return argument;
                 argument = null;
@@ -84,14 +96,6 @@ public class Arguments : IEnumerable<Argument>
 
         if (argument != null)
             yield return argument;
-    }
-
-    public Argument GetOrdinal(int index)
-    {
-        return arguments
-            .Where(x => x.Type == ArgumentType.Ordinal)
-            .Skip(index)
-            .FirstOrDefault();
     }
 
     public IEnumerator<Argument> GetEnumerator()

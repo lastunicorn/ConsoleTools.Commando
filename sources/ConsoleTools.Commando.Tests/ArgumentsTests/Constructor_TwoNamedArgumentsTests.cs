@@ -40,7 +40,8 @@ namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
         [Fact]
         public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasTypeNamed()
         {
-            arguments[1].Type.Should().Be(ArgumentType.Named);
+            arguments[1].IsNamedArgument.Should().Be(true);
+            arguments[1].IsAnonymousArgument.Should().Be(false);
         }
 
         [Fact]

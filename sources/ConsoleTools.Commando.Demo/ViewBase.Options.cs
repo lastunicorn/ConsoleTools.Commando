@@ -2,7 +2,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo;
 
-public partial class ViewBase<T>
+public partial class ViewBase<TCommand>
 {
     public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
 

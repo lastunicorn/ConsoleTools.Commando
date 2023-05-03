@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo;
 
-public abstract partial class ViewBase<T>
-    where T : ICommand
+public abstract partial class ViewBase<TCommand>
+    where TCommand : ICommand
 {
     public void WriteTitle(string title)
     {

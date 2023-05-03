@@ -35,7 +35,9 @@ internal class CommandUsageControl
 
     public void Display()
     {
-        DisplayDescription();
+        if (!string.IsNullOrEmpty(Description))
+            DisplayDescription();
+
         DisplayUsageOverview();
 
         if (NamedParameters?.Count > 0)
@@ -48,7 +50,7 @@ internal class CommandUsageControl
     private void DisplayDescription()
     {
         Console.WriteLine();
-        Console.WriteLine(Description);
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, Description);
     }
 
     private void DisplayUsageOverview()
@@ -63,7 +65,7 @@ internal class CommandUsageControl
             sb.Append(" [Options]");
 
         if (UnnamedParameters?.Count > 0)
-            sb.Append(" -- [Operands]");
+            sb.Append(" [Operands]");
 
         Console.WriteLine(sb.ToString());
     }
@@ -82,9 +84,16 @@ internal class CommandUsageControl
             string fullName = "-" + parameter.Name;
             string parameterShortName = "-" + parameter.ShortName;
             string isOptional = parameter.IsOptional ? "(optional)" : string.Empty;
-            string description = SerializeValueDescription(parameter);
+            string type = SerializeValueDescription(parameter);
+            string description = parameter.Description;
 
-            dataGrid.Rows.Add(fullName, parameterShortName, isOptional, description);
+            dataGrid.Columns.Add(new Column());
+            dataGrid.Columns.Add(new Column());
+            dataGrid.Columns.Add(new Column());
+            dataGrid.Columns.Add(new Column());
+            dataGrid.Columns.Add(new Column { ForegroundColor = ConsoleColor.DarkGray });
+
+            dataGrid.Rows.Add(fullName, parameterShortName, isOptional, type, description);
         }
         dataGrid.Display();
     }
@@ -120,23 +129,23 @@ internal class CommandUsageControl
     private static string SerializeValueDescription(CommandParameterInfo parameter)
     {
         if (parameter.ParameterType.IsText())
-            return " Type: text";
+            return "text";
 
         if (parameter.ParameterType.IsNumber())
-            return " Type: number";
+            return "number";
 
         if (parameter.ParameterType.IsListOfNumbers())
-            return " Type: list-of-numbers";
+            return "list-of-numbers";
 
         if (parameter.ParameterType.IsListOfTexts())
-            return " Type: list-of-texts";
+            return "list-of-texts";
 
         if (parameter.ParameterType.IsBoolean())
-            return " Type: flag";
+            return "flag";
 
         if (parameter.ParameterType.IsCharacter())
-            return " Type: character";
+            return "character";
 
-        return " Type: ?";
+        return parameter.ParameterType.Name;
     }
 }

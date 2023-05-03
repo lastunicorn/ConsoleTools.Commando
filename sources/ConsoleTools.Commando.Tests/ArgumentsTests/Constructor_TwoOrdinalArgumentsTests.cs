@@ -40,7 +40,8 @@ namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
         [Fact]
         public void HavingArgsStringWithTwoOrdinalArguments_WhenParsed_ThenSecondArgumentHasTypeOrdinal()
         {
-            arguments[1].Type.Should().Be(ArgumentType.Ordinal);
+            arguments[1].IsNamedArgument.Should().Be(false);
+            arguments[1].IsAnonymousArgument.Should().Be(true);
         }
 
         [Fact]

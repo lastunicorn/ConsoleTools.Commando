@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using FluentAssertions;
 using Xunit;
@@ -31,9 +31,9 @@ public class CommandParser_Verb_NoOptions_NoOperands_Tests
         string[] args = { verb };
 
         CommandParser commandParser = new();
-        GenericCommand genericCommand = commandParser.Parse(args);
+        CommandRequest commandRequest = commandParser.Parse(args);
 
-        genericCommand.Verb.Should().Be(verb);
+        commandRequest.Verb.Should().Be(verb);
     }
 
     [Theory]
@@ -44,11 +44,11 @@ public class CommandParser_Verb_NoOptions_NoOperands_Tests
         string[] args = { verb };
 
         CommandParser commandParser = new();
-        GenericCommand genericCommand = commandParser.Parse(args);
+        CommandRequest commandRequest = commandParser.Parse(args);
 
-        genericCommand.Verb.Should().Be(verb);
+        commandRequest.Verb.Should().Be(verb);
 
-        genericCommand.Options.Should().BeEmpty();
+        commandRequest.Options.Should().BeEmpty();
     }
 
     [Theory]
@@ -59,10 +59,10 @@ public class CommandParser_Verb_NoOptions_NoOperands_Tests
         string[] args = { verb };
 
         CommandParser commandParser = new();
-        GenericCommand genericCommand = commandParser.Parse(args);
+        CommandRequest commandRequest = commandParser.Parse(args);
 
-        genericCommand.Verb.Should().Be(verb);
+        commandRequest.Verb.Should().Be(verb);
 
-        genericCommand.Operands.Should().BeEmpty();
+        commandRequest.Operands.Should().BeEmpty();
     }
 }

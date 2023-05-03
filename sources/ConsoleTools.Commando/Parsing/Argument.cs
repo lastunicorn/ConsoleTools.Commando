@@ -22,19 +22,29 @@ public class Argument
 
     public string Value { get; set; }
 
-    public ArgumentType Type { get; set; }
+    public bool IsNamedArgument => Name != null;
+
+    public bool IsAnonymousArgument => Name == null;
 
     public override string ToString()
     {
+        string argumentType = string.Empty;
+
+        if (IsNamedArgument)
+            argumentType += "Named";
+
+        if (IsAnonymousArgument)
+            argumentType += "Anonymous";
+
         if (Name != null && Value != null)
-            return $"{Name} = {Value} [{Type}]";
+            return $"{Name} = {Value} []";
 
         if (Name != null)
-            return $"{Name} [{Type}]";
+            return $"{Name} [{argumentType}]";
 
         if (Value != null)
-            return $"{Value} [{Type}]";
+            return $"{Value} [{argumentType}]";
 
-        return $"null [{Type}]";
+        return $"null [{argumentType}]";
     }
 }

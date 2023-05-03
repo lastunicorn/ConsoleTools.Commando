@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 
 namespace DustInTheWind.ConsoleTools.Commando;
@@ -64,12 +64,16 @@ public class Application
     {
         try
         {
-            GenericCommand genericCommand = commandParser.Parse(args);
-            await commandRouter.Execute(genericCommand);
+            CommandRequest commandRequest = commandParser.Parse(args);
+            await commandRouter.Execute(commandRequest);
         }
         catch (Exception ex)
         {
+#if DEBUG
+            CustomConsole.WriteError(ex);
+#else
             CustomConsole.WriteError(ex.Message);
+#endif
         }
     }
 }
