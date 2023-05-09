@@ -14,19 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
-public class CommandCreatedEventArgs : EventArgs
+public enum BinaryDisplayFormat
 {
-    public string CommandFullName { get; init; }
-
-    public string[] Args { get; init; }
-
-    public List<CommandOption> UnusedOptions { get; init; }
-
-    public List<string> UnusedOperands { get; init; }
+    Hexadecimal,
+    Base64
 }

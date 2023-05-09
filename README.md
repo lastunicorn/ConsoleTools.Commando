@@ -6,6 +6,8 @@ It is a presentation layer framework using MVVM that helps to implement a CLI (c
 
 1. Include `ConsoleTools.Commando.Autofac.DependencyInjection` nuget package.
 
+   It will automatically include the `ConsoleTools.Commando` package.
+
 2. Register `Commando` into `Autofac`.
 
    ```csharp
@@ -13,12 +15,14 @@ It is a presentation layer framework using MVVM that helps to implement a CLI (c
    containerBuilder.RegisterCommando(presentationAssembly);
    ```
 
-3. Instantiate the `Application`
+   The `RegisterCommando(...)` method needs as parameters the assemblies where your commands are located. 
+
+3. Instantiate the `Application`.
    ```csharp
    Application application = container.Resolve<Application>();
    ```
 
-4. Execute
+4. Run the application.
 
    ```csharp
    await application.Run(args);

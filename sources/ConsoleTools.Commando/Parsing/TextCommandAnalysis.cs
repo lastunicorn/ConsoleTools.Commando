@@ -42,7 +42,7 @@ internal class TextCommandAnalysis
             Verb = verbArgument?.Value
         };
 
-        IEnumerable<GenericCommandOption> options = GetOptions();
+        IEnumerable<CommandOption> options = GetOptions();
         commandRequest.Options.AddRange(options);
 
         IEnumerable<string> operands = GetOperands(verbArgument);
@@ -60,11 +60,11 @@ internal class TextCommandAnalysis
             : null;
     }
 
-    private IEnumerable<GenericCommandOption> GetOptions()
+    private IEnumerable<CommandOption> GetOptions()
     {
         return arguments
             .Where(x => x.IsNamedArgument)
-            .Select(x => new GenericCommandOption(x.Name, x.Value));
+            .Select(x => new CommandOption(x.Name, x.Value));
     }
 
     private IEnumerable<string> GetOperands(Argument verbArgument)

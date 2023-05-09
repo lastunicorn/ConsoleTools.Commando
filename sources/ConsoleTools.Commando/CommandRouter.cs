@@ -100,7 +100,7 @@ public class CommandRouter
 
     private static void SetParameter(ICommand command, ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
-        GenericCommandOption option = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
+        CommandOption option = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
 
         if (option != null)
         {

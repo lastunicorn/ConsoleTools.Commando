@@ -15,18 +15,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
-public class CommandCreatedEventArgs : EventArgs
+public class CommandOption
 {
-    public string CommandFullName { get; init; }
+    public string Name { get; }
 
-    public string[] Args { get; init; }
+    public string Value { get; }
 
-    public List<CommandOption> UnusedOptions { get; init; }
+    public CommandOption(string name, string value)
+    {
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentNullException(nameof(name));
 
-    public List<string> UnusedOperands { get; init; }
+        Name = name;
+        Value = value;
+    }
 }

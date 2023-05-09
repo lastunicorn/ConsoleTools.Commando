@@ -15,18 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.Demo;
 
-public class CommandCreatedEventArgs : EventArgs
+public partial class ViewBase<TCommand>
 {
-    public string CommandFullName { get; init; }
+    public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
 
-    public string[] Args { get; init; }
+    public ConsoleColor WarningColor { get; set; } = ConsoleColor.DarkYellow;
 
-    public List<CommandOption> UnusedOptions { get; init; }
+    public ConsoleColor SuccessColor { get; set; } = ConsoleColor.Green;
 
-    public List<string> UnusedOperands { get; init; }
+    public ConsoleColor DataKeyColor { get; set; } = ConsoleColor.White;
+
+    public ConsoleColor DataValueColor { get; set; } = ConsoleColor.DarkGray;
+
+    public int? BinaryMaxLength { get; set; }
+
+    public BinaryDisplayFormat BinaryFormat { get; set; }
 }

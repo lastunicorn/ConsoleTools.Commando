@@ -4,6 +4,7 @@ ConsoleTools Commando
 v1.6.0
 ----------------------------------------------------------------------------------------------------
 - [syntax] Allow '=' and ':' as name-value separators.
+- [feature] Added a Ninject configuration helper package.
 
 v1.5.0
 ----------------------------------------------------------------------------------------------------

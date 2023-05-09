@@ -1,17 +1,19 @@
 # Commando
 
-Commando is a framework developed with the purpose of easily creating and describing commands (with complex arguments) in a console application.
+Commando is a framework developed with the purpose of easily creating and executing commands in a console application.
 
-## Internal Structure
+## Execution Steps
 
-For processing a text command received as input from the user, Commando needs to do the following steps:
+The processing and execution of a text command received as input from the user, means the execution of the following steps:
 
 - Parse the text command.
 - Instantiate the correct `ICommand` class.
 - Populate all the parameters of the `ICommand` instance with values from the text command.
 - Execute the `ICommand`.
 
-To perform handle the request as stated previously, the following internal components and models are created:
+## Internal Structure
+
+To handle the request as stated previously, the following internal components and models are created:
 
 1) Command Parser
 2) Command Request Model

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32428.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando", "ConsoleTools.Commando\ConsoleTools.Commando.csproj", "{E9125FDB-B912-472E-AB8C-2AEFF0543F95}"
 EndProject
@@ -12,9 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{933C5D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Autofac.DependencyInjection", "ConsoleTools.Commando.Autofac.DependencyInjection\ConsoleTools.Commando.Autofac.DependencyInjection.csproj", "{EEFC180D-6001-4EE8-BAB1-EBE17BD8E341}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Demo", "ConsoleTools.Commando.Demo\ConsoleTools.Commando.Demo.csproj", "{8EE16070-FB87-44FA-9BEF-5A22D4EC38D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Autofac.Demo", "ConsoleTools.Commando.Autofac.Demo\ConsoleTools.Commando.Autofac.Demo.csproj", "{8EE16070-FB87-44FA-9BEF-5A22D4EC38D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Tests", "ConsoleTools.Commando.Tests\ConsoleTools.Commando.Tests.csproj", "{7AA909C4-2348-476C-B5C0-89FF9E18B42F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Tests", "ConsoleTools.Commando.Tests\ConsoleTools.Commando.Tests.csproj", "{7AA909C4-2348-476C-B5C0-89FF9E18B42F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Ninject.DependencyInjection", "ConsoleTools.Commando.Ninject.DependencyInjection\ConsoleTools.Commando.Ninject.DependencyInjection.csproj", "{006FC2AF-C692-421C-9C59-A3DA9169376B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Ninject.Demo", "ConsoleTools.Commando.Ninject.Demo\ConsoleTools.Commando.Ninject.Demo.csproj", "{1820A7C2-7E35-4E96-942A-8CC75B30E87C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +42,14 @@ Global
 		{7AA909C4-2348-476C-B5C0-89FF9E18B42F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AA909C4-2348-476C-B5C0-89FF9E18B42F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AA909C4-2348-476C-B5C0-89FF9E18B42F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{006FC2AF-C692-421C-9C59-A3DA9169376B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{006FC2AF-C692-421C-9C59-A3DA9169376B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{006FC2AF-C692-421C-9C59-A3DA9169376B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{006FC2AF-C692-421C-9C59-A3DA9169376B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

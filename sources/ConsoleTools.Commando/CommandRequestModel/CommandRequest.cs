@@ -22,14 +22,14 @@ namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 public class CommandRequest
 {
-    private List<GenericCommandOption> unusedOptions = new();
+    private List<CommandOption> unusedOptions = new();
     private List<string> unusedOperands = new();
 
     public string[] UnderlyingArgs { get; init; }
 
     public string Verb { get; init; }
 
-    public List<GenericCommandOption> Options { get; } = new();
+    public List<CommandOption> Options { get; } = new();
 
     public List<string> Operands { get; } = new();
 
@@ -39,11 +39,11 @@ public class CommandRequest
         unusedOperands = Operands.ToList();
     }
 
-    public GenericCommandOption GetOptionAndMarkAsUsed(ParameterMetadata parameterMetadata)
+    public CommandOption GetOptionAndMarkAsUsed(ParameterMetadata parameterMetadata)
     {
         if (parameterMetadata.Name != null)
         {
-            GenericCommandOption option = Options
+            CommandOption option = Options
                 .FirstOrDefault(x => x.Name == parameterMetadata.Name);
 
             if (option != null)
@@ -55,7 +55,7 @@ public class CommandRequest
 
         if (parameterMetadata.ShortName != 0)
         {
-            GenericCommandOption option = Options
+            CommandOption option = Options
                 .FirstOrDefault(x => x.Name == parameterMetadata.ShortName.ToString());
 
             if (option != null)
@@ -86,7 +86,7 @@ public class CommandRequest
         return null;
     }
 
-    public IEnumerable<GenericCommandOption> EnumerateUnusedOptions()
+    public IEnumerable<CommandOption> EnumerateUnusedOptions()
     {
         return unusedOptions;
     }

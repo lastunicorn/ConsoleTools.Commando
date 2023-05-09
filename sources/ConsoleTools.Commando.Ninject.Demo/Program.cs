@@ -14,19 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
+using System.Threading.Tasks;
+using Ninject;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.Demo;
 
-public class CommandCreatedEventArgs : EventArgs
+internal class Program
 {
-    public string CommandFullName { get; init; }
+    private static async Task Main(string[] args)
+    {
+        IKernel container = Setup.ConfigureServices();
 
-    public string[] Args { get; init; }
-
-    public List<CommandOption> UnusedOptions { get; init; }
-
-    public List<string> UnusedOperands { get; init; }
+        Application application = container.Get<Application>();
+        await application.Run(args);
+    }
 }

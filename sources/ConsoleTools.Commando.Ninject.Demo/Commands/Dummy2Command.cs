@@ -15,28 +15,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
+namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-public class GenericCommandOption
+public class Dummy2Command : ICommand
 {
-    public string Name { get; }
+    [CommandParameter(Name = "text", ShortName = 't', Description = "Some useless text.")]
+    public string Text { get; set; }
 
-    public string Value { get; }
+    public DummyView View { get; set; }
 
-    public GenericCommandOption(string name, string value)
+    public Dummy2Command(DummyView dummyView)
     {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentNullException(nameof(name));
-
-        Name = name;
-        Value = value;
+        View = dummyView ?? throw new ArgumentNullException(nameof(dummyView));
     }
 
-    public override string ToString()
+    public Task Execute()
     {
-        return Value == null
-            ? $"{Name}"
-            : $"{Name} = {Value}";
+        View.WriteValue("Text", Text);
+
+        return Task.CompletedTask;
     }
 }

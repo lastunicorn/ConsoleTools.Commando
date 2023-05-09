@@ -27,6 +27,10 @@
         <Copy
             SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Autofac.DependencyInjection\bin\Release\ConsoleTools.Commando.Autofac.DependencyInjection.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Ninject.DependencyInjection\bin\Release\ConsoleTools.Commando.Ninject.DependencyInjection.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
 
 	</Target>
 

@@ -14,19 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
+namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-namespace DustInTheWind.ConsoleTools.Commando;
-
-public class CommandCreatedEventArgs : EventArgs
+public class DummyView : ViewBase<DummyCommand>
 {
-    public string CommandFullName { get; init; }
-
-    public string[] Args { get; init; }
-
-    public List<CommandOption> UnusedOptions { get; init; }
-
-    public List<string> UnusedOperands { get; init; }
+    public override void Display(DummyCommand command)
+    {
+        WithIndentation("Same values after command finished execution:", () =>
+        {
+            WriteValue("Text", command.Text);
+            WriteValue("Flag", command.Flag);
+            WriteValue("Integer Number", command.IntegerNumber);
+            WriteValue("Real Number", command.RealNumber);
+            WriteValue("Character", command.Character);
+            WriteValue("File Path", command.FilePath);
+        });
+    }
 }

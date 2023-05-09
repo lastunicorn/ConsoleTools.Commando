@@ -15,18 +15,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.Ninject.DependencyInjection;
 
-public class CommandCreatedEventArgs : EventArgs
+internal class TypeIsNotCommandException : Exception
 {
-    public string CommandFullName { get; init; }
+    private const string DefaultMessage = "Type {0} does not represent command. A command must implement the {1} interface.";
 
-    public string[] Args { get; init; }
-
-    public List<CommandOption> UnusedOptions { get; init; }
-
-    public List<string> UnusedOperands { get; init; }
+    public TypeIsNotCommandException(Type type)
+        : base(string.Format(DefaultMessage, type.FullName, typeof(ICommand).FullName))
+    {
+    }
 }
