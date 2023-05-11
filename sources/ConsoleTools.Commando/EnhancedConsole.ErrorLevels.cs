@@ -16,9 +16,9 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-public partial class ViewBase<TCommand>
+public partial class EnhancedConsole
 {
     public void WriteValue(string name, object value)
     {
@@ -52,6 +52,12 @@ public partial class ViewBase<TCommand>
     public void WriteInfo(string message)
     {
         DisplayIndentation();
-        WriteLineWithColor(ConsoleColor.Gray, message);
+        WriteLineWithColor(InfoColor, message);
+    }
+
+    public void WriteNote(string message)
+    {
+        DisplayIndentation();
+        WriteLineWithColor(NoteColor, message);
     }
 }

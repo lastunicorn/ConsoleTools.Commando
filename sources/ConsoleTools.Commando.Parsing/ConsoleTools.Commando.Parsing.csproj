@@ -20,20 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <AssemblyName>DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection</AssemblyName>
-        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection</RootNamespace>
+        <AssemblyName>DustInTheWind.ConsoleTools.Commando.Parsing</AssemblyName>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Parsing</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageId>ConsoleTools.Commando.Autofac.DependencyInjection</PackageId>
-        <IncludeReferencedProjects>true</IncludeReferencedProjects>
+        <PackageId>ConsoleTools.Commando.Parsing</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" />
+        <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj" />
-      <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" />
+        <InternalsVisibleTo Include="DustInTheWind.ConsoleTools.Commando.Tests" />
     </ItemGroup>
 
 </Project>

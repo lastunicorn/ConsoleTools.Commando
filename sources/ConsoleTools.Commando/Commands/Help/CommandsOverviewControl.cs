@@ -25,13 +25,30 @@ internal class CommandsOverviewControl
 {
     public string ApplicationName { get; set; }
 
-    public List<CommandShortInfo> Commands { get; set; }
+    public List<CommandShortInfo> NamedCommands { get; set; }
+
+    public List<CommandShortInfo> DefaultCommands { get; set; }
 
     public void Display()
     {
         Console.WriteLine();
         CustomConsole.WriteLineEmphasized("Usage:");
-        Console.WriteLine($" {ApplicationName} [command]");
+
+        if (NamedCommands?.Count > 0)
+            Console.WriteLine($" {ApplicationName} [command] [parameters]");
+
+        if (DefaultCommands?.Count > 0)
+            Console.WriteLine($" {ApplicationName} [parameters]");
+
+        if (NamedCommands?.Count > 0)
+            DisplayNamedCommands();
+
+        if (DefaultCommands?.Count > 0)
+            DisplayDefaultCommands();
+    }
+
+    private void DisplayNamedCommands()
+    {
         Console.WriteLine();
         Console.WriteLine("Commands:");
 
@@ -41,17 +58,53 @@ internal class CommandsOverviewControl
             MaxWidth = 80
         };
 
-        IEnumerable<ContentRow> rows = Commands.Select(CreateContentRow);
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+
+        IEnumerable<ContentRow> rows = NamedCommands.Select(CreateContentRowForNamedCommand);
         dataGrid.Rows.AddRange(rows);
 
         dataGrid.Display();
     }
 
-    private static ContentRow CreateContentRow(CommandShortInfo commandShortInfo)
+    private static ContentRow CreateContentRowForNamedCommand(CommandShortInfo commandShortInfo)
     {
         ContentRow row = new();
 
-        row.AddCell(commandShortInfo.Name);
+        row.AddCell(commandShortInfo.Name ?? "<anonymous command>");
+
+        row.AddCell(new ContentCell
+        {
+            Content = commandShortInfo.Description,
+            ForegroundColor = ConsoleColor.DarkGray
+        });
+
+        return row;
+    }
+
+    private void DisplayDefaultCommands()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Anonymous Command:");
+
+        DataGrid dataGrid = new()
+        {
+            Border = { IsVisible = false },
+            MaxWidth = 80
+        };
+
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+
+        IEnumerable<ContentRow> rows = DefaultCommands.Select(CreateContentRowForAnonymousCommand);
+        dataGrid.Rows.AddRange(rows);
+
+        dataGrid.Display();
+    }
+
+    private static ContentRow CreateContentRowForAnonymousCommand(CommandShortInfo commandShortInfo)
+    {
+        ContentRow row = new();
 
         row.AddCell(new ContentCell
         {

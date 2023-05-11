@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
+
 namespace DustInTheWind.ConsoleTools.Commando;
 
-public enum BinaryDisplayFormat
+public interface ICommandParser
 {
-    Hexadecimal,
-    Base64
+    CommandRequest Parse(string[] args);
 }

@@ -14,23 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
-
-public partial class ViewBase<TCommand>
+public class DefaultCommandAttribute : CommandAttribute
 {
-    public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
-
-    public ConsoleColor WarningColor { get; set; } = ConsoleColor.DarkYellow;
-
-    public ConsoleColor SuccessColor { get; set; } = ConsoleColor.Green;
-
-    public ConsoleColor DataKeyColor { get; set; } = ConsoleColor.White;
-
-    public ConsoleColor DataValueColor { get; set; } = ConsoleColor.DarkGray;
-
-    public int? BinaryMaxLength { get; set; }
-
-    public BinaryDisplayFormat BinaryFormat { get; set; }
+    /// <summary>
+    /// Creates a new instance of the <see cref="NamedCommandAttribute"/> with
+    /// no name.
+    /// </summary>
+    public DefaultCommandAttribute()
+    {
+    }
 }

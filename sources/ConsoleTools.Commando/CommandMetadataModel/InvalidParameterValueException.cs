@@ -15,26 +15,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
-public class Dummy2Command : ICommand
+internal class InvalidParameterValueException : Exception
 {
-    [CommandParameter(Name = "text", ShortName = 't', Description = "Some useless text.")]
-    public string Text { get; set; }
-
-    public DummyView View { get; set; }
-
-    public Dummy2Command(DummyView dummyView)
+    public InvalidParameterValueException(string parameterName, string value)
+        : base(BuildMessage(parameterName, value))
     {
-        View = dummyView ?? throw new ArgumentNullException(nameof(dummyView));
     }
 
-    public Task Execute()
+    public InvalidParameterValueException(string parameterName, string value, Exception innerException)
+        : base(BuildMessage(parameterName, value), innerException)
     {
-        View.WriteValue("Text", Text);
+    }
 
-        return Task.CompletedTask;
+    private static string BuildMessage(string parameterName, string value)
+    {
+        return $"'{value}' is not a valid value for '{parameterName}'.";
     }
 }

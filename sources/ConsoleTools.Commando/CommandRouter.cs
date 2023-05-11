@@ -30,13 +30,13 @@ public class CommandRouter
     private readonly CommandMetadataCollection commandMetadataCollection;
     private readonly ICommandFactory commandFactory;
 
-    public event EventHandler<CommandCreatedEventArgs> CommandCreated;
-
     public CommandRouter(CommandMetadataCollection commandMetadataCollection, ICommandFactory commandFactory)
     {
         this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
         this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
     }
+
+    public event EventHandler<CommandCreatedEventArgs> CommandCreated;
 
     public async Task Execute(CommandRequest commandRequest)
     {
@@ -67,10 +67,7 @@ public class CommandRouter
 
     private ICommand CreateCommandIfExists(CommandRequest commandRequest)
     {
-        if (string.IsNullOrEmpty(commandRequest.Verb))
-            return null;
-
-        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(commandRequest.Verb);
+        CommandMetadata commandMetadata = GetCommandMetadata(commandRequest);
 
         if (commandMetadata == null)
             throw new InvalidCommandException();
@@ -79,6 +76,16 @@ public class CommandRouter
         SetParameters(command, commandMetadata, commandRequest);
 
         return command;
+    }
+
+    private CommandMetadata GetCommandMetadata(CommandRequest commandRequest)
+    {
+        if (commandRequest.IsEmpty)
+            return commandMetadataCollection.GetHelpCommand();
+
+        return string.IsNullOrEmpty(commandRequest.Verb)
+            ? commandMetadataCollection.GetAnonymous().FirstOrDefault()
+            : commandMetadataCollection.GetByName(commandRequest.Verb);
     }
 
     private ICommand CreateHelpCommand()

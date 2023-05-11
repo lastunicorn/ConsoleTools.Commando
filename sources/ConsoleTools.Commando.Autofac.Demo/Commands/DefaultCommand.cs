@@ -14,23 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-public partial class ViewBase<TCommand>
+[DefaultCommand(Order = 100, Description = "Default command to be executed when no command name is specified.")]
+public class DefaultCommand : CommandBase
 {
-    public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
+    [NamedParameter("text")]
+    public string Text { get; set; }
 
-    public ConsoleColor WarningColor { get; set; } = ConsoleColor.DarkYellow;
+    public DefaultCommand(EnhancedConsole enhancedConsole)
+        : base(enhancedConsole)
+    {
+    }
 
-    public ConsoleColor SuccessColor { get; set; } = ConsoleColor.Green;
-
-    public ConsoleColor DataKeyColor { get; set; } = ConsoleColor.White;
-
-    public ConsoleColor DataValueColor { get; set; } = ConsoleColor.DarkGray;
-
-    public int? BinaryMaxLength { get; set; }
-
-    public BinaryDisplayFormat BinaryFormat { get; set; }
+    public override Task Execute()
+    {
+        Console.WriteTitle("Default command");
+        Console.WriteValue("Text", Text);
+        
+        return Task.CompletedTask;
+    }
 }

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Empty;
 
-[Command(Enabled = false)]
+[NamedCommand("empty", Enabled = false)]
 internal class EmptyCommand : ICommand
 {
     public Task Execute()

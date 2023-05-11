@@ -14,53 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Threading.Tasks;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-[Command("dummy", ShortDescription = "A dummy command that shows how to use Commando.A dummy command that shows how to use Commando.A dummy command that shows how to use Commando.")]
-public class DummyCommand : ICommand
+[NamedCommand("dummy", Description = "A dummy command that shows how to create parameters of different types.")]
+public class DummyCommand : CommandBase
 {
-    [CommandParameter(Name = "text", ShortName = 't')]
+    [NamedParameter("text", ShortName = 't')]
     public string Text { get; set; }
 
-    [CommandParameter(Name = "flag", ShortName = 'f', IsOptional = true)]
+    [NamedParameter("flag", ShortName = 'f', IsOptional = true)]
     public bool Flag { get; set; }
 
-    [CommandParameter(Name = "integer", ShortName = 'i', IsOptional = true)]
+    [NamedParameter("integer", ShortName = 'i', IsOptional = true)]
     public int IntegerNumber { get; set; }
 
-    [CommandParameter(Name = "real", ShortName = 'r', IsOptional = true)]
+    [NamedParameter("real", ShortName = 'r', IsOptional = true)]
     public float RealNumber { get; set; }
 
-    [CommandParameter(Name = "char", ShortName = 'c', IsOptional = true)]
+    [NamedParameter("char", ShortName = 'c', IsOptional = true)]
     public char Character { get; set; }
 
-    [CommandParameter(Order = 1, IsOptional = true)]
+    [AnonymousParameter(Order = 1, IsOptional = true)]
     public string FilePath { get; set; }
 
-    public DummyView View { get; set; }
-
-    public DummyCommand(DummyView dummyView)
+    public DummyCommand(EnhancedConsole console)
+        : base(console)
     {
-        View = dummyView ?? throw new ArgumentNullException(nameof(dummyView));
     }
 
-    public Task Execute()
+    public override Task Execute()
     {
-        View.WriteTitle("This is the Dummy Command.");
+        Console.WriteTitle("This is the Dummy Command.");
 
-        View.WithIndentation("Initial values:", () =>
+        Console.WithIndentation("Initial values:", () =>
         {
-            View.WriteValue("Text", Text);
-            View.WriteValue("Flag", Flag);
-            View.WriteValue("Integer Number", IntegerNumber);
-            View.WriteValue("Real Number", RealNumber);
-            View.WriteValue("Character", Character);
-            View.WriteValue("File Path", FilePath);
+            Console.WriteValue("Text", Text);
+            Console.WriteValue("Flag", Flag);
+            Console.WriteValue("Integer Number", IntegerNumber);
+            Console.WriteValue("Real Number", RealNumber);
+            Console.WriteValue("Character", Character);
+            Console.WriteValue("File Path", FilePath);
         });
-        View.WriteLine();
+        Console.WriteLine();
 
         Text = "This is a new text.";
         Flag = false;

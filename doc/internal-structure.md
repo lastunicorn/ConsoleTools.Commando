@@ -1,14 +1,15 @@
-# Commando
+# Commando - Internal Structure
 
-Commando is a framework developed with the purpose of easily creating and executing commands in a console application.
+Commando is a framework developed with the purpose of easily parsing and executing commands in a console application.
 
 ## Execution Steps
 
-The processing and execution of a text command received as input from the user, means the execution of the following steps:
+For processing a text command, the following steps are performed:
 
 - Parse the text command.
 - Instantiate the correct `ICommand` class.
-- Populate all the parameters of the `ICommand` instance with values from the text command.
+  - Populate all the parameters of the `ICommand` instance with values from the text command.
+
 - Execute the `ICommand`.
 
 ## Internal Structure
@@ -26,6 +27,15 @@ To handle the request as stated previously, the following internal components an
 ### 1) Command Parser
 
 The purpose of a Command Parser is to understand the syntax used by the user, parse the provided text and extract all important values, which are then stored in the Command Request Model objects.
+
+#### Data
+
+- the command text (arguments) provided by the user in the console.
+- it is obtained from .NET as an array of strings: `private static Main(string[] args)`
+
+#### Execution
+
+- Uses a `ICommandParser` implementation to transform the arguments into a `CommandRequest` object (part of the Command Request Model).
 
 ### 2) Command Request Model
 
@@ -49,23 +59,37 @@ The Command Request Model contains the following important properties:
 
 ### 3) Command Router
 
-It is responsible for instantiating and executing the appropriate `ICommand` object. For this, the router needs two things:
+It is responsible for instantiating and executing the appropriate `ICommand` object.
 
-- **list of available commands**
+#### Data
+
+For its job, the router needs two types of data:
+
+- **available commands**
+  - also known as Command Metadata Model.
   - a list with information about all the classes that represent a command.
-  - obtained using reflection.
-- **the request** - All the data from the user's request is provided under the form of the Command Request Model.
+  - obtained using reflection from the assembly provided at setup time.
+- **command request**
+  - Also known as Command Request Model.
+  - Contains all the data from the user's command line request.
+
+
+#### Execution
 
 What the Command Router remains to do is:
 
-- **identify command** - Search in the list of available commands for the one specified by the Command Request Model.
-- **instantiate command**
-- **populate command parameters** -  This is done based on the metadata with values from the text command.
-- **execute command**
+1. **identify command** - Search in the list of available commands for the one specified by the Command Request Model.
+2. **instantiate command**
+   - **populate command parameters** -  This is done based on the metadata with values from the text command.
+
+3. **execute command**
 
 ### 4) Command Metadata Model
 
-The command metadata contains all the necessary information about all the available commands. In this list may appear commands provided by the library itself, like the `help` command, but also the commands provided by the consumer of the library.
+- A list of `CommandMetadata` objects containing all the necessary information about all the available commands.
+- Created at setup time using Reflection, from the provided Assemblies.
+  - It is suggested to place the `ICommand` classes in a separate assembly that containing the presentation layer.
+- Contains commands provided by the Commando library itself, like the `help` command, but also custom commands, created by the consumer of the library.
 
 These metadata are used by the Command Router to instantiate the appropriate command class and populate correctly its properties.
 
@@ -75,8 +99,8 @@ These metadata are used by the Command Router to instantiate the appropriate com
 
 A Command class is the equivalent of:
 
-- a Page from ASP.NET Razor Pages;
-- a View Model from the MVVM pattern used in WPF.
+- a Page class from ASP.NET Razor Pages;
+- a View Model class from the MVVM pattern used in WPF.
 
 #### The Command
 

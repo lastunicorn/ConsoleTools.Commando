@@ -14,15 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
-
-public class CommandsOverviewInfo
+public abstract class CommandBase : CommandBase<EnhancedConsole>
 {
-    public string ApplicationName { get; set; }
-
-    public List<CommandShortInfo> NamedCommands { get; set; }
-    
-    public List<CommandShortInfo> DefaultCommands { get; set; }
+    protected CommandBase(EnhancedConsole console)
+        : base(console)
+    {
+    }
 }

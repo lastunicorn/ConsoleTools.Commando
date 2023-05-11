@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
@@ -53,6 +54,12 @@ internal static class StringExtensions
         }
 
         if (startIndex != -1)
-            yield return text.Substring(startIndex).ToLower();
+            yield return text[startIndex..].ToLower();
+    }
+
+    public static string ToKebabCase(this string text)
+    {
+        IEnumerable<string> words = text.ToLowerCaseWords();
+        return string.Join('-', words);
     }
 }

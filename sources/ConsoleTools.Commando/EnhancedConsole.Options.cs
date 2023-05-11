@@ -14,15 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-public class CommandsOverviewInfo
+public partial class EnhancedConsole
 {
-    public string ApplicationName { get; set; }
+    public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
 
-    public List<CommandShortInfo> NamedCommands { get; set; }
+    public ConsoleColor WarningColor { get; set; } = ConsoleColor.DarkYellow;
+
+    public ConsoleColor SuccessColor { get; set; } = ConsoleColor.Green;
     
-    public List<CommandShortInfo> DefaultCommands { get; set; }
+    public ConsoleColor InfoColor { get; set; } = ConsoleColor.Gray;
+    
+    public ConsoleColor NoteColor { get; set; } = ConsoleColor.DarkGray;
+
+    public ConsoleColor DataKeyColor { get; set; } = ConsoleColor.White;
+
+    public ConsoleColor DataValueColor { get; set; } = ConsoleColor.DarkGray;
+
+    public int? BinaryMaxLength { get; set; }
+
+    public BinaryDisplayFormat BinaryFormat { get; set; }
 }

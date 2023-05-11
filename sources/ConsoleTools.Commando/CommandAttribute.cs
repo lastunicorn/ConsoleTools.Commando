@@ -18,20 +18,13 @@ using System;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class CommandAttribute : Attribute
 {
     /// <summary>
-    /// Gets the name of the command.
-    /// Ths value is optional, but, if provided, it must not contain spaces.
-    /// The command will be executed only if the verb provided by the user matches this value.
-    /// </summary>
-    public string CommandName { get; }
-
-    /// <summary>
     /// Gets or sets a short description that is displayed by the help command.
     /// </summary>
-    public string ShortDescription { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the order in which this command will appear in the help list.
@@ -48,16 +41,7 @@ public class CommandAttribute : Attribute
     /// Creates a new instance of the <see cref="CommandAttribute"/> with
     /// no name.
     /// </summary>
-    public CommandAttribute()
+    protected CommandAttribute()
     {
-    }
-
-    /// <summary>
-    /// Creates a new instance of the <see cref="CommandAttribute"/> with
-    /// the specified name.
-    /// </summary>
-    public CommandAttribute(string commandName)
-    {
-        CommandName = commandName ?? throw new ArgumentNullException(nameof(commandName));
     }
 }

@@ -18,7 +18,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Ninject.DependencyInjection", "ConsoleTools.Commando.Ninject.DependencyInjection\ConsoleTools.Commando.Ninject.DependencyInjection.csproj", "{006FC2AF-C692-421C-9C59-A3DA9169376B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Ninject.Demo", "ConsoleTools.Commando.Ninject.Demo\ConsoleTools.Commando.Ninject.Demo.csproj", "{1820A7C2-7E35-4E96-942A-8CC75B30E87C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Ninject.Demo", "ConsoleTools.Commando.Ninject.Demo\ConsoleTools.Commando.Ninject.Demo.csproj", "{1820A7C2-7E35-4E96-942A-8CC75B30E87C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Parsing", "ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj", "{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1820A7C2-7E35-4E96-942A-8CC75B30E87C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

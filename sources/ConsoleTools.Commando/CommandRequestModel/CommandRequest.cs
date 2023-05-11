@@ -33,6 +33,8 @@ public class CommandRequest
 
     public List<string> Operands { get; } = new();
 
+    public bool IsEmpty => Verb == null && Options.Count == 0 && Operands.Count == 0;
+
     public void Reset()
     {
         unusedOptions = Options.ToList();

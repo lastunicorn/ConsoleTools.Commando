@@ -14,37 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+using System;
 
-public class Argument
+namespace DustInTheWind.ConsoleTools.Commando;
+
+public class NamedParameterAttribute : CommandParameterAttribute
 {
     public string Name { get; set; }
 
-    public string Value { get; set; }
+    public char ShortName { get; set; }
 
-    public bool IsNamedArgument => Name != null;
-
-    public bool IsAnonymousArgument => Name == null;
-
-    public override string ToString()
+    public NamedParameterAttribute(string name)
     {
-        string argumentType = string.Empty;
+        if (name == null) throw new ArgumentNullException(nameof(name));
+        if (name.Length == 0) throw new ArgumentException("The name is mandatory.", nameof(name));
 
-        if (IsNamedArgument)
-            argumentType += "Named";
-
-        if (IsAnonymousArgument)
-            argumentType += "Anonymous";
-
-        if (Name != null && Value != null)
-            return $"{Name} = {Value} []";
-
-        if (Name != null)
-            return $"{Name} [{argumentType}]";
-
-        if (Value != null)
-            return $"{Value} [{argumentType}]";
-
-        return $"null [{argumentType}]";
+        Name = name;
     }
 }

@@ -16,10 +16,9 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-public abstract partial class ViewBase<TCommand> : IView<TCommand>
-    where TCommand : ICommand
+public partial class EnhancedConsole
 {
     public void WriteLine()
     {
@@ -63,6 +62,4 @@ public abstract partial class ViewBase<TCommand> : IView<TCommand>
         Console.WriteLine(text);
         Console.ForegroundColor = oldColor;
     }
-
-    public abstract void Display(TCommand command);
 }

@@ -14,20 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.IO;
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
 
-/// <summary>
-/// Represents a console command that handles a specific request from the user.
-/// The correct command to be executed is identified based on the command line arguments provided
-/// by the user in the console.
-/// </summary>
-public interface ICommand
+[NamedCommand("read", Description = "Display the content of a text file.")]
+public class ReadFileCommand : CommandBase
 {
-    /// <summary>
-    /// When implemented by an inheritor, it executes asynchronously the actions needed for handling
-    /// the user's request.
-    /// </summary>
-    Task Execute();
+    [AnonymousParameter(Order = 1, Description = "The path to the file that should be displayed.")]
+    public string FilePath { get; set; }
+
+    public ReadFileCommand(EnhancedConsole console)
+        : base(console)
+    {
+    }
+
+    public override Task Execute()
+    {
+        Console.WriteTitle("Reading a text file");
+        Console.WriteValue("File", FilePath);
+
+        string content = File.ReadAllText(FilePath);
+        Console.WriteValue("Content", content);
+
+        return Task.CompletedTask;
+    }
 }

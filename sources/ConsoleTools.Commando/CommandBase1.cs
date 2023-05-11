@@ -17,24 +17,17 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-public class Dummy2Command : ICommand
+public abstract class CommandBase<TConsole> : ICommand
+    where TConsole : EnhancedConsole
 {
-    [CommandParameter(Name = "text", ShortName = 't', Description = "Some useless text.")]
-    public string Text { get; set; }
+    public TConsole Console { get; }
 
-    public DummyView View { get; set; }
-
-    public Dummy2Command(DummyView dummyView)
+    protected CommandBase(TConsole console)
     {
-        View = dummyView ?? throw new ArgumentNullException(nameof(dummyView));
+        Console = console ?? throw new ArgumentNullException(nameof(console));
     }
 
-    public Task Execute()
-    {
-        View.WriteValue("Text", Text);
-
-        return Task.CompletedTask;
-    }
+    public abstract Task Execute();
 }

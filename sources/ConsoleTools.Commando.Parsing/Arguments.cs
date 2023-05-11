@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
-public class Arguments : IEnumerable<Argument>
+internal class Arguments : IEnumerable<Argument>
 {
     public string[] UnderlyingArgs { get; }
 
@@ -53,49 +53,40 @@ public class Arguments : IEnumerable<Argument>
 
     private static IEnumerable<Argument> Parse(IEnumerable<string> args)
     {
-        Argument argument = null;
+        Argument previousArgument = null;
 
-        IEnumerable<ChunkAnalysis> chunks = args.Select(x => new ChunkAnalysis(x));
+        IEnumerable<Argument> parsedArguments = args.Select(x => new Argument(x));
 
-        foreach (ChunkAnalysis chunk in chunks)
+        foreach (Argument argument in parsedArguments)
         {
-            if (chunk.HasName)
+            if (argument.HasName)
             {
-                if (argument != null)
-                    yield return argument;
+                if (previousArgument != null)
+                    yield return previousArgument;
 
-                if (chunk.HasValue)
-                {
-                    argument = new Argument
-                    {
-                        Name = chunk.Name,
-                        Value = chunk.Value
-                    };
-
+                if (argument.HasValue)
                     yield return argument;
-                    argument = null;
-                }
                 else
-                {
-                    argument = new Argument
-                    {
-                        Name = chunk.Name
-                    };
-                }
+                    previousArgument = argument;
             }
             else
             {
-                argument ??= new Argument();
+                if (previousArgument != null)
+                {
+                    previousArgument.Value = argument.Value;
 
-                argument.Value = chunk.Value;
-
-                yield return argument;
-                argument = null;
+                    yield return previousArgument;
+                    previousArgument = null;
+                }
+                else
+                {
+                    yield return argument;
+                }
             }
         }
 
-        if (argument != null)
-            yield return argument;
+        if (previousArgument != null)
+            yield return previousArgument;
     }
 
     public IEnumerator<Argument> GetEnumerator()

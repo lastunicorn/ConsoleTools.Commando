@@ -28,28 +28,33 @@ public class ParameterMetadata
     private readonly PropertyInfo propertyInfo;
     private readonly CommandParameterAttribute customAttribute;
 
-    public string Name => customAttribute.Name;
+    private NamedParameterAttribute NamedParameterAttribute => customAttribute as NamedParameterAttribute;
 
-    public char ShortName => customAttribute.ShortName;
+    private AnonymousParameterAttribute AnonymousParameterAttribute => customAttribute as AnonymousParameterAttribute;
+
+    public string Name => NamedParameterAttribute?.Name;
+
+    public char ShortName => NamedParameterAttribute?.ShortName ?? (char)0;
 
     public string DisplayName
     {
         get
         {
-            string displayName = customAttribute.DisplayName;
-            if (displayName != null)
-            {
-                return displayName;
-            }
+            string displayName = AnonymousParameterAttribute?.DisplayName;
 
-            IEnumerable<string> words = propertyInfo.Name.ToLowerCaseWords();
-            return string.Join(' ', words);
+            if (displayName != null)
+                return displayName;
+
+            int? order = AnonymousParameterAttribute?.Order;
+
+            if (order != null)
+                return $"param {order}";
+
+            return propertyInfo.Name.ToKebabCase();
         }
     }
 
-    public int? Order => customAttribute.Order == 0
-        ? null
-        : customAttribute.Order;
+    public int? Order => AnonymousParameterAttribute?.Order;
 
     public bool IsOptional => customAttribute.IsOptional;
 
@@ -108,7 +113,16 @@ public class ParameterMetadata
         //}
 
         TypeConverter typeConverter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
-        return typeConverter.ConvertFromString(value);
+
+        try
+        {
+            return typeConverter.ConvertFromString(value);
+        }
+        catch (Exception ex)
+        {
+            string parameterDisplayName = Name ?? DisplayName;
+            throw new InvalidParameterValueException(parameterDisplayName, value, ex);
+        }
     }
 
     public override string ToString()

@@ -15,24 +15,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
-[HelpCommand("help", ShortDescription = "Obtain more details and explanation about the available commands.", Order = int.MaxValue)]
+[HelpCommand("help", Description = "Display more details about the available commands.", Order = int.MaxValue)]
 internal class HelpCommand : ICommand
 {
     private readonly CommandMetadataCollection commandMetadataCollection;
     private readonly Application application;
 
-    [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
+    [AnonymousParameter(DisplayName = "command name", Order = 1, IsOptional = true, Description = "The name of the command for which to display detailed help information.")]
     public string CommandName { get; set; }
 
     public CommandsOverviewInfo CommandsOverviewInfo { get; private set; }
 
     public CommandFullInfo CommandFullInfo { get; private set; }
+
+    public CultureInfo CultureInfo { get; private set; }
 
     public HelpCommand(CommandMetadataCollection commandMetadataCollection, Application application)
     {
@@ -42,10 +45,15 @@ internal class HelpCommand : ICommand
 
     public Task Execute()
     {
-        if (CommandName != null)
-            CommandFullInfo = GetCommandFullInfo(CommandName);
-        else
+        if (CommandName == null)
+        {
             CommandsOverviewInfo = GetAllCommandsOverview();
+            CultureInfo = CultureInfo.CurrentCulture;
+        }
+        else
+        {
+            CommandFullInfo = GetCommandFullInfo(CommandName);
+        }
 
         return Task.CompletedTask;
     }
@@ -78,7 +86,10 @@ internal class HelpCommand : ICommand
         return new CommandsOverviewInfo
         {
             ApplicationName = application.Name,
-            Commands = commandMetadataCollection.GetAllEnabled()
+            NamedCommands = commandMetadataCollection.GetEnabledNamed()
+                .Select(x => new CommandShortInfo(x))
+                .ToList(),
+            DefaultCommands = commandMetadataCollection.GetEnabledDefault()
                 .Select(x => new CommandShortInfo(x))
                 .ToList()
         };

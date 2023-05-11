@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
-
-public interface ICommandParser
+public abstract class ViewBase<TCommand> : EnhancedConsole, IView<TCommand>
+    where TCommand : ICommand
 {
-    CommandRequest Parse(string[] args);
+    public abstract void Display(TCommand command);
 }

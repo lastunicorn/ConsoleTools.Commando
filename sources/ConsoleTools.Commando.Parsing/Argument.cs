@@ -16,8 +16,9 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
-internal class ChunkAnalysis
+internal class Argument
 {
+
     private readonly string value;
 
     //private int nameStartIndex;
@@ -31,11 +32,19 @@ internal class ChunkAnalysis
 
     public string Value { get; set; }
 
+    public bool IsNamedArgument => Name != null;
+
+    public bool IsAnonymousArgument => Name == null;
+
     public bool HasName => Name != null;
 
     public bool HasValue => Value != null;
 
-    public ChunkAnalysis(string value)
+    public Argument()
+    {
+    }
+
+    public Argument(string value)
     {
         this.value = value;
 
@@ -117,4 +126,26 @@ internal class ChunkAnalysis
     //            index++;
     //    }
     //}
+
+    public override string ToString()
+    {
+        string argumentType = string.Empty;
+
+        if (IsNamedArgument)
+            argumentType += "Named";
+
+        if (IsAnonymousArgument)
+            argumentType += "Anonymous";
+
+        if (Name != null && Value != null)
+            return $"{Name} = {Value} []";
+
+        if (Name != null)
+            return $"{Name} [{argumentType}]";
+
+        if (Value != null)
+            return $"{Value} [{argumentType}]";
+
+        return $"null [{argumentType}]";
+    }
 }

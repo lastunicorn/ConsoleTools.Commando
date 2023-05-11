@@ -27,7 +27,8 @@ public class DummyView : ViewBase<DummyCommand>
             WriteValue("Integer Number", command.IntegerNumber);
             WriteValue("Real Number", command.RealNumber);
             WriteValue("Character", command.Character);
-            WriteValue("File Path", command.FilePath);
+            WriteValue("Param 1", command.Param1);
+            WriteValue("Param 2", command.Param2);
         });
     }
 }

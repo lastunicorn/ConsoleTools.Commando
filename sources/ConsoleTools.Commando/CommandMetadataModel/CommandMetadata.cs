@@ -85,21 +85,26 @@ public class CommandMetadata
 
     private string ComputeCommandName()
     {
-        if (commandAttribute != null && !string.IsNullOrEmpty(commandAttribute.CommandName))
-            return commandAttribute.CommandName;
+        if (commandAttribute is NamedCommandAttribute namedCommandAttribute)
+            return namedCommandAttribute.Name;
 
-        if (commandType.Name.EndsWith("Command"))
-            return commandType.Name[..^"Command".Length].ToLower();
+        return null;
 
-        return commandType.Name.ToLower();
+        //if (commandAttribute != null && !string.IsNullOrEmpty(commandAttribute.CommandName))
+        //    return commandAttribute.CommandName;
+
+        //if (commandType.Name.EndsWith("Command"))
+        //    return commandType.Name[..^"Command".Length].ToLower();
+
+        //return commandType.Name.ToLower();
     }
 
     private List<string> ComputeDescription()
     {
         List<string> lines = new();
 
-        if (commandAttribute != null && !string.IsNullOrEmpty(commandAttribute.ShortDescription))
-            lines.Add(commandAttribute.ShortDescription);
+        if (commandAttribute != null && !string.IsNullOrEmpty(commandAttribute.Description))
+            lines.Add(commandAttribute.Description);
 
         return lines;
     }
@@ -112,6 +117,6 @@ public class CommandMetadata
 
     public override string ToString()
     {
-        return Name ?? "param" + Order;
+        return Name ?? "anonymous command " + Order;
     }
 }

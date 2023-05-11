@@ -49,7 +49,7 @@ internal class CommandUsageControl
 
     private void DisplayDescription()
     {
-        Console.WriteLine();
+        CustomConsole.WriteLine();
         CustomConsole.WriteLine(ConsoleColor.DarkGray, Description);
     }
 
@@ -73,27 +73,35 @@ internal class CommandUsageControl
     private void DisplayOptions()
     {
         Console.WriteLine();
-        CustomConsole.WriteLineEmphasized("Options:");
+        CustomConsole.WriteLineEmphasized("Options (named arguments):");
 
         DataGrid dataGrid = new()
         {
-            Border = { IsVisible = false }
+            Border = { IsVisible = false },
+            MaxWidth = 80
         };
+
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            ForegroundColor = ConsoleColor.DarkGray
+        });
+
         foreach (CommandParameterInfo parameter in NamedParameters)
         {
             string fullName = "-" + parameter.Name;
-            string parameterShortName = "-" + parameter.ShortName;
-            string isOptional = parameter.IsOptional ? "(optional)" : string.Empty;
-            string type = SerializeValueDescription(parameter);
+            string shortName = "-" + parameter.ShortName;
+            string isOptional = parameter.IsOptional
+                ? "(optional)"
+                : string.Empty;
+            string type = parameter.ParameterType.ToUserFriendlyName();
             string description = parameter.Description;
 
-            dataGrid.Columns.Add(new Column());
-            dataGrid.Columns.Add(new Column());
-            dataGrid.Columns.Add(new Column());
-            dataGrid.Columns.Add(new Column());
-            dataGrid.Columns.Add(new Column { ForegroundColor = ConsoleColor.DarkGray });
-
-            dataGrid.Rows.Add(fullName, parameterShortName, isOptional, type, description);
+            dataGrid.Rows.Add(fullName, shortName, isOptional, type, description);
         }
         dataGrid.Display();
     }
@@ -101,51 +109,38 @@ internal class CommandUsageControl
     private void DisplayOperands()
     {
         Console.WriteLine();
-        CustomConsole.WriteLineEmphasized("Operands:");
+        CustomConsole.WriteLineEmphasized("Operands (anonymous arguments):");
 
         DataGrid dataGrid = new()
         {
             Border = { IsVisible = false }
         };
 
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            ForegroundColor = ConsoleColor.DarkGray
+        });
+
         foreach (CommandParameterInfo parameter in UnnamedParameters)
         {
             string index = parameter.Order == null
                 ? string.Empty
                 : parameter.Order.Value.ToString();
-            string fullName = parameter.DisplayName.Replace(' ', '-');
-            string parameterShortName = string.Empty;
+            string name = parameter.DisplayName.Replace(' ', '-');
             string isOptional = parameter.IsOptional
                 ? "(optional)"
                 : string.Empty;
-            string description = SerializeValueDescription(parameter);
+            string type = parameter.ParameterType.ToUserFriendlyName();
+            string description = parameter.Description;
 
-            dataGrid.Rows.Add(index, fullName, parameterShortName, isOptional, description);
+            dataGrid.Rows.Add(index, name, isOptional, type, description);
         }
 
         dataGrid.Display();
-    }
-
-    private static string SerializeValueDescription(CommandParameterInfo parameter)
-    {
-        if (parameter.ParameterType.IsText())
-            return "text";
-
-        if (parameter.ParameterType.IsNumber())
-            return "number";
-
-        if (parameter.ParameterType.IsListOfNumbers())
-            return "list-of-numbers";
-
-        if (parameter.ParameterType.IsListOfTexts())
-            return "list-of-texts";
-
-        if (parameter.ParameterType.IsBoolean())
-            return "flag";
-
-        if (parameter.ParameterType.IsCharacter())
-            return "character";
-
-        return parameter.ParameterType.Name;
     }
 }

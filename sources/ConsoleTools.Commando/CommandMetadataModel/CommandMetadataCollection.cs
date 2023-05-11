@@ -23,7 +23,7 @@ namespace DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 public class CommandMetadataCollection
 {
-    private readonly List<CommandMetadata> commandInfos = new();
+    private readonly List<CommandMetadata> commandsMetadata = new();
     private readonly List<Type> viewTypes = new();
 
     public void LoadFromCurrentAppDomain()
@@ -42,7 +42,7 @@ public class CommandMetadataCollection
             if (IsCommandType(type))
             {
                 CommandMetadata commandMetadata = new(type);
-                commandInfos.Add(commandMetadata);
+                commandsMetadata.Add(commandMetadata);
             }
 
             if (IsViewType(type))
@@ -52,13 +52,15 @@ public class CommandMetadataCollection
 
     public void Clear()
     {
-        commandInfos.Clear();
+        commandsMetadata.Clear();
         viewTypes.Clear();
     }
 
     private static bool IsCommandType(Type type)
     {
-        return type != typeof(ICommand) && typeof(ICommand).IsAssignableFrom(type);
+        return !type.IsAbstract &&
+               type != typeof(ICommand) &&
+               typeof(ICommand).IsAssignableFrom(type);
     }
 
     private static bool IsViewType(Type type)
@@ -85,7 +87,7 @@ public class CommandMetadataCollection
 
     public IEnumerable<Type> GetCommandTypes()
     {
-        return commandInfos
+        return commandsMetadata
             .Select(x => x.Type);
     }
 
@@ -120,28 +122,41 @@ public class CommandMetadataCollection
 
     public CommandMetadata GetByName(string commandName)
     {
-        return commandInfos
+        return commandsMetadata
             .Where(x => x.IsEnabled && x.Name == commandName)
             .MinBy(x => x.Order);
     }
 
-    public IEnumerable<CommandMetadata> GetAllEnabled()
+    public IEnumerable<CommandMetadata> GetEnabledNamed()
     {
-        return commandInfos
-            .Where(x => x.IsEnabled)
+        return commandsMetadata
+            .Where(x => x.IsEnabled && x.Name != null)
+            .OrderBy(x => x.Order)
+            .ThenBy(x => x.Name);
+    }
+
+    public IEnumerable<CommandMetadata> GetEnabledDefault()
+    {
+        return commandsMetadata
+            .Where(x => x.IsEnabled && x.Name == null)
             .OrderBy(x => x.Order)
             .ThenBy(x => x.Name);
     }
 
     public CommandMetadata GetHelpCommand()
     {
-        CommandMetadata commandMetadata = commandInfos
+        CommandMetadata commandMetadata = commandsMetadata
             .FirstOrDefault(x => x.IsHelpCommand);
 
         if (commandMetadata != null)
             return commandMetadata;
 
-        return commandInfos
+        return commandsMetadata
             .FirstOrDefault(x => string.Equals(x.Name, "help", StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    public IEnumerable<CommandMetadata> GetAnonymous()
+    {
+        return commandsMetadata.Where(x => x.IsEnabled && x.Name == null);
     }
 }

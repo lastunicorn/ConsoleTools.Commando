@@ -18,10 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-public abstract partial class ViewBase<TCommand>
-    where TCommand : ICommand
+public partial class EnhancedConsole
 {
     public void WriteTitle(string title)
     {

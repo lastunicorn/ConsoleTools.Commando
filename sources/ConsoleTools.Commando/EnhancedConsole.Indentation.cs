@@ -16,9 +16,9 @@
 
 using System;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-public partial class ViewBase<TCommand>
+public partial class EnhancedConsole
 {
     private int indentLevel;
 
