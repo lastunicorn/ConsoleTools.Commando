@@ -14,26 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.IO;
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Microsoft.Demo.Commands;
 
-[DefaultCommand(Order = 100, Description = "Default command to be executed when no command name is specified.")]
-public class DefaultCommand : CommandBase
+[NamedCommand("read", Description = "Display the content of a text file.")]
+public class ReadFileCommand : CommandBase
 {
-    [NamedParameter("text")]
-    public string Text { get; set; }
+    [AnonymousParameter(Order = 1, Description = "The path to the file that should be displayed.")]
+    public string FilePath { get; set; }
 
-    public DefaultCommand(EnhancedConsole enhancedConsole)
-        : base(enhancedConsole)
+    public ReadFileCommand(EnhancedConsole console)
+        : base(console)
     {
     }
 
     public override Task Execute()
     {
-        Console.WriteTitle("Default command");
-        Console.WriteValue("Text", Text);
-        
+        Console.WriteTitle("Reading a text file");
+        Console.WriteValue("File", FilePath);
+
+        string content = File.ReadAllText(FilePath);
+        Console.WriteValueBelowName("Content", content);
+
         return Task.CompletedTask;
     }
 }

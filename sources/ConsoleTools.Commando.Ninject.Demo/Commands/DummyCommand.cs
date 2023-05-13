@@ -16,7 +16,7 @@
 
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Ninject.Demo.Commands;
 
 [NamedCommand("dummy", Description = "A dummy command that shows how to create parameters of different types.")]
 public class DummyCommand : CommandBase

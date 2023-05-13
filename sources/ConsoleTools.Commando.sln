@@ -20,7 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Ninje
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Ninject.Demo", "ConsoleTools.Commando.Ninject.Demo\ConsoleTools.Commando.Ninject.Demo.csproj", "{1820A7C2-7E35-4E96-942A-8CC75B30E87C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Parsing", "ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj", "{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Parsing", "ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj", "{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Microsoft.DependencyInjection", "ConsoleTools.Commando.Microsoft.DependencyInjection\ConsoleTools.Commando.Microsoft.DependencyInjection.csproj", "{1C6D8A1E-4D7F-46E1-BFFD-B5A1E1FB98EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Microsoft.Demo", "ConsoleTools.Commando.Microsoft.Demo\ConsoleTools.Commando.Microsoft.Demo.csproj", "{231F7389-0E69-4923-96C6-A0D25D645B28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +60,14 @@ Global
 		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6D2CC8C-7BF8-4BA7-84CE-E877B188C45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C6D8A1E-4D7F-46E1-BFFD-B5A1E1FB98EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C6D8A1E-4D7F-46E1-BFFD-B5A1E1FB98EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C6D8A1E-4D7F-46E1-BFFD-B5A1E1FB98EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C6D8A1E-4D7F-46E1-BFFD-B5A1E1FB98EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{231F7389-0E69-4923-96C6-A0D25D645B28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{231F7389-0E69-4923-96C6-A0D25D645B28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{231F7389-0E69-4923-96C6-A0D25D645B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{231F7389-0E69-4923-96C6-A0D25D645B28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

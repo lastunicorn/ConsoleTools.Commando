@@ -4,6 +4,7 @@ ConsoleTools Commando
 v1.6.0
 ----------------------------------------------------------------------------------------------------
 - [syntax ] Allow '=' and ':' as name-value separators.
+- [syntax ] Used only '--' for parameter names.
 - [feature] Added a Ninject configuration helper package.
 - [feature] Added support for anonymous commands (command without a verb).
 - [feature] Added base classes for commands and views.

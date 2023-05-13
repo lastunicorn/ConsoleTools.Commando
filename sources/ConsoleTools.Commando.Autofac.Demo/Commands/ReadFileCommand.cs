@@ -17,7 +17,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo.Commands;
 
 [NamedCommand("read", Description = "Display the content of a text file.")]
 public class ReadFileCommand : CommandBase
@@ -36,7 +36,7 @@ public class ReadFileCommand : CommandBase
         Console.WriteValue("File", FilePath);
 
         string content = File.ReadAllText(FilePath);
-        Console.WriteValue("Content", content);
+        Console.WriteValueBelowName("Content", content);
 
         return Task.CompletedTask;
     }

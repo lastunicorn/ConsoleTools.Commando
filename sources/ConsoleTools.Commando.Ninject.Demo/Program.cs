@@ -17,7 +17,7 @@
 using System.Threading.Tasks;
 using Ninject;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Ninject.Demo;
 
 internal class Program
 {

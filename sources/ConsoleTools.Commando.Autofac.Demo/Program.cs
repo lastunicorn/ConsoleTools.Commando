@@ -17,7 +17,7 @@
 using System.Threading.Tasks;
 using Autofac;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo;
 
 internal class Program
 {

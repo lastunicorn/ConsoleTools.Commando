@@ -14,26 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Threading.Tasks;
+using System;
+using System.Reflection;
+using DustInTheWind.ConsoleTools.Commando.Microsoft.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Microsoft.Demo;
 
-[DefaultCommand(Order = 100, Description = "Default command to be executed when no command name is specified.")]
-public class DefaultCommand : CommandBase
+internal class Setup
 {
-    [NamedParameter("text")]
-    public string Text { get; set; }
-
-    public DefaultCommand(EnhancedConsole enhancedConsole)
-        : base(enhancedConsole)
+    public static IServiceProvider ConfigureServices()
     {
-    }
+        IServiceCollection serviceCollection = new ServiceCollection();
 
-    public override Task Execute()
-    {
-        Console.WriteTitle("Default command");
-        Console.WriteValue("Text", Text);
+        Assembly presentationAssembly = Assembly.GetExecutingAssembly();
+        serviceCollection.AddCommando(presentationAssembly);
         
-        return Task.CompletedTask;
+        return serviceCollection.BuildServiceProvider();
     }
 }

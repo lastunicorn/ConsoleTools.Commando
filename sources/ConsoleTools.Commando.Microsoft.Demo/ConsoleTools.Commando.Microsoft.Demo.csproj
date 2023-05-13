@@ -22,15 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>CommandoDemo</AssemblyName>
-        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Ninject.Demo</RootNamespace>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Microsoft.Demo</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ConsoleTools.Commando.Ninject.DependencyInjection\ConsoleTools.Commando.Ninject.DependencyInjection.csproj" />
+        <ProjectReference Include="..\ConsoleTools.Commando.Microsoft.DependencyInjection\ConsoleTools.Commando.Microsoft.DependencyInjection.csproj" />
     </ItemGroup>
 
 </Project>

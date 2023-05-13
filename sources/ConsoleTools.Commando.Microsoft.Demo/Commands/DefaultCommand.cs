@@ -16,7 +16,7 @@
 
 using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Microsoft.Demo.Commands;
 
 [DefaultCommand(Order = 100, Description = "Default command to be executed when no command name is specified.")]
 public class DefaultCommand : CommandBase

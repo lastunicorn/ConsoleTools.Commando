@@ -18,7 +18,7 @@ using System.Reflection;
 using Autofac;
 using DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo;
 
 internal class Setup
 {

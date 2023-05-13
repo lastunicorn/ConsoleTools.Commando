@@ -14,16 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace DustInTheWind.ConsoleTools.Commando.Microsoft.Demo.Commands;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.DependencyInjection;
-
-internal class TypeIsNotCommandException : Exception
+public class DummyView : ViewBase<DummyCommand>
 {
-    private const string DefaultMessage = "Type {0} does not represent command. A command must implement the {1} interface.";
-
-    public TypeIsNotCommandException(Type type)
-        : base(string.Format(DefaultMessage, type.FullName, typeof(ICommand).FullName))
+    public override void Display(DummyCommand command)
     {
+        WithIndentation("Same values after command finished execution:", () =>
+        {
+            WriteValue("Text", command.Text);
+            WriteValue("Flag", command.Flag);
+            WriteValue("Integer Number", command.IntegerNumber);
+            WriteValue("Real Number", command.RealNumber);
+            WriteValue("Character", command.Character);
+            WriteValue("Param 1", command.Param1);
+            WriteValue("Param 2", command.Param2);
+        });
     }
 }

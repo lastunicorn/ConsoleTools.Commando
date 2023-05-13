@@ -18,19 +18,9 @@ namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
 internal class Argument
 {
+    public string Name { get; init; }
 
-    private readonly string value;
-
-    //private int nameStartIndex;
-    //private int nameEndIndex;
-    //private int valueStartIndex;
-    //private int valueEndIndex;
-
-    //int index;
-
-    public string Name { get; set; }
-
-    public string Value { get; set; }
+    public string Value { get; init; }
 
     public bool IsNamedArgument => Name != null;
 
@@ -39,93 +29,6 @@ internal class Argument
     public bool HasName => Name != null;
 
     public bool HasValue => Value != null;
-
-    public Argument()
-    {
-    }
-
-    public Argument(string value)
-    {
-        this.value = value;
-
-        if (value == null)
-            return;
-
-        Parse();
-    }
-
-    private void Parse()
-    {
-        string trimmedValue = value.Trim();
-
-        if (trimmedValue.StartsWith("--"))
-        {
-            trimmedValue = trimmedValue[2..];
-            ExtractNameAndValue(trimmedValue);
-        }
-        else if (trimmedValue.StartsWith('-'))
-        {
-            trimmedValue = trimmedValue[1..];
-            ExtractNameAndValue(trimmedValue);
-        }
-        else if (trimmedValue.StartsWith('/'))
-        {
-            trimmedValue = trimmedValue[1..];
-            ExtractNameAndValue(trimmedValue);
-        }
-        else
-        {
-            Value = trimmedValue;
-        }
-    }
-
-    private void ExtractNameAndValue(string value)
-    {
-        int separatorIndex = value.IndexOf(':');
-
-        if (separatorIndex < 0)
-            separatorIndex = value.IndexOf('=');
-
-        if (separatorIndex >= 0)
-        {
-            Name = value[..separatorIndex];
-            Value = value[(separatorIndex + 1)..];
-        }
-        else
-        {
-            Name = value;
-        }
-    }
-
-    //public void Analyze()
-    //{
-    //    nameStartIndex = -1;
-    //    nameEndIndex = -1;
-    //    valueStartIndex = -1;
-    //    valueEndIndex = -1;
-
-    //    if (value == null)
-    //        return;
-
-    //    index = 0;
-
-    //    SkipWhiteSpaces();
-
-    //    if (index == value.Length)
-    //        return;
-    //}
-
-    //private void SkipWhiteSpaces()
-    //{
-    //    while (true)
-    //    {
-    //        if (index == value.Length)
-    //            return;
-
-    //        if (value[index] is ' ' or '\t')
-    //            index++;
-    //    }
-    //}
 
     public override string ToString()
     {

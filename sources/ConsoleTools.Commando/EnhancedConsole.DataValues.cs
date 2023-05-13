@@ -50,10 +50,22 @@ public partial class EnhancedConsole
             Console.Write(" ");
         }
 
-        if (value == null)
-            Console.WriteLine("<null>");
-        else
-            WriteLineWithColor(DataValueColor, value.ToString());
+        switch (value)
+        {
+            case null:
+                WriteNullValue();
+                Console.WriteLine();
+                break;
+
+            case string { Length: 0 }:
+                WriteEmptyValue();
+                Console.WriteLine();
+                break;
+
+            default:
+                WriteLineWithColor(DataValueColor, value.ToString());
+                break;
+        }
     }
 
     public void WriteValue(string name, byte[] bytes, BinaryDisplayFormat? format = null)
@@ -74,7 +86,8 @@ public partial class EnhancedConsole
 
         if (bytes == null)
         {
-            Console.WriteLine("<null>");
+            WriteNullValue();
+            Console.WriteLine();
         }
         else
         {
@@ -88,49 +101,49 @@ public partial class EnhancedConsole
         switch (displayBinaryFormat)
         {
             case BinaryDisplayFormat.Hexadecimal:
-            {
-                if (BinaryMaxLength is > 0)
                 {
-                    int maxLength = BinaryMaxLength.Value;
-
-                    IEnumerable<string> list = bytes
-                        .Take(maxLength)
-                        .Select(b => $"{b:x2}");
-
-                    string text = string.Join(" ", list);
-
-                    if (bytes.Length > maxLength)
+                    if (BinaryMaxLength is > 0)
                     {
-                        int remainedBytes = bytes.Length - maxLength;
-                        text = $"{text}... (+{remainedBytes} bytes)";
+                        int maxLength = BinaryMaxLength.Value;
+
+                        IEnumerable<string> list = bytes
+                            .Take(maxLength)
+                            .Select(b => $"{b:x2}");
+
+                        string text = string.Join(" ", list);
+
+                        if (bytes.Length > maxLength)
+                        {
+                            int remainedBytes = bytes.Length - maxLength;
+                            text = $"{text}... (+{remainedBytes} bytes)";
+                        }
+
+                        return text;
+                    }
+                    else
+                    {
+                        IEnumerable<string> list = bytes.Select(b => $"{b:x2}");
+                        return string.Join(" ", list);
+                    }
+                }
+
+            case BinaryDisplayFormat.Base64:
+                {
+                    string text = Convert.ToBase64String(bytes);
+
+                    if (BinaryMaxLength is > 0)
+                    {
+                        int maxLength = BinaryMaxLength.Value;
+
+                        if (text.Length > maxLength)
+                        {
+                            int remainedLength = text.Length - maxLength;
+                            text = text[..maxLength] + "... (+" + remainedLength + " chars)";
+                        }
                     }
 
                     return text;
                 }
-                else
-                {
-                    IEnumerable<string> list = bytes.Select(b => $"{b:x2}");
-                    return string.Join(" ", list);
-                }
-            }
-
-            case BinaryDisplayFormat.Base64:
-            {
-                string text = Convert.ToBase64String(bytes);
-
-                if (BinaryMaxLength is > 0)
-                {
-                    int maxLength = BinaryMaxLength.Value;
-
-                    if (text.Length > maxLength)
-                    {
-                        int remainedLength = text.Length - maxLength;
-                        text = text[..maxLength] + "... (+" + remainedLength + " chars)";
-                    }
-                }
-
-                return text;
-            }
 
             default:
                 throw new ArgumentOutOfRangeException();
@@ -142,9 +155,31 @@ public partial class EnhancedConsole
         DisplayIndentation();
         WriteLineWithColor(DataKeyColor, name + ":");
 
-        if (value == null)
-            Console.WriteLine("<null>");
-        else
-            WriteLineWithColor(DataValueColor, value.ToString());
+        switch (value)
+        {
+            case null:
+                WriteNullValue();
+                Console.WriteLine();
+                break;
+
+            case string { Length: 0 }:
+                WriteEmptyValue();
+                Console.WriteLine();
+                break;
+
+            default:
+                WriteLineWithColor(DataValueColor, value.ToString());
+                break;
+        }
+    }
+
+    private void WriteNullValue()
+    {
+        WriteWithColor(NullOrEmptyColor, "<null>");
+    }
+
+    private void WriteEmptyValue()
+    {
+        WriteWithColor(NullOrEmptyColor, "<empty>");
     }
 }

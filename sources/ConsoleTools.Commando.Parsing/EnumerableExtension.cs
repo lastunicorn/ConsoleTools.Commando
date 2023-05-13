@@ -14,26 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 
-namespace DustInTheWind.ConsoleTools.Commando.Autofac.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
-[DefaultCommand(Order = 100, Description = "Default command to be executed when no command name is specified.")]
-public class DefaultCommand : CommandBase
+internal static class EnumerableExtension
 {
-    [NamedParameter("text")]
-    public string Text { get; set; }
-
-    public DefaultCommand(EnhancedConsole enhancedConsole)
-        : base(enhancedConsole)
+    public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, bool> action)
     {
-    }
+        if (collection == null)
+            return;
 
-    public override Task Execute()
-    {
-        Console.WriteTitle("Default command");
-        Console.WriteValue("Text", Text);
-        
-        return Task.CompletedTask;
+        int index = -1;
+        T previousItem = default;
+
+        foreach (T item in collection)
+        {
+            index++;
+
+            if (index > 0)
+            {
+                int previousIndex = index - 1;
+                action(previousItem, previousIndex, false);
+            }
+
+            previousItem = item;
+        }
+
+        if (index > 0)
+            action(previousItem, index, true);
     }
 }

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>CommandoDemo</AssemblyName>
-        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Demo</RootNamespace>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Autofac.Demo</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

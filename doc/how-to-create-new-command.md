@@ -36,8 +36,5 @@ Other optional parameters may be provided:
 
 - **order**
 
-1. sfsfd
+## 3) Add Parameters
 
-2. sdf
-
-3. dsf

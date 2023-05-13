@@ -1,6 +1,21 @@
 # How to use?
 
-## Using Autofac
+1. Setup Commando.
+2. Create your commands (`ICommand` classes).
+
+## 1) Setup Commando
+
+### Basic
+
+Commando is provided as a nuget package:
+
+- `DustInTheWind.ConsoleTools.Commando`
+
+Manually setting up Commando is moderately difficult. It involves around 10 or so classes that need to be registered into the dependency container of your choice. More details can be found in the [How to Create a Setup Component](how-to-create-setup-component.md) tutorial.
+
+So, don't do it yourself; use one of the already existing Setup components that use Autofac or Ninject.
+
+### With Autofac
 
 1. Include `ConsoleTools.Commando.Autofac.DependencyInjection` nuget package.
 
@@ -27,7 +42,7 @@
    await application.Run(args);
    ```
 
-## Using Ninject
+### With Ninject
 
 1. Include `ConsoleTools.Commando.Ninject.DependencyInjection` nuget package.
 

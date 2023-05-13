@@ -55,9 +55,9 @@ internal class Arguments : IEnumerable<Argument>
     {
         Argument previousArgument = null;
 
-        IEnumerable<Argument> parsedArguments = args.Select(x => new Argument(x));
+        IEnumerable<Argument> arguments = ExtractArguments(args);
 
-        foreach (Argument argument in parsedArguments)
+        foreach (Argument argument in arguments)
         {
             if (argument.HasName)
             {
@@ -73,9 +73,12 @@ internal class Arguments : IEnumerable<Argument>
             {
                 if (previousArgument != null)
                 {
-                    previousArgument.Value = argument.Value;
+                    yield return new Argument
+                    {
+                        Name = previousArgument.Name,
+                        Value = argument.Value
+                    };
 
-                    yield return previousArgument;
                     previousArgument = null;
                 }
                 else
@@ -87,6 +90,20 @@ internal class Arguments : IEnumerable<Argument>
 
         if (previousArgument != null)
             yield return previousArgument;
+    }
+
+    private static IEnumerable<Argument> ExtractArguments(IEnumerable<string> args)
+    {
+        foreach (string arg in args)
+        {
+            ChunkAnalysis chunkAnalysis = new(arg);
+            chunkAnalysis.Analyze();
+
+            foreach (Argument argument in chunkAnalysis)
+            {
+                yield return argument;
+            }
+        }
     }
 
     public IEnumerator<Argument> GetEnumerator()

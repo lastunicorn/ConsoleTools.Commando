@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Ninject.Demo.Commands;
 
 public class DummyView : ViewBase<DummyCommand>
 {

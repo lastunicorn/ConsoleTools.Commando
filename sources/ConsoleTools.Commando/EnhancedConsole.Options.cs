@@ -33,6 +33,8 @@ public partial class EnhancedConsole
     public ConsoleColor DataKeyColor { get; set; } = ConsoleColor.White;
 
     public ConsoleColor DataValueColor { get; set; } = ConsoleColor.DarkGray;
+    
+    public ConsoleColor NullOrEmptyColor { get; set; } = ConsoleColor.DarkMagenta;
 
     public int? BinaryMaxLength { get; set; }
 

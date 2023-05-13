@@ -18,7 +18,7 @@ using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.Ninject.DependencyInjection;
 using Ninject;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Ninject.Demo;
 
 internal class Setup
 {
