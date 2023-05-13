@@ -1,32 +1,49 @@
 # Console Tools Commando
 
-It is a presentation layer framework using MVVM that helps to implement a CLI (command line interface).
+This is an MVVM presentation layer framework that helps you to create a CLI (command line interface).
 
 ## How to use (with Autofac)
 
-1. Include `ConsoleTools.Commando.Autofac.DependencyInjection` nuget package.
+1. Include the nuget package:
 
-   It will automatically include the `ConsoleTools.Commando` package.
+   - `ConsoleTools.Commando.DependencyInjection.Autofac`
 
-2. Register `Commando` into `Autofac`.
-
-   ```csharp
-   Assembly presentationAssembly = typeof(SomeCommand).Assembly;
-   containerBuilder.RegisterCommando(presentationAssembly);
-   ```
-
-   The `RegisterCommando(...)` method needs as parameters the assemblies where your commands are located. 
-
-3. Instantiate the `Application`.
-   ```csharp
-   Application application = container.Resolve<Application>();
-   ```
-
-4. Run the application.
+2. Build and run the `CommandoHost`.
 
    ```csharp
-   await application.Run(args);
+   CommandoHost host = CommandoHost.CreateBuilder()
+       .RegisterCommandsFrom(typeof(DummyCommand).Assembly) // Provide here the assembly containing your commands.
+       .Build();
+   
+   await host.RunAsync(args);
    ```
+
+3. Create your commands.
+
+   ```c#
+   [NamedCommand("read", Description = "Display the content of a text file.")]
+   internal class ReadCommand : ICommand
+   {
+       [NamedParameter("file", ShortName = 'f', Description = "The full path of the file.")]
+       public string FilePath { get; set; }
+       
+   	public Task Execute()
+   	{
+   		...
+   	}
+   }
+   ```
+
+
+> **Notes**
+>
+> 1. The `ConsoleTools.Commando.DependencyInjection.Autofac` package will automatically include:
+>
+>    - `Autofac`
+>
+>    - `ConsoleTools.Commando`
+>
+> 2. The `CommandoHost` approach is available only from version 2.0.0. For the older versions, please see the dependency injection demo projects from the repository.
 
 ## Discussions and Suggestions
 

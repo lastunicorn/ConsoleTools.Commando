@@ -14,35 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
+namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac.Demo.Commands;
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
-
-internal static class EnumerableExtension
+public class DummyView : ViewBase<DummyCommand>
 {
-    public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, bool> action)
+    public override void Display(DummyCommand command)
     {
-        if (collection == null)
-            return;
-
-        int index = -1;
-        T previousItem = default;
-
-        foreach (T item in collection)
+        WithIndentation("Same values after command finished execution:", () =>
         {
-            index++;
-
-            if (index > 0)
-            {
-                int previousIndex = index - 1;
-                action(previousItem, previousIndex, false);
-            }
-
-            previousItem = item;
-        }
-
-        if (index >= 0)
-            action(previousItem, index, true);
+            WriteValue("Text", command.Text);
+            WriteValue("Flag", command.Flag);
+            WriteValue("Integer Number", command.IntegerNumber);
+            WriteValue("Real Number", command.RealNumber);
+            WriteValue("Character", command.Character);
+            WriteValue("Param 1", command.Param1);
+            WriteValue("Param 2", command.Param2);
+        });
     }
 }

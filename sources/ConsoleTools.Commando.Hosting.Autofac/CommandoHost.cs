@@ -15,34 +15,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Autofac;
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac;
 
-internal static class EnumerableExtension
+public class CommandoHost
 {
-    public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, bool> action)
+    private readonly IContainer container;
+
+    internal CommandoHost(IContainer container)
     {
-        if (collection == null)
-            return;
+        this.container = container ?? throw new ArgumentNullException(nameof(container));
+    }
 
-        int index = -1;
-        T previousItem = default;
+    public static CommandoBuilder CreateBuilder()
+    {
+        return new CommandoBuilder();
+    }
 
-        foreach (T item in collection)
-        {
-            index++;
+    public async Task RunAsync(string[] args)
+    {
+        await using ILifetimeScope lifetimeScope = container.BeginLifetimeScope();
 
-            if (index > 0)
-            {
-                int previousIndex = index - 1;
-                action(previousItem, previousIndex, false);
-            }
-
-            previousItem = item;
-        }
-
-        if (index >= 0)
-            action(previousItem, index, true);
+        Application application = lifetimeScope.Resolve<Application>();
+        await application.Run(args);
     }
 }

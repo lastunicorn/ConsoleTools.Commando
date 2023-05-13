@@ -1,7 +1,7 @@
 ConsoleTools Commando
 ====================================================================================================
 
-v1.6.0
+v2.0.0
 ----------------------------------------------------------------------------------------------------
 - [syntax ] Allow '=' and ':' as name-value separators.
 - [syntax ] Used only '--' for parameter names.
@@ -10,6 +10,7 @@ v1.6.0
 - [feature] Added base classes for commands and views.
 - [feature] Changed the attributes for commands and parameters.
 - [feature] Extracted the parsing logic into a different package.
+- [feature] Added support for parameter of type Encoding.
 
 v1.5.0
 ----------------------------------------------------------------------------------------------------

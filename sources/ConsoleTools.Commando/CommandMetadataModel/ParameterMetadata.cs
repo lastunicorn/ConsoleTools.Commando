@@ -112,6 +112,19 @@ public class ParameterMetadata
         //    return typeConverter2.ConvertFrom(list);
         //}
 
+        if (propertyInfo.PropertyType == typeof(Encoding))
+        {
+            try
+            {
+                return Encoding.GetEncoding(value);
+            }
+            catch (Exception ex)
+            {
+                string parameterDisplayName = Name ?? DisplayName;
+                throw new InvalidParameterValueException(parameterDisplayName, value, ex);
+            }
+        }
+
         TypeConverter typeConverter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
 
         try

@@ -28,7 +28,7 @@ To handle the request as stated previously, the following internal components an
 
 The purpose of a Command Parser is to understand the syntax used by the user, parse the provided text and extract all important values, which are then stored in the Command Request Model objects.
 
-#### Data
+#### Input Data
 
 - the command text (arguments) provided by the user in the console.
 - it is obtained from .NET as an array of strings: `private static Main(string[] args)`
@@ -36,6 +36,10 @@ The purpose of a Command Parser is to understand the syntax used by the user, pa
 #### Execution
 
 - Uses a `ICommandParser` implementation to transform the arguments into a `CommandRequest` object (part of the Command Request Model).
+
+#### Result
+
+- A `CommandRequest` object containing a list of name-value pairs.
 
 ### 2) Command Request Model
 
@@ -61,7 +65,7 @@ The Command Request Model contains the following important properties:
 
 It is responsible for instantiating and executing the appropriate `ICommand` object.
 
-#### Data
+#### Input Data
 
 For its job, the router needs two types of data:
 
@@ -83,6 +87,10 @@ What the Command Router remains to do is:
    - **populate command parameters** -  This is done based on the metadata with values from the text command.
 
 3. **execute command**
+
+#### Result
+
+- A `ICommand` instance which is immediately executed.
 
 ### 4) Command Metadata Model
 
@@ -122,16 +130,6 @@ public class DummyCommand : ICommand
 }
 ```
 
-A Command must implement the `ICommand` interface.
+For more details about the command:
 
-The `Command` attribute is optional and may provide additional information and constraints about the command:
-
-- Command Name
-  - Case insensitive.
-  - If provided, the command will be executed only if the verb from the generic model matches this value.
-- Short Description
-  - This value is displayed by the help command.
-
-More details about the command can be found here:
-
-- TBD
+- [How to Create a New Command](how-to-create-new-command.md)

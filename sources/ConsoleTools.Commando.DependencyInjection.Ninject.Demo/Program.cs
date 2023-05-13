@@ -14,35 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Ninject;
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.DependencyInjection.Ninject.Demo;
 
-internal static class EnumerableExtension
+internal class Program
 {
-    public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, bool> action)
+    private static async Task Main(string[] args)
     {
-        if (collection == null)
-            return;
+        IKernel container = Setup.ConfigureServices();
 
-        int index = -1;
-        T previousItem = default;
-
-        foreach (T item in collection)
-        {
-            index++;
-
-            if (index > 0)
-            {
-                int previousIndex = index - 1;
-                action(previousItem, previousIndex, false);
-            }
-
-            previousItem = item;
-        }
-
-        if (index >= 0)
-            action(previousItem, index, true);
+        Application application = container.Get<Application>();
+        await application.Run(args);
     }
 }

@@ -25,15 +25,22 @@ public class CommandMetadataCollection
 {
     private readonly List<CommandMetadata> commandsMetadata = new();
     private readonly List<Type> viewTypes = new();
+    private bool isFrozen;
 
     public void LoadFromCurrentAppDomain()
     {
+        if (isFrozen)
+            throw new InvalidOperationException();
+
         Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
         LoadFrom(assemblies);
     }
 
     public void LoadFrom(params Assembly[] assemblies)
     {
+        if (isFrozen)
+            throw new InvalidOperationException();
+
         IEnumerable<Type> allTypes = assemblies
             .SelectMany(x => x.GetTypes());
 
@@ -52,6 +59,9 @@ public class CommandMetadataCollection
 
     public void Clear()
     {
+        if (isFrozen)
+            throw new InvalidOperationException();
+
         commandsMetadata.Clear();
         viewTypes.Clear();
     }
@@ -93,7 +103,7 @@ public class CommandMetadataCollection
 
     public IEnumerable<Type> GetViewTypes()
     {
-        return viewTypes;
+        return viewTypes.AsReadOnly();
     }
 
     public IEnumerable<Type> GetViewTypesForCommand(Type commandType)
@@ -158,5 +168,10 @@ public class CommandMetadataCollection
     public IEnumerable<CommandMetadata> GetAnonymous()
     {
         return commandsMetadata.Where(x => x.IsEnabled && x.Name == null);
+    }
+
+    public void Freeze()
+    {
+        isFrozen = true;
     }
 }

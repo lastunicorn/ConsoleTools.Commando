@@ -1,4 +1,4 @@
-ConsoleTools Commando 1.6.0
+ConsoleTools Commando 2.0.0
 ====================================================================================================
 
 A presentation layer framework using MVVM that helps to implement a CLI (command line interface). 

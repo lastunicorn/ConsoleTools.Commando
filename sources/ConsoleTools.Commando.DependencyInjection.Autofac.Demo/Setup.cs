@@ -14,35 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
+using System.Reflection;
+using Autofac;
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.DependencyInjection.Autofac.Demo;
 
-internal static class EnumerableExtension
+internal class Setup
 {
-    public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, bool> action)
+    public static IContainer ConfigureServices()
     {
-        if (collection == null)
-            return;
+        ContainerBuilder containerBuilder = new();
 
-        int index = -1;
-        T previousItem = default;
+        Assembly presentationAssembly = Assembly.GetExecutingAssembly();
+        containerBuilder.RegisterCommando(presentationAssembly);
 
-        foreach (T item in collection)
-        {
-            index++;
-
-            if (index > 0)
-            {
-                int previousIndex = index - 1;
-                action(previousItem, previousIndex, false);
-            }
-
-            previousItem = item;
-        }
-
-        if (index >= 0)
-            action(previousItem, index, true);
+        return containerBuilder.Build();
     }
 }

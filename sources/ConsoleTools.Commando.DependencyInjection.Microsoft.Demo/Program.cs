@@ -15,34 +15,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace DustInTheWind.ConsoleTools.Commando.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.DependencyInjection.Microsoft.Demo;
 
-internal static class EnumerableExtension
+internal class Program
 {
-    public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, bool> action)
+    private static async Task Main(string[] args)
     {
-        if (collection == null)
-            return;
+        IServiceProvider serviceProvider = Setup.ConfigureServices();
 
-        int index = -1;
-        T previousItem = default;
+        using IServiceScope serviceScope = serviceProvider.CreateScope();
 
-        foreach (T item in collection)
-        {
-            index++;
-
-            if (index > 0)
-            {
-                int previousIndex = index - 1;
-                action(previousItem, previousIndex, false);
-            }
-
-            previousItem = item;
-        }
-
-        if (index >= 0)
-            action(previousItem, index, true);
+        Application application = serviceScope.ServiceProvider.GetService<Application>();
+        await application.Run(args);
     }
 }
