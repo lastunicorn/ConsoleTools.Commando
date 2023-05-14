@@ -14,26 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Threading.Tasks;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Microsoft.Demo.Commands;
 
-namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac.Demo.Commands;
-
-[DefaultCommand(Order = 100, Description = "Default command to be executed when no command name is specified.")]
-public class DefaultCommand : CommandBase
+public class DummyView : ViewBase<DummyCommand>
 {
-    [NamedParameter("text")]
-    public string Text { get; set; }
-
-    public DefaultCommand(EnhancedConsole enhancedConsole)
-        : base(enhancedConsole)
+    public override void Display(DummyCommand command)
     {
-    }
-
-    public override Task Execute()
-    {
-        Console.WriteTitle("Default command");
-        Console.WriteValue("Text", Text);
-        
-        return Task.CompletedTask;
+        WithIndentation("Same values after command finished execution:", () =>
+        {
+            WriteValue("Text", command.Text);
+            WriteValue("Flag", command.Flag);
+            WriteValue("Integer Number", command.IntegerNumber);
+            WriteValue("Real Number", command.RealNumber);
+            WriteValue("Character", command.Character);
+            WriteValue("Param 1", command.Param1);
+            WriteValue("Param 2", command.Param2);
+        });
     }
 }

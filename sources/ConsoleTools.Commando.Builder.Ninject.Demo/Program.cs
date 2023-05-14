@@ -14,21 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using DustInTheWind.ConsoleTools.Commando.Builder.Ninject.Demo.Commands;
 
-namespace DustInTheWind.ConsoleTools.Commando.DependencyInjection.Microsoft.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Ninject.Demo;
 
 internal class Program
 {
-    private static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        IServiceProvider serviceProvider = Setup.ConfigureServices();
+        Application application = ApplicationBuilder.Create()
+            .RegisterCommandsFrom(typeof(DummyCommand).Assembly)
+            .Build();
 
-        using IServiceScope serviceScope = serviceProvider.CreateScope();
-
-        Application application = serviceScope.ServiceProvider.GetService<Application>();
         await application.RunAsync(args);
     }
 }

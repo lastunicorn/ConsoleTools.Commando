@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Microsoft.Demo.Commands;
 
 [NamedCommand("read", Description = "Display the content of a text file.")]
 public class ReadFileCommand : CommandBase

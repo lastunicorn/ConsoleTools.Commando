@@ -28,6 +28,6 @@ internal class Program
         await using ILifetimeScope lifetimeScope = container.BeginLifetimeScope();
 
         Application application = lifetimeScope.Resolve<Application>();
-        await application.Run(args);
+        await application.RunAsync(args);
     }
 }

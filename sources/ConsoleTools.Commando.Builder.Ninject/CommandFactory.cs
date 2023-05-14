@@ -14,18 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Threading.Tasks;
 using Ninject;
 
-namespace DustInTheWind.ConsoleTools.Commando.DependencyInjection.Ninject.Demo;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Ninject;
 
-internal class Program
+internal class CommandFactory : ICommandFactory
 {
-    private static async Task Main(string[] args)
-    {
-        IKernel container = Setup.ConfigureServices();
+    private readonly IKernel context;
 
-        Application application = container.Get<Application>();
-        await application.RunAsync(args);
+    public CommandFactory(IKernel context)
+    {
+        this.context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public ICommand Create(Type commandType)
+    {
+        if (commandType == null) throw new ArgumentNullException(nameof(commandType));
+
+        bool isCommandType = typeof(ICommand).IsAssignableFrom(commandType);
+        if (!isCommandType)
+            throw new TypeIsNotCommandException(commandType);
+
+        return (ICommand)context.Get(commandType);
+    }
+
+    public object CreateView(Type viewType)
+    {
+        return context.Get(viewType);
     }
 }

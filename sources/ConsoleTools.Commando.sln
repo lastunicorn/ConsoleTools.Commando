@@ -26,13 +26,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Depen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.DependencyInjection.Microsoft.Demo", "ConsoleTools.Commando.DependencyInjection.Microsoft.Demo\ConsoleTools.Commando.DependencyInjection.Microsoft.Demo.csproj", "{231F7389-0E69-4923-96C6-A0D25D645B28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Hosting.Autofac", "ConsoleTools.Commando.Hosting.Autofac\ConsoleTools.Commando.Hosting.Autofac.csproj", "{B80AC8B5-3C01-4C79-A860-6D87D606F837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Builder.Autofac", "ConsoleTools.Commando.Builder.Autofac\ConsoleTools.Commando.Builder.Autofac.csproj", "{B80AC8B5-3C01-4C79-A860-6D87D606F837}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Hosting.Autofac.Demo", "ConsoleTools.Commando.Hosting.Autofac.Demo\ConsoleTools.Commando.Hosting.Autofac.Demo.csproj", "{7E9B6F83-0E9C-45B8-B5CE-267DDB35D6DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Builder.Autofac.Demo", "ConsoleTools.Commando.Builder.Autofac.Demo\ConsoleTools.Commando.Builder.Autofac.Demo.csproj", "{7E9B6F83-0E9C-45B8-B5CE-267DDB35D6DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DependencyInjection", "DependencyInjection", "{20B812CD-8CB1-4B8C-AA09-569795A8D0D7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosting", "Hosting", "{AE618F72-0B85-4E6B-A726-6CDD9C568F42}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builders", "Builders", "{AE618F72-0B85-4E6B-A726-6CDD9C568F42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Builder.Microsoft", "ConsoleTools.Commando.Builder.Microsoft\ConsoleTools.Commando.Builder.Microsoft.csproj", "{84B6C734-B2B2-443D-A143-EE5386F26E2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Builder.Microsoft.Demo", "ConsoleTools.Commando.Builder.Microsoft.Demo\ConsoleTools.Commando.Builder.Microsoft.Demo.csproj", "{092C53D2-EFE2-419C-ADFF-E04B7195650C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Builder.Ninject", "ConsoleTools.Commando.Builder.Ninject\ConsoleTools.Commando.Builder.Ninject.csproj", "{36805832-3C4C-4650-BF3B-06A7751C378D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools.Commando.Builder.Ninject.Demo", "ConsoleTools.Commando.Builder.Ninject.Demo\ConsoleTools.Commando.Builder.Ninject.Demo.csproj", "{2321988A-F229-4AF3-932C-5B2CF9CB4D95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +92,22 @@ Global
 		{7E9B6F83-0E9C-45B8-B5CE-267DDB35D6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E9B6F83-0E9C-45B8-B5CE-267DDB35D6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E9B6F83-0E9C-45B8-B5CE-267DDB35D6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B6C734-B2B2-443D-A143-EE5386F26E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B6C734-B2B2-443D-A143-EE5386F26E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B6C734-B2B2-443D-A143-EE5386F26E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B6C734-B2B2-443D-A143-EE5386F26E2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{092C53D2-EFE2-419C-ADFF-E04B7195650C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092C53D2-EFE2-419C-ADFF-E04B7195650C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092C53D2-EFE2-419C-ADFF-E04B7195650C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092C53D2-EFE2-419C-ADFF-E04B7195650C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36805832-3C4C-4650-BF3B-06A7751C378D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36805832-3C4C-4650-BF3B-06A7751C378D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36805832-3C4C-4650-BF3B-06A7751C378D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36805832-3C4C-4650-BF3B-06A7751C378D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2321988A-F229-4AF3-932C-5B2CF9CB4D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2321988A-F229-4AF3-932C-5B2CF9CB4D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2321988A-F229-4AF3-932C-5B2CF9CB4D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2321988A-F229-4AF3-932C-5B2CF9CB4D95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +121,10 @@ Global
 		{231F7389-0E69-4923-96C6-A0D25D645B28} = {20B812CD-8CB1-4B8C-AA09-569795A8D0D7}
 		{B80AC8B5-3C01-4C79-A860-6D87D606F837} = {AE618F72-0B85-4E6B-A726-6CDD9C568F42}
 		{7E9B6F83-0E9C-45B8-B5CE-267DDB35D6DD} = {AE618F72-0B85-4E6B-A726-6CDD9C568F42}
+		{84B6C734-B2B2-443D-A143-EE5386F26E2C} = {AE618F72-0B85-4E6B-A726-6CDD9C568F42}
+		{092C53D2-EFE2-419C-ADFF-E04B7195650C} = {AE618F72-0B85-4E6B-A726-6CDD9C568F42}
+		{36805832-3C4C-4650-BF3B-06A7751C378D} = {AE618F72-0B85-4E6B-A726-6CDD9C568F42}
+		{2321988A-F229-4AF3-932C-5B2CF9CB4D95} = {AE618F72-0B85-4E6B-A726-6CDD9C568F42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9803FBD9-69B8-40CC-A218-90C1128A1133}

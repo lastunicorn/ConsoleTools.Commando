@@ -58,8 +58,8 @@ public class Application
                 CustomConsole.WriteLine(ConsoleColor.DarkYellow, $"Unknown argument: {unusedArgument}");
         }
     }
-
-    public async Task Run(string[] args)
+    
+    public async Task RunAsync(string[] args)
     {
         try
         {

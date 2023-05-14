@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 ConsoleTools.Commando
 Copyright (C) 2022-2023 Dust in the Wind
 
@@ -20,21 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <AssemblyName>DustInTheWind.ConsoleTools.Commando.DependencyInjection.Autofac</AssemblyName>
-        <RootNamespace>DustInTheWind.ConsoleTools.Commando.DependencyInjection.Autofac</RootNamespace>
+        <AssemblyName>DustInTheWind.ConsoleTools.Commando.Builder.Autofac</AssemblyName>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Builder.Autofac</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageId>ConsoleTools.Commando.DependencyInjection.Autofac</PackageId>
+        <PackageId>ConsoleTools.Commando.Builder.Autofac</PackageId>
         <IncludeReferencedProjects>true</IncludeReferencedProjects>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Autofac" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj" />
-      <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" />
+        <ProjectReference Include="..\ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj" />
+        <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" />
     </ItemGroup>
 
 </Project>

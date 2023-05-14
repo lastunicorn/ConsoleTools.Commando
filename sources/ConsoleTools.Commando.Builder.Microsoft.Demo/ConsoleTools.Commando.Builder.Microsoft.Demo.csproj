@@ -22,15 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>CommandoDemo</AssemblyName>
-        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Hosting.Autofac.Demo</RootNamespace>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Builder.Microsoft.Demo</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ConsoleTools.Commando.Hosting.Autofac\ConsoleTools.Commando.Hosting.Autofac.csproj" />
+        <ProjectReference Include="..\ConsoleTools.Commando.Builder.Microsoft\ConsoleTools.Commando.Builder.Microsoft.csproj" />
     </ItemGroup>
 
 </Project>

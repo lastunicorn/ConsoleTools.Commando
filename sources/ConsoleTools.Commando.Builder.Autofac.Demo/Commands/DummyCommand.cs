@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Threading.Tasks;
-
-namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac.Demo.Commands;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Autofac.Demo.Commands;
 
 [NamedCommand("dummy", Description = "A dummy command that shows how to create parameters of different types.")]
 public class DummyCommand : CommandBase

@@ -14,41 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Autofac;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
+using Ninject;
 
-namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Ninject;
 
-public class CommandoBuilder
+public class ApplicationBuilder
 {
-    private readonly ContainerBuilder containerBuilder;
+    private readonly IKernel kernel;
     private readonly CommandMetadataCollection commandMetadataCollection;
     private bool isCommandParserConfigured;
 
-    public CommandoBuilder()
+    private ApplicationBuilder()
     {
-        containerBuilder = new ContainerBuilder();
+        kernel = new StandardKernel();
         commandMetadataCollection = new CommandMetadataCollection();
 
         ConfigureDefaultServices();
         LoadDefaultCommands();
     }
 
+    public static ApplicationBuilder Create()
+    {
+        return new ApplicationBuilder();
+    }
+
     private void ConfigureDefaultServices()
     {
-        containerBuilder.RegisterType<EnhancedConsole>().AsSelf();
-
-        containerBuilder.RegisterType<CommandRouter>().AsSelf();
-        containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
-
-        containerBuilder.RegisterInstance(commandMetadataCollection).AsSelf().SingleInstance();
-
-        containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();
+        kernel.Bind<ICommandFactory>().To<CommandFactory>();
+        kernel.Bind<CommandMetadataCollection>().ToConstant(commandMetadataCollection).InSingletonScope();
+        kernel.Bind<Application>().ToSelf().InSingletonScope();
     }
 
     private void LoadDefaultCommands()
@@ -57,7 +54,7 @@ public class CommandoBuilder
         commandMetadataCollection.LoadFrom(defaultCommandsAssembly);
     }
 
-    public CommandoBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
+    public ApplicationBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
     {
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
@@ -67,7 +64,7 @@ public class CommandoBuilder
         return this;
     }
 
-    public CommandoBuilder RegisterCommandsFrom(Func<IEnumerable<Assembly>> assemblyProvider)
+    public ApplicationBuilder RegisterCommandsFrom(Func<IEnumerable<Assembly>> assemblyProvider)
     {
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
@@ -77,14 +74,14 @@ public class CommandoBuilder
         return this;
     }
 
-    public CommandoBuilder RegisterCommandsFrom(params Assembly[] assemblies)
+    public ApplicationBuilder RegisterCommandsFrom(params Assembly[] assemblies)
     {
         commandMetadataCollection.LoadFrom(assemblies);
 
         return this;
     }
 
-    public CommandoBuilder UseCommandParser(Type commandParserType)
+    public ApplicationBuilder UseCommandParser(Type commandParserType)
     {
         if (commandParserType == null) throw new ArgumentNullException(nameof(commandParserType));
 
@@ -99,34 +96,39 @@ public class CommandoBuilder
             throw new ArgumentException(message, nameof(commandParserType));
         }
 
-        containerBuilder.RegisterType(commandParserType).As<ICommandParser>();
+        kernel.Bind<ICommandParser>().To(commandParserType);
 
         isCommandParserConfigured = true;
 
         return this;
     }
 
-    public CommandoBuilder ConfigureServices(Action<ContainerBuilder> action)
+    public ApplicationBuilder ConfigureServices(Action<IKernel> action)
     {
-        action(containerBuilder);
+        action(kernel);
 
         return this;
     }
 
-    public CommandoHost Build()
+    public Application Build()
+    {
+        IKernel container = FinalizeContainerSetup();
+        return container.Get<Application>();
+    }
+
+    private IKernel FinalizeContainerSetup()
     {
         if (!isCommandParserConfigured)
-            containerBuilder.RegisterType<CommandParser>().As<ICommandParser>();
+            kernel.Bind<ICommandParser>().To<CommandParser>();
 
         commandMetadataCollection.Freeze();
 
         foreach (Type type in commandMetadataCollection.GetCommandTypes())
-            containerBuilder.RegisterType(type).AsSelf();
+            kernel.Bind(type).ToSelf();
 
         foreach (Type type in commandMetadataCollection.GetViewTypes())
-            containerBuilder.RegisterType(type).AsSelf();
+            kernel.Bind(type).ToSelf();
 
-        IContainer container = containerBuilder.Build();
-        return new CommandoHost(container);
+        return kernel;
     }
 }

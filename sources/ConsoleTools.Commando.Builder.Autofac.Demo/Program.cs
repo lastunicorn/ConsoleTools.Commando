@@ -14,21 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac.Demo.Commands;
+using DustInTheWind.ConsoleTools.Commando.Builder.Autofac.Demo.Commands;
 
-public class DummyView : ViewBase<DummyCommand>
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Autofac.Demo;
+
+internal class Program
 {
-    public override void Display(DummyCommand command)
+    public static async Task Main(string[] args)
     {
-        WithIndentation("Same values after command finished execution:", () =>
-        {
-            WriteValue("Text", command.Text);
-            WriteValue("Flag", command.Flag);
-            WriteValue("Integer Number", command.IntegerNumber);
-            WriteValue("Real Number", command.RealNumber);
-            WriteValue("Character", command.Character);
-            WriteValue("Param 1", command.Param1);
-            WriteValue("Param 2", command.Param2);
-        });
+        Application application = ApplicationBuilder.Create()
+            .RegisterCommandsFrom(typeof(DummyCommand).Assembly)
+            .Build();
+
+        await application.RunAsync(args);
     }
 }

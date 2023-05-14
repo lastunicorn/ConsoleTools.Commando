@@ -19,21 +19,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <AssemblyName>DustInTheWind.ConsoleTools.Commando.Hosting.Autofac</AssemblyName>
-        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Hosting.Autofac</RootNamespace>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageId>ConsoleTools.Commando.Hosting.Autofac</PackageId>
-        <IncludeReferencedProjects>true</IncludeReferencedProjects>
+        <AssemblyName>CommandoDemo</AssemblyName>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Builder.Ninject.Demo</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ConsoleTools.Commando.Parsing\ConsoleTools.Commando.Parsing.csproj" />
-        <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" />
+        <ProjectReference Include="..\ConsoleTools.Commando.Builder.Ninject\ConsoleTools.Commando.Builder.Ninject.csproj" />
     </ItemGroup>
 
 </Project>

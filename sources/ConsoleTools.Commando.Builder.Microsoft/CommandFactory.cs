@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using Autofac;
-
-namespace DustInTheWind.ConsoleTools.Commando.Hosting.Autofac;
+namespace DustInTheWind.ConsoleTools.Commando.Builder.Microsoft;
 
 internal class CommandFactory : ICommandFactory
 {
-    private readonly IComponentContext context;
+    private readonly IServiceProvider serviceProvider;
 
-    public CommandFactory(IComponentContext context)
+    public CommandFactory(IServiceProvider serviceProvider)
     {
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
+        this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
 
     public ICommand Create(Type commandType)
@@ -36,11 +33,11 @@ internal class CommandFactory : ICommandFactory
         if (!isCommandType)
             throw new TypeIsNotCommandException(commandType);
 
-        return (ICommand)context.Resolve(commandType);
+        return (ICommand)serviceProvider.GetService(commandType);
     }
 
     public object CreateView(Type viewType)
     {
-        return context.Resolve(viewType);
+        return serviceProvider.GetService(viewType);
     }
 }
