@@ -1,4 +1,4 @@
-# How to use? (Host Approach)
+# How to use? (Builder Approach)
 
 Commando offers support for three dependency injection frameworks:
 
@@ -10,20 +10,20 @@ Commando offers support for three dependency injection frameworks:
 
 Reference the nuget package corresponding to the dependency injection framework that you want to use.
 
-- `ConsoleTools.Commando.Hosting.Autofac`
-- `ConsoleTools.Commando.Hosting.Ninject`
-- `ConsoleTools.Commando.Hosting.Microsoft`
+- `ConsoleTools.Commando.Builder.Autofac`
+- `ConsoleTools.Commando.Builder.Ninject`
+- `ConsoleTools.Commando.Builder.Microsoft`
 
-## Step 2 - Build and run the `CommandoHost`.
+## Step 2 - Build and run the `Application`.
 
-In the `Main` method:
+In the `Main` method, use an `ApplicationBuilder`:
 
 ```csharp
-CommandoHost host = CommandoHost.CreateBuilder()
+Application application = ApplicationBuilder.Create()
     .RegisterCommandsFrom(typeof(DummyCommand).Assembly) // Provide here the assembly containing your commands.
     .Build();
 
-await host.RunAsync(args);
+await application.RunAsync(args);
 ```
 
 ## Step 3 - Create your commands.

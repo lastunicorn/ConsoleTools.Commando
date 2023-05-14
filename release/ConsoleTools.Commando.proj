@@ -5,7 +5,7 @@
 	<PropertyGroup>
 		<OutputPath>output\</OutputPath>
 		<TempPath>temp\</TempPath>
-		<Version>2.0.0</Version>
+		<Version>2.0.0-rc1</Version>
 		<OutputFileName>ConsoleTools.Commando-$(Version).zip</OutputFileName>
 		<RepositoryRoot>..\</RepositoryRoot>
 	</PropertyGroup>
@@ -34,6 +34,18 @@
 		
         <Copy
             SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.DependencyInjection.Microsoft\bin\Release\ConsoleTools.Commando.DependencyInjection.Microsoft.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Autofac\bin\Release\ConsoleTools.Commando.Builder.Autofac.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Ninject\bin\Release\ConsoleTools.Commando.Builder.Ninject.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Microsoft\bin\Release\ConsoleTools.Commando.Builder.Microsoft.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
 
 	</Target>

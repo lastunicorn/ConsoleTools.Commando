@@ -1,21 +1,24 @@
 # Console Tools Commando
 
-This is an MVVM presentation layer framework that helps you to create a CLI (command line interface).
+This is an MVVM presentation layer framework that helps you create a CLI (command line interface).
 
 ## How to use (with Autofac)
 
 1. Include the nuget package:
 
-   - `ConsoleTools.Commando.DependencyInjection.Autofac`
+   - `ConsoleTools.Commando.Builder.Autofac`
+   - Other two packages will be included automatically:
+     - `Autofac`
+     - `ConsoleTools.Commando`
 
-2. Build and run the `CommandoHost`.
+2. Build and run the `Application`.
 
    ```csharp
-   CommandoHost host = CommandoHost.CreateBuilder()
+   Application application = ApplicationBuilder.Create()
        .RegisterCommandsFrom(typeof(DummyCommand).Assembly) // Provide here the assembly containing your commands.
        .Build();
    
-   await host.RunAsync(args);
+   await application.RunAsync(args);
    ```
 
 3. Create your commands.
@@ -37,13 +40,7 @@ This is an MVVM presentation layer framework that helps you to create a CLI (com
 
 > **Notes**
 >
-> 1. The `ConsoleTools.Commando.DependencyInjection.Autofac` package will automatically include:
->
->    - `Autofac`
->
->    - `ConsoleTools.Commando`
->
-> 2. The `CommandoHost` approach is available only from version 2.0.0. For the older versions, please see the dependency injection demo projects from the repository.
+> The `CommandoHost` approach is available only from version 2.0.0. For the older versions, please see the dependency injection demo projects from the repository.
 
 ## Discussions and Suggestions
 
