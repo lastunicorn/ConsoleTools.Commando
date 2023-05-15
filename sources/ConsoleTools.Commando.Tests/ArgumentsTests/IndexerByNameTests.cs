@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using FluentAssertions;
 using Xunit;
@@ -36,7 +35,7 @@ public class IndexerByNameTests
     [Fact]
     public void HavingArgumentsInstanceWithOneNamedArgument_WhenRetrievingNonexistentItem_ThenReturnsNull()
     {
-        Arguments arguments = new(new[] { "-argument1", "value1" });
+        Arguments arguments = new(new[] { "--argument1", "value1" });
 
         Argument argument = arguments["nonexistent"];
 
@@ -46,7 +45,7 @@ public class IndexerByNameTests
     [Fact]
     public void HavingArgumentsInstanceWithOneNamedArgument_WhenRetrievingIt_ThenReturnsTheArgument()
     {
-        Arguments arguments = new(new[] { "-argument1", "value1" });
+        Arguments arguments = new(new[] { "--argument1", "value1" });
 
         Argument argument = arguments["argument1"];
 
@@ -56,7 +55,7 @@ public class IndexerByNameTests
     [Fact]
     public void HavingArgumentsInstanceWithTwoNamedArguments_WhenRetrievingNonexistentItem_ThenReturnsNull()
     {
-        Arguments arguments = new(new[] { "-argument1", "value1", "-argument2", "value2" });
+        Arguments arguments = new(new[] { "--argument1", "value1", "--argument2", "value2" });
 
         Argument argument = arguments["nonexistent"];
 
@@ -68,7 +67,7 @@ public class IndexerByNameTests
     [InlineData("argument2")]
     public void HavingArgumentsInstanceWithTwoNamedArguments_WhenRetrievingOneItem_ThenReturnsCorrectArgument(string name)
     {
-        Arguments arguments = new(new[] { "-argument1", "value1", "-argument2", "value2" });
+        Arguments arguments = new(new[] { "--argument1", "value1", "--argument2", "value2" });
 
         Argument argument = arguments[name];
 

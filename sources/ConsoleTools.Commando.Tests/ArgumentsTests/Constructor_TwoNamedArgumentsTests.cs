@@ -26,7 +26,7 @@ public class Constructor_TwoNamedArgumentsTests
 
     public Constructor_TwoNamedArgumentsTests()
     {
-        string[] args = { "-param1", "value1", "-param2", "value2" };
+        string[] args = { "--param1", "value1", "--param2", "value2" };
 
         arguments = new Arguments(args);
     }

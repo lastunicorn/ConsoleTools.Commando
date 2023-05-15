@@ -26,7 +26,7 @@ public class Constructor_OneNamedArgumentTests
 
     public Constructor_OneNamedArgumentTests()
     {
-        string[] args = { "-param1", "value1" };
+        string[] args = { "--param1", "value1" };
 
         arguments = new Arguments(args);
     }
