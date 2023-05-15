@@ -4,43 +4,37 @@ This is an MVVM presentation layer framework that helps you create a CLI (comman
 
 ## How to use (with Autofac)
 
-1. Include the nuget package:
+### 1) Include the nuget package:
 
-   - `ConsoleTools.Commando.Builder.Autofac`
-   - Other two packages will be included automatically:
-     - `Autofac`
-     - `ConsoleTools.Commando`
+- `ConsoleTools.Commando.Builder.Autofac`
+- Note:
+  - The `ConsoleTools.Commando` package will be automatically included.
 
-2. Build and run the `Application`.
+### 2) Build and run the `Application`.
 
-   ```csharp
-   Application application = ApplicationBuilder.Create()
-       .RegisterCommandsFrom(typeof(DummyCommand).Assembly) // Provide here the assembly containing your commands.
-       .Build();
-   
-   await application.RunAsync(args);
-   ```
+```c#
+Application application = ApplicationBuilder.Create()
+    .RegisterCommandsFrom(typeof(ReadCommand).Assembly) // Provide here the assembly containing your commands.
+    .Build();
 
-3. Create your commands.
+await application.RunAsync(args);
+```
 
-   ```c#
-   [NamedCommand("read", Description = "Display the content of a text file.")]
-   internal class ReadCommand : ICommand
-   {
-       [NamedParameter("file", ShortName = 'f', Description = "The full path of the file.")]
-       public string FilePath { get; set; }
-       
-   	public Task Execute()
-   	{
-   		...
-   	}
-   }
-   ```
+### 3) Create your commands.
 
-
-> **Notes**
->
-> The `CommandoHost` approach is available only from version 2.0.0. For the older versions, please see the dependency injection demo projects from the repository.
+```c#
+[NamedCommand("read", Description = "Display the content of a text file.")]
+internal class ReadCommand : ICommand
+{
+    [NamedParameter("file", ShortName = 'f', Description = "The full path of the file.")]
+    public string FilePath { get; set; }
+    
+	public Task Execute()
+	{
+		...
+	}
+}
+```
 
 ## Discussions and Suggestions
 

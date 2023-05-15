@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ImplicitUsings>enable</ImplicitUsings>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ConsoleTools.Commando.Parsing</PackageId>
+        <Description>A plug-in package for Console Tools Commando. Contains the algorithm for parsing the console commands typed by the user.</Description>
+        <PackageTags>console;mvvm;command;command-line;cli;command-line-interface;parsing;command-texts</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

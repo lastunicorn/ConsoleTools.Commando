@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ConsoleTools.Commando.DependencyInjection.Ninject</PackageId>
         <IncludeReferencedProjects>true</IncludeReferencedProjects>
+        <Description>A setup package for Console Tools Commando. Uses Ninject to easily setup the application.</Description>
+        <PackageTags>console;mvvm;command;command-line;cli;command-line-interface;setup;ninject;dependency-injection</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

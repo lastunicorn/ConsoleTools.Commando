@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ImplicitUsings>enable</ImplicitUsings>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ConsoleTools.Commando</PackageId>
+        <Description>An MVVM presentation layer framework that helps you create a CLI (command line interface).</Description>
+        <PackageTags>console;mvvm;command;command-line;cli;command-line-interface</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

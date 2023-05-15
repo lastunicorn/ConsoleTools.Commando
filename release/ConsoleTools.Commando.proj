@@ -5,7 +5,7 @@
 	<PropertyGroup>
 		<OutputPath>output\</OutputPath>
 		<TempPath>temp\</TempPath>
-		<Version>2.0.0-alpha</Version>
+		<Version>2.0.0-alpha2</Version>
 		<OutputFileName>ConsoleTools.Commando-$(Version).zip</OutputFileName>
 		<RepositoryRoot>..\</RepositoryRoot>
 	</PropertyGroup>
@@ -46,6 +46,10 @@
 		
         <Copy
             SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Microsoft\bin\Release\ConsoleTools.Commando.Builder.Microsoft.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Parsing\bin\Release\ConsoleTools.Commando.Parsing.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
 
 	</Target>
