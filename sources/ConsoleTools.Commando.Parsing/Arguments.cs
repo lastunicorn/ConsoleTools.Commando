@@ -14,10 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
@@ -59,12 +56,15 @@ internal class Arguments : IEnumerable<Argument>
 
         foreach (Argument argument in arguments)
         {
-            if (argument.HasName)
+            if (argument.IsNamedArgument)
             {
                 if (previousArgument != null)
+                {
                     yield return previousArgument;
+                    previousArgument = null;
+                }
 
-                if (argument.HasValue)
+                if (argument.Value != null)
                     yield return argument;
                 else
                     previousArgument = argument;
@@ -94,14 +94,33 @@ internal class Arguments : IEnumerable<Argument>
 
     private static IEnumerable<Argument> ExtractArguments(IEnumerable<string> args)
     {
+        bool forceToBeOperand = false;
+
         foreach (string arg in args)
         {
-            ChunkAnalysis chunkAnalysis = new(arg);
-            chunkAnalysis.Analyze();
-
-            foreach (Argument argument in chunkAnalysis)
+            if (arg == "--")
             {
-                yield return argument;
+                forceToBeOperand = true;
+                continue;
+            }
+
+            if (forceToBeOperand)
+            {
+                yield return new Argument
+                {
+                    Value = arg,
+                    IsForcedToBeAnonymous = true
+                };
+            }
+            else
+            {
+                ChunkAnalysis chunkAnalysis = new(arg);
+                chunkAnalysis.Analyze();
+
+                foreach (Argument argument in chunkAnalysis)
+                {
+                    yield return argument;
+                }
             }
         }
     }

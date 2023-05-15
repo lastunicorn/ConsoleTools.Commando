@@ -107,11 +107,11 @@ public class CommandRouter
 
     private static void SetParameter(ICommand command, ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
-        CommandOption option = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
+        CommandArgument argument = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
 
-        if (option != null)
+        if (argument != null)
         {
-            parameterMetadata.SetValue(command, option.Value);
+            parameterMetadata.SetValue(command, argument.Value);
             return;
         }
 

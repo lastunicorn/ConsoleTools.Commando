@@ -26,9 +26,7 @@ internal class Argument
 
     public bool IsAnonymousArgument => Name == null;
 
-    public bool HasName => Name != null;
-
-    public bool HasValue => Value != null;
+    public bool IsForcedToBeAnonymous { get; init; }
 
     public override string ToString()
     {

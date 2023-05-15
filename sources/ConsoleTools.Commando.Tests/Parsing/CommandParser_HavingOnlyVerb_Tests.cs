@@ -21,12 +21,12 @@ using Xunit;
 
 namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
 
-public class CommandParser_Verb_NoOptions_NoOperands_Tests
+public class CommandParser_HavingOnlyVerb_Tests
 {
     [Theory]
     [InlineData("read")]
     [InlineData("write")]
-    public void HavingOnlyTheVerb_WhenParsed_ThenGenericCommandContainsTheVerb(string verb)
+    public void WhenParsed_ThenGenericCommandContainsTheVerb(string verb)
     {
         string[] args = { verb };
 
@@ -39,30 +39,26 @@ public class CommandParser_Verb_NoOptions_NoOperands_Tests
     [Theory]
     [InlineData("read")]
     [InlineData("write")]
-    public void HavingOnlyTheVerb_WhenParsed_ThenGenericCommandContainsEmptyOptionsList(string verb)
+    public void WhenParsed_ThenGenericCommandContainsEmptyOptionsList(string verb)
     {
         string[] args = { verb };
 
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
-
-        commandRequest.Verb.Should().Be(verb);
-
+        
         commandRequest.Options.Should().BeEmpty();
     }
 
     [Theory]
     [InlineData("read")]
     [InlineData("write")]
-    public void HavingOnlyTheVerb_WhenParsed_ThenGenericCommandContainsEmptyOperandsList(string verb)
+    public void WhenParsed_ThenGenericCommandContainsEmptyOperandsList(string verb)
     {
         string[] args = { verb };
 
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
-
-        commandRequest.Verb.Should().Be(verb);
-
+        
         commandRequest.Operands.Should().BeEmpty();
     }
 }

@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
@@ -34,49 +31,30 @@ internal class TextCommandAnalysis
 
     public CommandRequest Analyze()
     {
-        Argument verbArgument = GetVerb();
-
         CommandRequest commandRequest = new()
         {
-            UnderlyingArgs = arguments.UnderlyingArgs,
-            Verb = verbArgument?.Value
+            UnderlyingArgs = arguments.UnderlyingArgs
         };
 
-        IEnumerable<CommandOption> options = GetOptions();
-        commandRequest.Options.AddRange(options);
+        bool isFirst = true;
 
-        IEnumerable<string> operands = GetOperands(verbArgument);
-        commandRequest.Operands.AddRange(operands);
+        foreach (Argument argument in arguments)
+        {
+            if (isFirst)
+            {
+                isFirst = false;
+
+                if (argument.IsAnonymousArgument && !argument.IsForcedToBeAnonymous)
+                {
+                    commandRequest.Verb = argument.Value;
+                    continue;
+                }
+            }
+
+            CommandArgument commandArgument = new(argument.Name, argument.Value);
+            commandRequest.AddParameter(commandArgument);
+        }
 
         return commandRequest;
-    }
-
-    public Argument GetVerb()
-    {
-        Argument firstArgument = arguments.FirstOrDefault();
-
-        return firstArgument?.IsAnonymousArgument == true
-            ? firstArgument
-            : null;
-    }
-
-    private IEnumerable<CommandOption> GetOptions()
-    {
-        return arguments
-            .Where(x => x.IsNamedArgument)
-            .Select(x => new CommandOption(x.Name, x.Value));
-    }
-
-    private IEnumerable<string> GetOperands(Argument verbArgument)
-    {
-        IEnumerable<Argument> query = arguments
-            .Where(x => x.IsAnonymousArgument);
-
-        bool skipFirsArgument = !string.IsNullOrEmpty(verbArgument?.Value);
-
-        if (skipFirsArgument)
-            query = query.Skip(1);
-
-        return query.Select(x => x.Value);
     }
 }

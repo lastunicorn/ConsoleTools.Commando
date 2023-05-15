@@ -14,20 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
-public class CommandOption
+public record CommandArgument
 {
     public string Name { get; }
 
     public string Value { get; }
 
-    public CommandOption(string name, string value)
+    public CommandArgument(string name, string value)
     {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentNullException(nameof(name));
+        if (name == null && value == null)
+            throw new ArgumentException("Both name and value cannot be null.", nameof(name));
 
         Name = name;
         Value = value;

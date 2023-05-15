@@ -14,56 +14,66 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 public class CommandRequest
 {
-    private List<CommandOption> unusedOptions = new();
-    private List<string> unusedOperands = new();
+    private readonly List<CommandArgument> arguments = new();
+    private List<CommandArgument> unusedArguments = new();
 
     public string[] UnderlyingArgs { get; init; }
 
-    public string Verb { get; init; }
+    public string Verb { get; set; }
 
-    public List<CommandOption> Options { get; } = new();
+    public IReadOnlyCollection<CommandArgument> Options => arguments
+        .Where(x => x.Name != null)
+        .ToList();
 
-    public List<string> Operands { get; } = new();
+    public IReadOnlyCollection<CommandArgument> Operands => arguments
+        .Where(x => x.Name == null)
+        .ToList();
 
-    public bool IsEmpty => Verb == null && Options.Count == 0 && Operands.Count == 0;
+    public bool IsEmpty => Verb == null && arguments.Count == 0;
+    
+    public void AddParameter(CommandArgument commandArgument)
+    {
+        if (commandArgument == null) throw new ArgumentNullException(nameof(commandArgument));
+
+        arguments.Add(commandArgument);
+    }
 
     public void Reset()
     {
-        unusedOptions = Options.ToList();
-        unusedOperands = Operands.ToList();
+        unusedArguments = arguments.ToList();
     }
 
-    public CommandOption GetOptionAndMarkAsUsed(ParameterMetadata parameterMetadata)
+    public CommandArgument GetOptionAndMarkAsUsed(ParameterMetadata parameterMetadata)
     {
         if (parameterMetadata.Name != null)
         {
-            CommandOption option = Options
+            CommandArgument argument = arguments
+                .Where(x => x.Name != null)
                 .FirstOrDefault(x => x.Name == parameterMetadata.Name);
 
-            if (option != null)
+            if (argument != null)
             {
-                unusedOptions.Remove(option);
-                return option;
+                unusedArguments.Remove(argument);
+                return argument;
             }
         }
 
         if (parameterMetadata.ShortName != 0)
         {
-            CommandOption option = Options
+            CommandArgument argument = arguments
+                .Where(x => x.Name != null)
                 .FirstOrDefault(x => x.Name == parameterMetadata.ShortName.ToString());
 
-            if (option != null)
+            if (argument != null)
             {
-                unusedOptions.Remove(option);
-                return option;
+                unusedArguments.Remove(argument);
+                return argument;
             }
         }
 
@@ -76,25 +86,34 @@ public class CommandRequest
         {
             int index = parameterMetadata.Order.Value - 1;
 
-            if (index >= 0 && index < Operands.Count)
+            if (index >= 0)
             {
-                string operand = Operands[index];
+                CommandArgument operand = arguments
+                    .Where(x => x.Name == null)
+                    .Skip(index)
+                    .FirstOrDefault();
 
-                unusedOperands.Remove(operand);
-                return operand;
+                if (operand != null)
+                {
+                    unusedArguments.Remove(operand);
+                    return operand.Value;
+                }
             }
         }
 
         return null;
     }
 
-    public IEnumerable<CommandOption> EnumerateUnusedOptions()
+    public IEnumerable<CommandArgument> EnumerateUnusedOptions()
     {
-        return unusedOptions;
+        return unusedArguments
+            .Where(x => x.Name != null);
     }
 
     public IEnumerable<string> EnumerateUnusedOperands()
     {
-        return unusedOperands;
+        return unusedArguments
+            .Where(x => x.Name == null)
+            .Select(x => x.Value);
     }
 }

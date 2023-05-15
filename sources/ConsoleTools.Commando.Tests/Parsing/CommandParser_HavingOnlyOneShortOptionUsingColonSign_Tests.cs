@@ -1,4 +1,4 @@
-﻿// Velo City
+﻿// ConsoleTools.Commando
 // Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,36 @@ using Xunit;
 
 namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
 
-public class CommandParser_NoArgs_Tests
+public class CommandParser_HavingOnlyOneShortOptionUsingColonSign_Tests
 {
     private readonly CommandRequest commandRequest;
 
-    public CommandParser_NoArgs_Tests()
+    public CommandParser_HavingOnlyOneShortOptionUsingColonSign_Tests()
     {
-        string[] args = Array.Empty<string>();
+        string[] args = { "-n:value1" };
 
         CommandParser commandParser = new();
         commandRequest = commandParser.Parse(args);
     }
 
     [Fact]
-    public void HavingEmptyArgsArray_WhenParsed_ThenGenericCommandContainsNullVerb()
+    public void WhenParsed_ThenGenericCommandContainsNullVerb()
     {
         commandRequest.Verb.Should().BeNull();
     }
 
     [Fact]
-    public void HavingEmptyArgsArray_WhenParsed_ThenGenericCommandContainsEmptyOptionsList()
+    public void WhenParsed_ThenOptionsListContainsTheOption()
     {
-        commandRequest.Options.Should().BeEmpty();
+        CommandArgument[] expected =
+        {
+            new("n", "value1")
+        };
+        commandRequest.Options.Should().Equal(expected);
     }
 
     [Fact]
-    public void HavingEmptyArgsArray_WhenParsed_ThenGenericCommandContainsEmptyOperandsList()
+    public void WhenParsed_ThenOperandsListIsEmpty()
     {
         commandRequest.Operands.Should().BeEmpty();
     }

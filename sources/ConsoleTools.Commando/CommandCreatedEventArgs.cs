@@ -26,7 +26,7 @@ public class CommandCreatedEventArgs : EventArgs
 
     public string[] Args { get; init; }
 
-    public List<CommandOption> UnusedOptions { get; init; }
+    public List<CommandArgument> UnusedOptions { get; init; }
 
     public List<string> UnusedOperands { get; init; }
 }
