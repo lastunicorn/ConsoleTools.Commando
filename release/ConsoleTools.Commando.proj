@@ -5,7 +5,7 @@
 	<PropertyGroup>
 		<OutputPath>output\</OutputPath>
 		<TempPath>temp\</TempPath>
-		<Version>2.0.0-beta</Version>
+		<Version>2.0.0-beta.2</Version>
 		<OutputFileName>ConsoleTools.Commando-$(Version).zip</OutputFileName>
 		<RepositoryRoot>..\</RepositoryRoot>
 	</PropertyGroup>
@@ -29,27 +29,15 @@
             DestinationFolder="$(OutputPath)" />
 		
         <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.DependencyInjection.Autofac\bin\Release\ConsoleTools.Commando.DependencyInjection.Autofac.$(Version).nupkg"
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Setup.Autofac\bin\Release\ConsoleTools.Commando.Setup.Autofac.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
 		
         <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.DependencyInjection.Ninject\bin\Release\ConsoleTools.Commando.DependencyInjection.Ninject.$(Version).nupkg"
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Setup.Ninject\bin\Release\ConsoleTools.Commando.Setup.Ninject.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
 		
         <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.DependencyInjection.Microsoft\bin\Release\ConsoleTools.Commando.DependencyInjection.Microsoft.$(Version).nupkg"
-            DestinationFolder="$(OutputPath)" />
-		
-        <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Autofac\bin\Release\ConsoleTools.Commando.Builder.Autofac.$(Version).nupkg"
-            DestinationFolder="$(OutputPath)" />
-		
-        <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Ninject\bin\Release\ConsoleTools.Commando.Builder.Ninject.$(Version).nupkg"
-            DestinationFolder="$(OutputPath)" />
-		
-        <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Builder.Microsoft\bin\Release\ConsoleTools.Commando.Builder.Microsoft.$(Version).nupkg"
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Setup.Microsoft\bin\Release\ConsoleTools.Commando.Setup.Microsoft.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
 		
         <Copy
