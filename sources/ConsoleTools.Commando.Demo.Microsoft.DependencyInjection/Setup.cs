@@ -28,7 +28,7 @@ internal class Setup
 
         Assembly presentationAssembly = Assembly.GetExecutingAssembly();
         serviceCollection.AddCommando(presentationAssembly);
-        
+
         return serviceCollection.BuildServiceProvider();
     }
 }

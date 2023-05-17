@@ -45,7 +45,7 @@ public class CommandParser_HavingOnlyVerb_Tests
 
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
-        
+
         commandRequest.Options.Should().BeEmpty();
     }
 
@@ -58,7 +58,7 @@ public class CommandParser_HavingOnlyVerb_Tests
 
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
-        
+
         commandRequest.Operands.Should().BeEmpty();
     }
 }

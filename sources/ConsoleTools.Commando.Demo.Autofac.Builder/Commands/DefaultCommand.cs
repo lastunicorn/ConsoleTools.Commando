@@ -31,7 +31,7 @@ public class DefaultCommand : CommandBase
     {
         Console.WriteTitle("Default command");
         Console.WriteValue("Text", Text);
-        
+
         return Task.CompletedTask;
     }
 }
