@@ -2,13 +2,14 @@
 
 This is an MVVM presentation layer framework that helps you create a CLI (command line interface).
 
-## How to use (with Autofac)
+## How to use (with Microsoft Dependency Injection)
 
 ### 1) Include the nuget package:
 
-- `ConsoleTools.Commando.Setup.Autofac`
+- `ConsoleTools.Commando.Setup.Microsoft`
 - Note:
   - The `ConsoleTools.Commando` package will be automatically included.
+
 
 ### 2) Build and run the `Application`.
 
@@ -53,5 +54,5 @@ I'm looking forward to hearing from you.
 
 If you like my work and want to support me, you can buy me a coffee:
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y62EZ8H)
+- https://ko-fi.com/Y8Y62EZ8H
 

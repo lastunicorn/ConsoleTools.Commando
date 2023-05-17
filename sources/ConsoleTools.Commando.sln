@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{933C5DEC-024E-46AE-914D-017F4F93726A}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		license.txt = license.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando.Demo.Autofac.DependencyInjection", "ConsoleTools.Commando.Demo.Autofac.DependencyInjection\ConsoleTools.Commando.Demo.Autofac.DependencyInjection.csproj", "{8EE16070-FB87-44FA-9BEF-5A22D4EC38D1}"

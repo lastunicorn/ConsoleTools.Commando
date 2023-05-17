@@ -2,11 +2,11 @@
 
 This is an MVVM presentation layer framework that helps you create a CLI (command line interface).
 
-## How to use (with Autofac)
+## How to use (with Ninject)
 
 ### 1) Include the nuget package:
 
-- `ConsoleTools.Commando.Builder.Autofac`
+- `ConsoleTools.Commando.Setup.Ninject`
 - Note:
   - The `ConsoleTools.Commando` package will be automatically included.
 

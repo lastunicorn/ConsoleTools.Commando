@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <NeutralLanguage>en</NeutralLanguage>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseFile>license.txt</PackageLicenseFile>
-        <PackageReadmeFile>readme.md</PackageReadmeFile>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/lastunicorn/ConsoleTools.Commando</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lastunicorn/ConsoleTools.Commando</RepositoryUrl>
@@ -35,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <ItemGroup>
         <Content Include="..\license.txt" Link="license.txt" Pack="true" PackagePath="license.txt" />
-        <Content Include="..\readme.md" Link="readme.md" Pack="true" PackagePath="readme.md" />
     </ItemGroup>
 
     <ItemGroup>
