@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public partial class EnhancedConsole
@@ -25,15 +23,15 @@ public partial class EnhancedConsole
     public ConsoleColor WarningColor { get; set; } = ConsoleColor.DarkYellow;
 
     public ConsoleColor SuccessColor { get; set; } = ConsoleColor.Green;
-    
+
     public ConsoleColor InfoColor { get; set; } = ConsoleColor.Gray;
-    
+
     public ConsoleColor NoteColor { get; set; } = ConsoleColor.DarkGray;
 
     public ConsoleColor DataKeyColor { get; set; } = ConsoleColor.White;
 
     public ConsoleColor DataValueColor { get; set; } = ConsoleColor.DarkGray;
-    
+
     public ConsoleColor NullOrEmptyColor { get; set; } = ConsoleColor.DarkMagenta;
 
     public int? BinaryMaxLength { get; set; }

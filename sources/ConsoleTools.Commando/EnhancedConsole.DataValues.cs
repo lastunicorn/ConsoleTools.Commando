@@ -14,10 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public partial class EnhancedConsole
@@ -101,49 +97,49 @@ public partial class EnhancedConsole
         switch (displayBinaryFormat)
         {
             case BinaryDisplayFormat.Hexadecimal:
+            {
+                if (BinaryMaxLength is > 0)
                 {
-                    if (BinaryMaxLength is > 0)
+                    int maxLength = BinaryMaxLength.Value;
+
+                    IEnumerable<string> list = bytes
+                        .Take(maxLength)
+                        .Select(b => $"{b:x2}");
+
+                    string text = string.Join(" ", list);
+
+                    if (bytes.Length > maxLength)
                     {
-                        int maxLength = BinaryMaxLength.Value;
-
-                        IEnumerable<string> list = bytes
-                            .Take(maxLength)
-                            .Select(b => $"{b:x2}");
-
-                        string text = string.Join(" ", list);
-
-                        if (bytes.Length > maxLength)
-                        {
-                            int remainedBytes = bytes.Length - maxLength;
-                            text = $"{text}... (+{remainedBytes} bytes)";
-                        }
-
-                        return text;
-                    }
-                    else
-                    {
-                        IEnumerable<string> list = bytes.Select(b => $"{b:x2}");
-                        return string.Join(" ", list);
-                    }
-                }
-
-            case BinaryDisplayFormat.Base64:
-                {
-                    string text = Convert.ToBase64String(bytes);
-
-                    if (BinaryMaxLength is > 0)
-                    {
-                        int maxLength = BinaryMaxLength.Value;
-
-                        if (text.Length > maxLength)
-                        {
-                            int remainedLength = text.Length - maxLength;
-                            text = text[..maxLength] + "... (+" + remainedLength + " chars)";
-                        }
+                        int remainedBytes = bytes.Length - maxLength;
+                        text = $"{text}... (+{remainedBytes} bytes)";
                     }
 
                     return text;
                 }
+                else
+                {
+                    IEnumerable<string> list = bytes.Select(b => $"{b:x2}");
+                    return string.Join(" ", list);
+                }
+            }
+
+            case BinaryDisplayFormat.Base64:
+            {
+                string text = Convert.ToBase64String(bytes);
+
+                if (BinaryMaxLength is > 0)
+                {
+                    int maxLength = BinaryMaxLength.Value;
+
+                    if (text.Length > maxLength)
+                    {
+                        int remainedLength = text.Length - maxLength;
+                        text = text[..maxLength] + "... (+" + remainedLength + " chars)";
+                    }
+                }
+
+                return text;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException();

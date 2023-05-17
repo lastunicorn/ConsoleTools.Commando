@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
 [AttributeUsage(AttributeTargets.Class)]
@@ -29,7 +27,7 @@ public class NamedCommandAttribute : CommandAttribute
     public string Name { get; }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="NamedCommandAttribute"/> with
+    /// Creates a new instance of the <see cref="NamedCommandAttribute" /> with
     /// the specified name.
     /// </summary>
     public NamedCommandAttribute(string name)

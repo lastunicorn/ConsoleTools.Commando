@@ -14,11 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
@@ -58,7 +54,7 @@ public class Application
                 CustomConsole.WriteLine(ConsoleColor.DarkYellow, $"Unknown argument: {unusedArgument}");
         }
     }
-    
+
     public async Task RunAsync(string[] args)
     {
         try

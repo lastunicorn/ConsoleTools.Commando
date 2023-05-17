@@ -36,7 +36,7 @@ public class CommandRequest
         .ToList();
 
     public bool IsEmpty => Verb == null && arguments.Count == 0;
-    
+
     public void AddParameter(CommandArgument commandArgument)
     {
         if (commandArgument == null) throw new ArgumentNullException(nameof(commandArgument));

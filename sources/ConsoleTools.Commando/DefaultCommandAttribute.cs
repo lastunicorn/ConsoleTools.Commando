@@ -19,7 +19,7 @@ namespace DustInTheWind.ConsoleTools.Commando;
 public class DefaultCommandAttribute : CommandAttribute
 {
     /// <summary>
-    /// Creates a new instance of the <see cref="NamedCommandAttribute"/> with
+    /// Creates a new instance of the <see cref="NamedCommandAttribute" /> with
     /// no name.
     /// </summary>
     public DefaultCommandAttribute()

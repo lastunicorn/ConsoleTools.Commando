@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class)]
 public class CommandAttribute : Attribute
 {
     /// <summary>
@@ -38,7 +36,7 @@ public class CommandAttribute : Attribute
     public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="CommandAttribute"/> with
+    /// Creates a new instance of the <see cref="CommandAttribute" /> with
     /// no name.
     /// </summary>
     protected CommandAttribute()

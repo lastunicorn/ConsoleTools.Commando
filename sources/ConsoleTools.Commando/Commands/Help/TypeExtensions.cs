@@ -14,10 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 internal static class TypeExtensions
@@ -87,6 +83,7 @@ internal static class TypeExtensions
     {
         return type == typeof(char);
     }
+
     public static string ToUserFriendlyName(this Type type)
     {
         if (type.IsText())
