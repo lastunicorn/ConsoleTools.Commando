@@ -26,10 +26,13 @@ public class Application
 
     public string Name { get; set; }
 
-    public Application(CommandRouter commandRouter, ICommandParser commandParser)
+    public event EventHandler<UnhandledApplicationExceptionEventArgs> UnhandledApplicationException;
+
+    public Application(ICommandParser commandParser, CommandRouter commandRouter)
     {
-        this.commandRouter = commandRouter ?? throw new ArgumentNullException(nameof(commandRouter));
         this.commandParser = commandParser ?? throw new ArgumentNullException(nameof(commandParser));
+        this.commandRouter = commandRouter ?? throw new ArgumentNullException(nameof(commandRouter));
+
         commandRouter.CommandCreated += HandleCommandCreated;
 
         Assembly assembly = Assembly.GetEntryAssembly();
@@ -64,11 +67,22 @@ public class Application
         }
         catch (Exception ex)
         {
+            UnhandledApplicationExceptionEventArgs eventArgs = new(ex);
+            OnUnhandledException(eventArgs);
+
+            if (!eventArgs.IsHandled)
+            {
 #if DEBUG
-            CustomConsole.WriteError(ex);
+                CustomConsole.WriteError(ex);
 #else
-            CustomConsole.WriteError(ex.Message);
+                CustomConsole.WriteError(ex.Message);
 #endif
+            }
         }
+    }
+
+    protected virtual void OnUnhandledException(UnhandledApplicationExceptionEventArgs e)
+    {
+        UnhandledApplicationException?.Invoke(this, e);
     }
 }

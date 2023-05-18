@@ -25,8 +25,19 @@ internal class Program
     {
         Application application = ApplicationBuilder.Create()
             .RegisterCommandsFrom(typeof(DummyCommand).Assembly)
+            .HandleExceptions(HandleUnhandledApplicationException)
             .Build();
 
         await application.RunAsync(args);
+    }
+
+    /// <summary>
+    /// Optional.
+    /// If this method is provided, it allows the consumer to take specific actions when an
+    /// unhandled exception is thrown during the execution.
+    /// </summary>
+    private static void HandleUnhandledApplicationException(object sender, UnhandledApplicationExceptionEventArgs e)
+    {
+        Console.WriteLine("An exception happened.");
     }
 }
