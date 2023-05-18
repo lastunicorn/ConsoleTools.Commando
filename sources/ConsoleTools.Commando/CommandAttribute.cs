@@ -36,10 +36,9 @@ public class CommandAttribute : Attribute
     public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="CommandAttribute" /> with
-    /// no name.
+    /// Creates a new instance of the <see cref="CommandAttribute" /> class.
     /// </summary>
-    protected CommandAttribute()
+    public CommandAttribute()
     {
     }
 }

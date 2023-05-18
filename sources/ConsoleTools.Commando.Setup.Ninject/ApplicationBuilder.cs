@@ -26,6 +26,7 @@ public class ApplicationBuilder
     private readonly IKernel kernel;
     private readonly CommandMetadataCollection commandMetadataCollection;
     private bool isCommandParserConfigured;
+    private EventHandler<UnhandledApplicationExceptionEventArgs> unhandledExceptionHandler;
 
     private ApplicationBuilder()
     {
@@ -110,10 +111,22 @@ public class ApplicationBuilder
         return this;
     }
 
+    public ApplicationBuilder HandleExceptions(EventHandler<UnhandledApplicationExceptionEventArgs> eventHandler)
+    {
+        unhandledExceptionHandler = eventHandler;
+
+        return this;
+    }
+
     public Application Build()
     {
         IKernel container = FinalizeContainerSetup();
-        return container.Get<Application>();
+        Application application = container.Get<Application>();
+
+        if (unhandledExceptionHandler != null)
+            application.UnhandledApplicationException += unhandledExceptionHandler;
+
+        return application;
     }
 
     private IKernel FinalizeContainerSetup()
