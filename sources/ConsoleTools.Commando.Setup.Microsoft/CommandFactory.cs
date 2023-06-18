@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 
 internal class CommandFactory : ICommandFactory
@@ -24,16 +26,21 @@ internal class CommandFactory : ICommandFactory
     {
         this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
-
-    public IConsoleCommand Create(Type commandType)
+    
+    public object Create(CommandMetadata commandMetadata)
     {
-        if (commandType == null) throw new ArgumentNullException(nameof(commandType));
+        switch (commandMetadata.CommandKind)
+        {
+            case CommandKind.None:
+                throw new TypeIsNotCommandException(commandMetadata.Type);
 
-        bool isCommandType = typeof(IConsoleCommand).IsAssignableFrom(commandType);
-        if (!isCommandType)
-            throw new TypeIsNotCommandException(commandType);
+            case CommandKind.WithoutResult:
+            case CommandKind.WithResult:
+                return serviceProvider.GetService(commandMetadata.Type);
 
-        return (IConsoleCommand)serviceProvider.GetService(commandType);
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     public object CreateView(Type viewType)

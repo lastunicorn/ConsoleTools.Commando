@@ -16,7 +16,7 @@
 
 using System.Reflection;
 using Autofac;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Autofac;

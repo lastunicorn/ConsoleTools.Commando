@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public interface ICommandFactory
 {
-    IConsoleCommand Create(Type commandType);
+    object Create(CommandMetadata commandMetadata);
 
     object CreateView(Type viewType);
 }

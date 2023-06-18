@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands;
+using DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands.Dummy;
 using DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder;

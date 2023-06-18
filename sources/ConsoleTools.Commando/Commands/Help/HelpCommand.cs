@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Globalization;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 

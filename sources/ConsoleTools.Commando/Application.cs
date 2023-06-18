@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 

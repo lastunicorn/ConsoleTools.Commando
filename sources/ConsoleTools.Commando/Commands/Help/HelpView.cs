@@ -18,17 +18,17 @@ namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 internal class HelpView : ViewBase<HelpCommand>
 {
-    public override void Display(HelpCommand command)
+    public override void Display(HelpCommand viewModel)
     {
-        if (command.CommandsOverviewInfo != null)
-            DisplayCommandsOverview(command);
-        else if (command.CommandFullInfo != null)
-            DisplayCommandDetails(command);
+        if (viewModel.CommandsOverviewInfo != null)
+            DisplayCommandsOverview(viewModel);
+        else if (viewModel.CommandFullInfo != null)
+            DisplayCommandDetails(viewModel);
 
-        if (command.CultureInfo != null)
+        if (viewModel.CultureInfo != null)
         {
             WriteLine();
-            WriteValue("Current Culture", command.CultureInfo.Name);
+            WriteValue("Current Culture", viewModel.CultureInfo.Name);
             WriteNote("The current culture is determining how the arguments values are interpreted.");
         }
     }

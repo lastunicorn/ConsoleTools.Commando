@@ -15,9 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
-using DustInTheWind.ConsoleTools.Commando.CommandRequestModel;
-using DustInTheWind.ConsoleTools.Commando.Commands.Empty;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
@@ -36,19 +35,56 @@ public class CommandRouter
 
     public async Task Execute(CommandRequest commandRequest)
     {
-        IConsoleCommand consoleCommand = CreateCommandToExecute(commandRequest);
+        CommandMetadata commandMetadata = GetCommandMetadata(commandRequest);
 
-        await consoleCommand.Execute();
+        if (commandMetadata == null)
+            throw new UnknownCommandException();
 
-        ExecuteViewsFor(consoleCommand);
+        switch (commandMetadata.CommandKind)
+        {
+            case CommandKind.None:
+                throw new UnknownCommandException();
+
+            case CommandKind.WithoutResult:
+                {
+                    IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
+
+                    if (consoleCommand == null)
+                        throw new UnknownCommandException();
+
+                    SetParameters(consoleCommand, commandMetadata, commandRequest);
+                    RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+                    await consoleCommand.Execute();
+                    
+                    break;
+                }
+
+            case CommandKind.WithResult:
+                {
+                    object consoleCommand = commandFactory.Create(commandMetadata);
+
+                    if (consoleCommand == null)
+                        throw new UnknownCommandException();
+
+                    SetParameters(consoleCommand, commandMetadata, commandRequest);
+                    RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+
+                    Type commandType = consoleCommand.GetType();
+                    MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
+
+                    object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
+                    ExecuteViewsFor(viewModel);
+
+                    break;
+                }
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
-    private IConsoleCommand CreateCommandToExecute(CommandRequest commandRequest)
+    private void RaiseCommandCreatedEvent(CommandRequest commandRequest, object consoleCommand)
     {
-        IConsoleCommand consoleCommand = CreateCommandIfExists(commandRequest)
-                           ?? CreateHelpCommand()
-                           ?? new EmptyConsoleCommand();
-
         CommandCreatedEventArgs args = new()
         {
             Args = commandRequest.UnderlyingArgs,
@@ -56,22 +92,8 @@ public class CommandRouter
             UnusedOptions = commandRequest.EnumerateUnusedOptions().ToList(),
             UnusedOperands = commandRequest.EnumerateUnusedOperands().ToList()
         };
+
         OnCommandCreated(args);
-
-        return consoleCommand;
-    }
-
-    private IConsoleCommand CreateCommandIfExists(CommandRequest commandRequest)
-    {
-        CommandMetadata commandMetadata = GetCommandMetadata(commandRequest);
-
-        if (commandMetadata == null)
-            throw new InvalidCommandException();
-
-        IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata.Type);
-        SetParameters(consoleCommand, commandMetadata, commandRequest);
-
-        return consoleCommand;
     }
 
     private CommandMetadata GetCommandMetadata(CommandRequest commandRequest)
@@ -84,16 +106,7 @@ public class CommandRouter
             : commandMetadataCollection.GetByName(commandRequest.Verb);
     }
 
-    private IConsoleCommand CreateHelpCommand()
-    {
-        CommandMetadata helpCommandMetadata = commandMetadataCollection.GetHelpCommand();
-
-        return helpCommandMetadata == null
-            ? null
-            : commandFactory.Create(helpCommandMetadata.Type);
-    }
-
-    private static void SetParameters(IConsoleCommand consoleCommand, CommandMetadata commandMetadata, CommandRequest commandRequest)
+    private static void SetParameters(object consoleCommand, CommandMetadata commandMetadata, CommandRequest commandRequest)
     {
         commandRequest.Reset();
 
@@ -101,7 +114,7 @@ public class CommandRouter
             SetParameter(consoleCommand, parameterMetadata, commandRequest);
     }
 
-    private static void SetParameter(IConsoleCommand consoleCommand, ParameterMetadata parameterMetadata, CommandRequest commandRequest)
+    private static void SetParameter(object consoleCommand, ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
         CommandArgument argument = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
 
@@ -121,23 +134,23 @@ public class CommandRouter
 
         if (!parameterMetadata.IsOptional)
         {
-            string parameterName = parameterMetadata.Name ?? parameterMetadata.Order.ToString();
+            string parameterName = parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
             throw new ParameterMissingException(parameterName);
         }
     }
 
-    private void ExecuteViewsFor(IConsoleCommand consoleCommand)
+    private void ExecuteViewsFor(object viewModel)
     {
-        Type commandType = consoleCommand.GetType();
+        Type commandResultType = viewModel.GetType();
 
-        IEnumerable<Type> viewTypes = commandMetadataCollection.GetViewTypesForCommand(commandType);
+        IEnumerable<Type> viewTypes = commandMetadataCollection.GetViewTypesForCommand(commandResultType);
 
         foreach (Type viewType in viewTypes)
         {
             object view = commandFactory.CreateView(viewType);
 
             MethodInfo displayMethodInfo = viewType.GetMethod(nameof(IView<IConsoleCommand>.Display));
-            displayMethodInfo?.Invoke(view, new object[] { consoleCommand });
+            displayMethodInfo?.Invoke(view, new[] { viewModel });
         }
     }
 

@@ -16,8 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
-public abstract class ViewBase<TCommand> : EnhancedConsole, IView<TCommand>
-    where TCommand : IConsoleCommand
+public abstract class ViewBase<TViewModel> : EnhancedConsole, IView<TViewModel>
 {
-    public abstract void Display(TCommand command);
+    public abstract void Display(TViewModel viewModel);
 }

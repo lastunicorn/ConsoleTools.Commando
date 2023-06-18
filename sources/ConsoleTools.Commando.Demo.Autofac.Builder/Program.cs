@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando.Demo.Autofac.Builder.Commands;
+using DustInTheWind.ConsoleTools.Commando.Demo.Autofac.Builder.Commands.Dummy;
 using DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Autofac.Builder;

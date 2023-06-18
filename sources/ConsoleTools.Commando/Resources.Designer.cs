@@ -70,20 +70,20 @@ namespace DustInTheWind.ConsoleTools.Commando {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Command..
-        /// </summary>
-        internal static string ErrorMessage_InvalidCommand {
-            get {
-                return ResourceManager.GetString("ErrorMessage_InvalidCommand", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Invalid command. Parameter &quot;{0}&quot; was not provided..
         /// </summary>
         internal static string ErrorMessage_ParameterMissing {
             get {
                 return ResourceManager.GetString("ErrorMessage_ParameterMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Command..
+        /// </summary>
+        internal static string ErrorMessage_UnknownCommand {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UnknownCommand", resourceCulture);
             }
         }
     }

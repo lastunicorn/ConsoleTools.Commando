@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Autofac;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 
@@ -27,15 +28,20 @@ internal class CommandFactory : ICommandFactory
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public IConsoleCommand Create(Type commandType)
+    public object Create(CommandMetadata commandMetadata)
     {
-        if (commandType == null) throw new ArgumentNullException(nameof(commandType));
+        switch (commandMetadata.CommandKind)
+        {
+            case CommandKind.None:
+                throw new TypeIsNotCommandException(commandMetadata.Type);
 
-        bool isCommandType = typeof(IConsoleCommand).IsAssignableFrom(commandType);
-        if (!isCommandType)
-            throw new TypeIsNotCommandException(commandType);
+            case CommandKind.WithoutResult:
+            case CommandKind.WithResult:
+                return context.Resolve(commandMetadata.Type);
 
-        return (IConsoleCommand)context.Resolve(commandType);
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     public object CreateView(Type viewType)

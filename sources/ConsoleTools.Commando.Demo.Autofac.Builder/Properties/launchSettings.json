@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleTools.Commando.Demo": {
       "commandName": "Project",
-      "commandLineArgs": "help"
+      "commandLineArgs": "dummy -t asd"
     }
   }
 }
