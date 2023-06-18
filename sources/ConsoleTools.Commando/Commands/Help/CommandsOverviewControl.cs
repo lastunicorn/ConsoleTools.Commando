@@ -24,7 +24,7 @@ internal class CommandsOverviewControl
 
     public List<CommandShortInfo> NamedCommands { get; set; }
 
-    public List<CommandShortInfo> DefaultCommands { get; set; }
+    public List<CommandShortInfo> AnonymousCommands { get; set; }
 
     public void Display()
     {
@@ -34,13 +34,13 @@ internal class CommandsOverviewControl
         if (NamedCommands?.Count > 0)
             Console.WriteLine($" {ApplicationName} [command] [parameters]");
 
-        if (DefaultCommands?.Count > 0)
+        if (AnonymousCommands?.Count > 0)
             Console.WriteLine($" {ApplicationName} [parameters]");
 
         if (NamedCommands?.Count > 0)
             DisplayNamedCommands();
 
-        if (DefaultCommands?.Count > 0)
+        if (AnonymousCommands?.Count > 0)
             DisplayDefaultCommands();
     }
 
@@ -93,7 +93,7 @@ internal class CommandsOverviewControl
         dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
         dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
 
-        IEnumerable<ContentRow> rows = DefaultCommands.Select(CreateContentRowForAnonymousCommand);
+        IEnumerable<ContentRow> rows = AnonymousCommands.Select(CreateContentRowForAnonymousCommand);
         dataGrid.Rows.AddRange(rows);
 
         dataGrid.Display();

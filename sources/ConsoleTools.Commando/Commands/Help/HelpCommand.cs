@@ -19,8 +19,8 @@ using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
-[HelpCommand("help", Description = "Display more details about the available commands.", Order = int.MaxValue)]
-internal class HelpCommand : ICommand
+[HelpCommand("help", Description = "Display more details about the available commands.")]
+internal class HelpCommand : IConsoleCommand
 {
     private readonly CommandMetadataCollection commandMetadataCollection;
     private readonly Application application;
@@ -83,10 +83,10 @@ internal class HelpCommand : ICommand
         return new CommandsOverviewInfo
         {
             ApplicationName = application.Name,
-            NamedCommands = commandMetadataCollection.GetEnabledNamed()
+            NamedCommands = commandMetadataCollection.GetNamed()
                 .Select(x => new CommandShortInfo(x))
                 .ToList(),
-            DefaultCommands = commandMetadataCollection.GetEnabledDefault()
+            AnonymousCommands = commandMetadataCollection.GetAnonymous()
                 .Select(x => new CommandShortInfo(x))
                 .ToList()
         };

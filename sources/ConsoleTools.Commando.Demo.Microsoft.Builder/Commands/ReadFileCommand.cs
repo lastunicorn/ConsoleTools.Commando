@@ -19,7 +19,7 @@ using System.Text;
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands;
 
 [NamedCommand("read", Description = "Display the content of a text file.")]
-public class ReadFileCommand : CommandBase
+public class ReadFileCommand : ConsoleCommandBase
 {
     [AnonymousParameter(Order = 1, Description = "The path to the file that should be displayed.")]
     public string FilePath { get; set; }

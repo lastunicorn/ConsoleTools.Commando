@@ -16,12 +16,12 @@
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
-public abstract class CommandBase<TConsole> : ICommand
+public abstract class ConsoleCommandBase<TConsole> : IConsoleCommand
     where TConsole : EnhancedConsole
 {
     public TConsole Console { get; }
 
-    protected CommandBase(TConsole console)
+    protected ConsoleCommandBase(TConsole console)
     {
         Console = console ?? throw new ArgumentNullException(nameof(console));
     }

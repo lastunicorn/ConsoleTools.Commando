@@ -16,8 +16,8 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.Builder.Commands;
 
-[Command(Order = 100, Description = "Default command to be executed when no command name is specified.")]
-public class DefaultCommand : CommandBase
+[AnonymousCommand(Description = "Default command to be executed when no command name is specified.")]
+public class DefaultCommand : ConsoleCommandBase
 {
     [NamedParameter("text")]
     public string Text { get; set; }

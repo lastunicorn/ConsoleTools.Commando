@@ -27,6 +27,7 @@ public class CommandMetadata
 {
     private readonly Type commandType;
     private CommandAttribute commandAttribute;
+    private CommandOrderAttribute commandOrderAttribute;
     private readonly List<string> descriptionLines;
 
     public string Name { get; }
@@ -35,7 +36,7 @@ public class CommandMetadata
 
     public Type Type { get; }
 
-    public int Order => commandAttribute?.Order ?? int.MaxValue;
+    public int Order => commandOrderAttribute?.Order ?? int.MaxValue;
 
     public bool IsEnabled => commandAttribute?.Enabled ?? true;
 
@@ -78,6 +79,10 @@ public class CommandMetadata
             .SingleOrDefault();
 
         IsHelpCommand = commandAttribute is HelpCommandAttribute;
+
+        commandOrderAttribute = commandType.GetCustomAttributes(typeof(CommandOrderAttribute), false)
+            .Cast<CommandOrderAttribute>()
+            .FirstOrDefault();
     }
 
     private string ComputeCommandName()

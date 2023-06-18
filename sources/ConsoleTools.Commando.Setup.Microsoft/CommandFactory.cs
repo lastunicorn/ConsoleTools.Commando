@@ -25,15 +25,15 @@ internal class CommandFactory : ICommandFactory
         this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
 
-    public ICommand Create(Type commandType)
+    public IConsoleCommand Create(Type commandType)
     {
         if (commandType == null) throw new ArgumentNullException(nameof(commandType));
 
-        bool isCommandType = typeof(ICommand).IsAssignableFrom(commandType);
+        bool isCommandType = typeof(IConsoleCommand).IsAssignableFrom(commandType);
         if (!isCommandType)
             throw new TypeIsNotCommandException(commandType);
 
-        return (ICommand)serviceProvider.GetService(commandType);
+        return (IConsoleCommand)serviceProvider.GetService(commandType);
     }
 
     public object CreateView(Type viewType)

@@ -66,8 +66,8 @@ public class CommandMetadataCollection
     private static bool IsCommandType(Type type)
     {
         return !type.IsAbstract &&
-               type != typeof(ICommand) &&
-               typeof(ICommand).IsAssignableFrom(type);
+               type != typeof(IConsoleCommand) &&
+               typeof(IConsoleCommand).IsAssignableFrom(type);
     }
 
     private static bool IsViewType(Type type)
@@ -134,15 +134,16 @@ public class CommandMetadataCollection
             .MinBy(x => x.Order);
     }
 
-    public IEnumerable<CommandMetadata> GetEnabledNamed()
+    public IEnumerable<CommandMetadata> GetNamed()
     {
         return commandsMetadata
-            .Where(x => x.IsEnabled && x.Name != null)
+            .Where(x => x.IsEnabled && !x.IsHelpCommand && x.Name != null)
             .OrderBy(x => x.Order)
-            .ThenBy(x => x.Name);
+            .ThenBy(x => x.Name)
+            .Concat(new[] { GetHelpCommand() });
     }
 
-    public IEnumerable<CommandMetadata> GetEnabledDefault()
+    public IEnumerable<CommandMetadata> GetAnonymous()
     {
         return commandsMetadata
             .Where(x => x.IsEnabled && x.Name == null)
@@ -152,19 +153,7 @@ public class CommandMetadataCollection
 
     public CommandMetadata GetHelpCommand()
     {
-        CommandMetadata commandMetadata = commandsMetadata
-            .FirstOrDefault(x => x.IsHelpCommand);
-
-        if (commandMetadata != null)
-            return commandMetadata;
-
-        return commandsMetadata
-            .FirstOrDefault(x => string.Equals(x.Name, "help", StringComparison.InvariantCultureIgnoreCase));
-    }
-
-    public IEnumerable<CommandMetadata> GetAnonymous()
-    {
-        return commandsMetadata.Where(x => x.IsEnabled && x.Name == null);
+        return commandsMetadata.FirstOrDefault(x => x.IsHelpCommand);
     }
 
     public void Freeze()

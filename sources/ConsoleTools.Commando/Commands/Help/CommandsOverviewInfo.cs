@@ -22,5 +22,5 @@ public class CommandsOverviewInfo
 
     public List<CommandShortInfo> NamedCommands { get; set; }
 
-    public List<CommandShortInfo> DefaultCommands { get; set; }
+    public List<CommandShortInfo> AnonymousCommands { get; set; }
 }

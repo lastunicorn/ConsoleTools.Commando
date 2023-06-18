@@ -17,7 +17,7 @@
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Empty;
 
 [NamedCommand("empty", Enabled = false)]
-internal class EmptyCommand : ICommand
+internal class EmptyConsoleCommand : IConsoleCommand
 {
     public Task Execute()
     {

@@ -17,7 +17,7 @@
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Autofac.Builder.Commands;
 
 [NamedCommand("dummy", Description = "A dummy command that shows how to create parameters of different types.")]
-public class DummyCommand : CommandBase
+public class DummyCommand : ConsoleCommandBase
 {
     [NamedParameter("text", ShortName = 't', IsOptional = true, Description = "A simple text.")]
     public string Text { get; set; }

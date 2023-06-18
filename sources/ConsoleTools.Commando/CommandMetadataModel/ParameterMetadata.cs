@@ -65,7 +65,7 @@ public class ParameterMetadata
         this.customAttribute = customAttribute ?? throw new ArgumentNullException(nameof(customAttribute));
     }
 
-    public void SetValue(ICommand command, string value)
+    public void SetValue(IConsoleCommand consoleCommand, string value)
     {
         bool isFlag = propertyInfo.PropertyType == typeof(bool) && value == null;
 
@@ -73,7 +73,7 @@ public class ParameterMetadata
             ? true
             : ParseValue(value);
 
-        propertyInfo.SetValue(command, valueAsObject);
+        propertyInfo.SetValue(consoleCommand, valueAsObject);
     }
 
     private object ParseValue(string value)

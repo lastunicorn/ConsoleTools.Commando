@@ -18,17 +18,17 @@ namespace DustInTheWind.ConsoleTools.Commando.Demo.Autofac.Builder.Commands;
 
 public class DummyView : ViewBase<DummyCommand>
 {
-    public override void Display(DummyCommand command)
+    public override void Display(DummyCommand dummyCommand)
     {
         WithIndentation("Same values after command finished execution:", () =>
         {
-            WriteValue("Text", command.Text);
-            WriteValue("Flag", command.Flag);
-            WriteValue("Integer Number", command.IntegerNumber);
-            WriteValue("Real Number", command.RealNumber);
-            WriteValue("Character", command.Character);
-            WriteValue("Param 1", command.Param1);
-            WriteValue("Param 2", command.Param2);
+            WriteValue("Text", dummyCommand.Text);
+            WriteValue("Flag", dummyCommand.Flag);
+            WriteValue("Integer Number", dummyCommand.IntegerNumber);
+            WriteValue("Real Number", dummyCommand.RealNumber);
+            WriteValue("Character", dummyCommand.Character);
+            WriteValue("Param 1", dummyCommand.Param1);
+            WriteValue("Param 2", dummyCommand.Param2);
         });
     }
 }

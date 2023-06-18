@@ -17,7 +17,7 @@
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Autofac.DependencyInjection.Commands;
 
 [NamedCommand("read", Description = "Display the content of a text file.")]
-public class ReadFileCommand : CommandBase
+public class ReadFileCommand : ConsoleCommandBase
 {
     [AnonymousParameter(Order = 1, Description = "The path to the file that should be displayed.")]
     public string FilePath { get; set; }

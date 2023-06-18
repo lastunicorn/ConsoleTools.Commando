@@ -27,15 +27,15 @@ internal class CommandFactory : ICommandFactory
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public ICommand Create(Type commandType)
+    public IConsoleCommand Create(Type commandType)
     {
         if (commandType == null) throw new ArgumentNullException(nameof(commandType));
 
-        bool isCommandType = typeof(ICommand).IsAssignableFrom(commandType);
+        bool isCommandType = typeof(IConsoleCommand).IsAssignableFrom(commandType);
         if (!isCommandType)
             throw new TypeIsNotCommandException(commandType);
 
-        return (ICommand)context.Resolve(commandType);
+        return (IConsoleCommand)context.Resolve(commandType);
     }
 
     public object CreateView(Type viewType)

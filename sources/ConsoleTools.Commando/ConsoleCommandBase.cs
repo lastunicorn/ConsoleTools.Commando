@@ -14,27 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.DependencyInjection.Commands;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-[NamedCommand("read", Description = "Display the content of a text file.")]
-public class ReadFileCommand : ConsoleCommandBase
+public abstract class ConsoleCommandBase : ConsoleCommandBase<EnhancedConsole>
 {
-    [AnonymousParameter(Order = 1, Description = "The path to the file that should be displayed.")]
-    public string FilePath { get; set; }
-
-    public ReadFileCommand(EnhancedConsole console)
+    protected ConsoleCommandBase(EnhancedConsole console)
         : base(console)
     {
-    }
-
-    public override Task Execute()
-    {
-        Console.WriteTitle("Reading a text file");
-        Console.WriteValue("File", FilePath);
-
-        string content = File.ReadAllText(FilePath);
-        Console.WriteValueBelowName("Content", content);
-
-        return Task.CompletedTask;
     }
 }

@@ -26,7 +26,7 @@ public class TypeIsNotCommandException : Exception
     private static string BuildMessage(Type type)
     {
         string typeFullName = type.FullName;
-        string commandTypeFullName = typeof(ICommand).FullName;
+        string commandTypeFullName = typeof(IConsoleCommand).FullName;
 
         return $"Type {typeFullName} does not represent command. A command must implement the {commandTypeFullName} interface.";
     }

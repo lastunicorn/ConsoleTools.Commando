@@ -39,7 +39,7 @@ internal class HelpView : ViewBase<HelpCommand>
         {
             ApplicationName = command.CommandsOverviewInfo.ApplicationName,
             NamedCommands = command.CommandsOverviewInfo.NamedCommands,
-            DefaultCommands = command.CommandsOverviewInfo.DefaultCommands
+            AnonymousCommands = command.CommandsOverviewInfo.AnonymousCommands
         };
 
         commandsOverviewControl.Display();

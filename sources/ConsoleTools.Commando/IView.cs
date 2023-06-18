@@ -17,7 +17,7 @@
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public interface IView<in TCommand>
-    where TCommand : ICommand
+    where TCommand : IConsoleCommand
 {
     void Display(TCommand command);
 }
