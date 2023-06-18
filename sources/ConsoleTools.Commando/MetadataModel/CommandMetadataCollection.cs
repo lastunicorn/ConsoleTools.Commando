@@ -21,7 +21,7 @@ namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 public class CommandMetadataCollection
 {
     private readonly List<CommandMetadata> commandsMetadata = new();
-    private readonly List<Type> viewTypes = new();
+    private readonly List<ViewMetadata> viewsMetadata = new();
     private bool isFrozen;
 
     public void LoadFromCurrentAppDomain()
@@ -45,10 +45,16 @@ public class CommandMetadataCollection
         {
             CommandMetadata commandMetadata = new(type);
 
-            if (commandMetadata.CommandKind != CommandKind.None) 
+            if (commandMetadata.CommandKind != CommandKind.None)
+            {
                 commandsMetadata.Add(commandMetadata);
-            else if (IsViewType(type))
-                viewTypes.Add(type);
+                continue;
+            }
+            
+            ViewMetadata viewMetadata = new(type);
+
+            if (viewMetadata.IsViewType())
+                viewsMetadata.Add(viewMetadata);
         }
     }
 
@@ -58,80 +64,24 @@ public class CommandMetadataCollection
             throw new InvalidOperationException();
 
         commandsMetadata.Clear();
-        viewTypes.Clear();
-    }
-
-    //private static bool IsCommandType(Type type)
-    //{
-    //    if (!type.IsClass || type.IsAbstract)
-    //        return false;
-
-    //    bool isNonGenericCommand = typeof(IConsoleCommand).IsAssignableFrom(type);
-
-    //    if (isNonGenericCommand)
-    //        return true;
-
-    //    bool isGenericCommand = type.GetInterfaces()
-    //         .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IConsoleCommand<>));
-
-    //    return isGenericCommand;
-    //}
-
-    private static bool IsViewType(Type type)
-    {
-        if (type.IsAbstract)
-            return false;
-
-        Type[] interfaceTypes = type.GetInterfaces();
-
-        foreach (Type interfaceType in interfaceTypes)
-        {
-            bool isGenericType = interfaceType.IsGenericType;
-
-            if (!isGenericType)
-                continue;
-
-            Type genericTypeDefinition = interfaceType.GetGenericTypeDefinition();
-
-            return genericTypeDefinition == typeof(IView<>);
-        }
-
-        return false;
+        viewsMetadata.Clear();
     }
 
     public IEnumerable<Type> GetCommandTypes()
     {
-        return commandsMetadata
-            .Select(x => x.Type);
+        return commandsMetadata.Select(x => x.Type);
     }
 
     public IEnumerable<Type> GetViewTypes()
     {
-        return viewTypes.AsReadOnly();
+        return viewsMetadata.Select(x => x.Type);
     }
 
-    public IEnumerable<Type> GetViewTypesForCommand(Type commandType)
+    public IEnumerable<Type> GetViewTypesForCommand(Type viewModelType)
     {
-        return viewTypes
-            .Where(x =>
-            {
-                IEnumerable<Type> interfaceTypes = x.GetInterfaces();
-
-                foreach (Type interfaceType in interfaceTypes)
-                {
-                    Type[] genericArgumentTypes = interfaceType.GetGenericArguments();
-
-                    if (genericArgumentTypes.Length != 1)
-                        continue;
-
-                    if (genericArgumentTypes[0] != commandType)
-                        continue;
-
-                    return true;
-                }
-
-                return false;
-            });
+        return viewsMetadata
+            .Where(x => x.IsViewFor(viewModelType))
+            .Select(x=>x.Type);
     }
 
     public CommandMetadata GetByName(string commandName)

@@ -16,9 +16,9 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
-internal class HelpView : ViewBase<HelpCommand>
+internal class HelpView : ViewBase<HelpViewModel>
 {
-    public override void Display(HelpCommand viewModel)
+    public override void Display(HelpViewModel viewModel)
     {
         if (viewModel.CommandsOverviewInfo != null)
             DisplayCommandsOverview(viewModel);
@@ -33,27 +33,27 @@ internal class HelpView : ViewBase<HelpCommand>
         }
     }
 
-    private static void DisplayCommandsOverview(HelpCommand command)
+    private static void DisplayCommandsOverview(HelpViewModel viewModel)
     {
         CommandsOverviewControl commandsOverviewControl = new()
         {
-            ApplicationName = command.CommandsOverviewInfo.ApplicationName,
-            NamedCommands = command.CommandsOverviewInfo.NamedCommands,
-            AnonymousCommands = command.CommandsOverviewInfo.AnonymousCommands
+            ApplicationName = viewModel.CommandsOverviewInfo.ApplicationName,
+            NamedCommands = viewModel.CommandsOverviewInfo.NamedCommands,
+            AnonymousCommands = viewModel.CommandsOverviewInfo.AnonymousCommands
         };
 
         commandsOverviewControl.Display();
     }
 
-    private static void DisplayCommandDetails(HelpCommand command)
+    private static void DisplayCommandDetails(HelpViewModel viewModel)
     {
         CommandUsageControl commandUsageControl = new()
         {
-            Description = command.CommandFullInfo.Description,
-            ApplicationName = command.CommandFullInfo.ApplicationName,
-            CommandName = command.CommandFullInfo.Name,
-            NamedParameters = command.CommandFullInfo.OptionsInfo,
-            UnnamedParameters = command.CommandFullInfo.OperandsInfo
+            Description = viewModel.CommandFullInfo.Description,
+            ApplicationName = viewModel.CommandFullInfo.ApplicationName,
+            CommandName = viewModel.CommandFullInfo.Name,
+            NamedParameters = viewModel.CommandFullInfo.OptionsInfo,
+            UnnamedParameters = viewModel.CommandFullInfo.OperandsInfo
         };
 
         commandUsageControl.Display();

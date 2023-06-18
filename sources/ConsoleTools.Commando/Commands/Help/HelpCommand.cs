@@ -20,7 +20,7 @@ using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 [HelpCommand("help", Description = "Display more details about the available commands.")]
-internal class HelpCommand : IConsoleCommand
+internal class HelpCommand : IConsoleCommand<HelpViewModel>
 {
     private readonly CommandMetadataCollection commandMetadataCollection;
     private readonly Application application;
@@ -28,31 +28,27 @@ internal class HelpCommand : IConsoleCommand
     [AnonymousParameter(DisplayName = "command name", Order = 1, IsOptional = true, Description = "The name of the command for which to display detailed help information.")]
     public string CommandName { get; set; }
 
-    public CommandsOverviewInfo CommandsOverviewInfo { get; private set; }
-
-    public CommandFullInfo CommandFullInfo { get; private set; }
-
-    public CultureInfo CultureInfo { get; private set; }
-
     public HelpCommand(CommandMetadataCollection commandMetadataCollection, Application application)
     {
         this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
         this.application = application ?? throw new ArgumentNullException(nameof(application));
     }
 
-    public Task Execute()
+    public Task<HelpViewModel> Execute()
     {
+        HelpViewModel viewModel = new();
+
         if (CommandName == null)
         {
-            CommandsOverviewInfo = GetAllCommandsOverview();
-            CultureInfo = CultureInfo.CurrentCulture;
+            viewModel.CommandsOverviewInfo = GetAllCommandsOverview();
+            viewModel.CultureInfo = CultureInfo.CurrentCulture;
         }
         else
         {
-            CommandFullInfo = GetCommandFullInfo(CommandName);
+            viewModel.CommandFullInfo = GetCommandFullInfo(CommandName);
         }
 
-        return Task.CompletedTask;
+        return Task.FromResult(viewModel);
     }
 
     private CommandFullInfo GetCommandFullInfo(string commandName)

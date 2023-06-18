@@ -25,7 +25,6 @@ namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 /// </summary>
 public class CommandMetadata
 {
-    private readonly Type commandType;
     private CommandAttribute commandAttribute;
     private CommandOrderAttribute commandOrderAttribute;
     private readonly List<string> descriptionLines;
@@ -48,7 +47,7 @@ public class CommandMetadata
     {
         get
         {
-            return commandType.GetProperties()
+            return Type.GetProperties()
                 .Select(x =>
                 {
                     CommandParameterAttribute customAttribute = x.GetCustomAttributes<CommandParameterAttribute>()
@@ -65,7 +64,7 @@ public class CommandMetadata
 
     public CommandMetadata(Type commandType)
     {
-        this.commandType = commandType ?? throw new ArgumentNullException(nameof(commandType));
+        Type = commandType ?? throw new ArgumentNullException(nameof(commandType));
 
         CommandKind = ComputeCommandKind(commandType);
 
@@ -75,8 +74,6 @@ public class CommandMetadata
             Name = ComputeCommandName();
             descriptionLines = ComputeDescription();
         }
-
-        Type = commandType;
     }
 
     private static CommandKind ComputeCommandKind(Type type)
@@ -100,13 +97,13 @@ public class CommandMetadata
 
     private void RetrieveAttributes()
     {
-        commandAttribute = commandType.GetCustomAttributes(typeof(CommandAttribute), false)
+        commandAttribute = Type.GetCustomAttributes(typeof(CommandAttribute), false)
             .Cast<CommandAttribute>()
             .SingleOrDefault();
 
         IsHelpCommand = commandAttribute is HelpCommandAttribute;
 
-        commandOrderAttribute = commandType.GetCustomAttributes(typeof(CommandOrderAttribute), false)
+        commandOrderAttribute = Type.GetCustomAttributes(typeof(CommandOrderAttribute), false)
             .Cast<CommandOrderAttribute>()
             .FirstOrDefault();
     }

@@ -55,7 +55,8 @@ public class CommandRouter
                     SetParameters(consoleCommand, commandMetadata, commandRequest);
                     RaiseCommandCreatedEvent(commandRequest, consoleCommand);
                     await consoleCommand.Execute();
-                    
+                    ExecuteViewsFor(consoleCommand);
+
                     break;
                 }
 
