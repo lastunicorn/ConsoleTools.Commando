@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.DependencyInjection.Commands.ReadFile;
 
-public class ReadFileViewModel
+internal class ReadFileViewModel
 {
     public string FilePath { get; set; }
 

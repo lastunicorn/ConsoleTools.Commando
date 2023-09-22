@@ -22,8 +22,11 @@ public static class MethodInfoExtensions
 {
     public static async Task<object> InvokeAsync(this MethodInfo methodInfo, object obj, params object[] parameters)
     {
-        dynamic awaitable = methodInfo.Invoke(obj, parameters);
-        await awaitable;
-        return awaitable.GetAwaiter().GetResult();
+        Task task = (Task)methodInfo.Invoke(obj, parameters);
+
+        await task.ConfigureAwait(false);
+
+        PropertyInfo resultProperty = task.GetType().GetProperty("Result");
+        return resultProperty.GetValue(task);
     }
 }

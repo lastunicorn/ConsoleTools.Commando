@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Autofac.DependencyInjection.Commands.Dummy;
 
-public class DummyView : ViewBase<DummyViewModel>
+internal class DummyView : ViewBase<DummyViewModel>
 {
     public override void Display(DummyViewModel viewModel)
     {

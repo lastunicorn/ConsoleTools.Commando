@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleTools.Commando.Demo": {
       "commandName": "Project",
-      "commandLineArgs": "-text asd"
+      "commandLineArgs": "--text asd"
     }
   }
 }

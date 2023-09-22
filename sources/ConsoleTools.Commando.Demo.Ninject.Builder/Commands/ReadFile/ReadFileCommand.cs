@@ -19,7 +19,7 @@ using System.Text;
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.Builder.Commands.ReadFile;
 
 [NamedCommand("read", Description = "Display the content of a text file.")]
-public class ReadFileCommand : IConsoleCommand<ReadFileViewModel>
+internal class ReadFileCommand : IConsoleCommand<ReadFileViewModel>
 {
     [AnonymousParameter(Order = 1, DisplayName = "file path", Description = "The path to the file that should be displayed.")]
     public string FilePath { get; set; }

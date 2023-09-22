@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.DependencyInjection.Commands.Default;
 
-public class DefaultView : ViewBase<DefaultViewModel>
+internal class DefaultView : ViewBase<DefaultViewModel>
 {
     public override void Display(DefaultViewModel viewModel)
     {

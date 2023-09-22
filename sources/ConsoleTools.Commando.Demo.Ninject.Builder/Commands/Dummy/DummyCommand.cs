@@ -17,7 +17,7 @@
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.Builder.Commands.Dummy;
 
 [NamedCommand("dummy", Description = "A dummy command that shows how to create parameters of different types.")]
-public class DummyCommand : IConsoleCommand<DummyViewModel>
+internal class DummyCommand : IConsoleCommand<DummyViewModel>
 {
     [NamedParameter("text", ShortName = 't', IsOptional = true, Description = "A simple text.")]
     public string Text { get; set; }

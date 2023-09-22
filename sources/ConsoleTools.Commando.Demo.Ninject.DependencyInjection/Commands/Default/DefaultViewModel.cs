@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.DependencyInjection.Commands.Default;
 
-public class DefaultViewModel
+internal class DefaultViewModel
 {
     public string Text { get; set; }
 }

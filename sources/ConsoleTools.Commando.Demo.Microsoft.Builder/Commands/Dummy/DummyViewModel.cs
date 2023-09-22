@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands.Dummy;
 
-public class DummyViewModel
+internal class DummyViewModel
 {
     public string Text { get; set; }
 

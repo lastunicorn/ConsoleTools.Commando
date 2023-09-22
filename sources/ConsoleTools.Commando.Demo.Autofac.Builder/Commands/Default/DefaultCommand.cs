@@ -17,7 +17,7 @@
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Autofac.Builder.Commands.Default;
 
 [AnonymousCommand(Description = "Default command to be executed when no command name is specified.")]
-public class DefaultCommand : IConsoleCommand<DefaultViewModel>
+internal class DefaultCommand : IConsoleCommand<DefaultViewModel>
 {
     [NamedParameter("text", ShortName = 't')]
     public string Text { get; set; }
