@@ -26,6 +26,8 @@ public class Application
 
     public string Name { get; set; }
 
+    public event EventHandler Starting;
+    public event EventHandler Ended;
     public event EventHandler<UnhandledApplicationExceptionEventArgs> UnhandledApplicationException;
 
     public Application(ICommandParser commandParser, CommandRouter commandRouter)
@@ -62,6 +64,8 @@ public class Application
     {
         try
         {
+            OnStarting();
+
             CommandRequest commandRequest = commandParser.Parse(args);
             await commandRouter.Execute(commandRequest);
         }
@@ -73,12 +77,26 @@ public class Application
             if (!eventArgs.IsHandled)
             {
 #if DEBUG
-                CustomConsole.WriteError(ex);
+                CustomConsole.WriteLineError(ex);
 #else
-                CustomConsole.WriteError(ex.Message);
+                CustomConsole.WriteLineError(ex.Message);
 #endif
             }
         }
+        finally
+        {
+            OnEnded();
+        }
+    }
+
+    protected virtual void OnStarting()
+    {
+        Starting?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnEnded()
+    {
+        Ended?.Invoke(this, EventArgs.Empty);
     }
 
     protected virtual void OnUnhandledException(UnhandledApplicationExceptionEventArgs e)
