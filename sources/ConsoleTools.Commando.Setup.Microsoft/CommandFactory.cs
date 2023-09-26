@@ -26,7 +26,7 @@ internal class CommandFactory : ICommandFactory
     {
         this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
-    
+
     public object Create(CommandMetadata commandMetadata)
     {
         switch (commandMetadata.CommandKind)

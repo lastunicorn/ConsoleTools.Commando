@@ -27,7 +27,9 @@ public class Application
     public string Name { get; set; }
 
     public event EventHandler Starting;
+
     public event EventHandler Ended;
+
     public event EventHandler<UnhandledApplicationExceptionEventArgs> UnhandledApplicationException;
 
     public Application(ICommandParser commandParser, CommandRouter commandRouter)

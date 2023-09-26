@@ -11,6 +11,7 @@ v2.0.0
 - [feature] Changed the attributes for commands and parameters.
 - [feature] Extracted the parsing logic into a different package.
 - [feature] Added support for parameter of type Encoding.
+- [feature] Added Starting and Ended events for the Application.
 
 v1.5.0
 ----------------------------------------------------------------------------------------------------

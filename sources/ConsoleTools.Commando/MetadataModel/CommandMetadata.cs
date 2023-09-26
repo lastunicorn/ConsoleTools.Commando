@@ -35,7 +35,7 @@ public class CommandMetadata
 
     public Type Type { get; }
 
-    public CommandKind CommandKind { get; private set; }
+    public CommandKind CommandKind { get; }
 
     public int Order => commandOrderAttribute?.Order ?? int.MaxValue;
 

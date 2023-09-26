@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
-using System;
 using Ninject;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;

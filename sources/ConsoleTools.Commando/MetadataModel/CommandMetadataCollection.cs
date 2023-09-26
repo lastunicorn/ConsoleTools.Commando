@@ -50,7 +50,7 @@ public class CommandMetadataCollection
                 commandsMetadata.Add(commandMetadata);
                 continue;
             }
-            
+
             ViewMetadata viewMetadata = new(type);
 
             if (viewMetadata.IsViewType())
@@ -81,7 +81,7 @@ public class CommandMetadataCollection
     {
         return viewsMetadata
             .Where(x => x.IsViewFor(viewModelType))
-            .Select(x=>x.Type);
+            .Select(x => x.Type);
     }
 
     public CommandMetadata GetByName(string commandName)

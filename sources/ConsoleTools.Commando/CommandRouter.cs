@@ -46,38 +46,38 @@ public class CommandRouter
                 throw new UnknownCommandException();
 
             case CommandKind.WithoutResult:
-                {
-                    IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
+            {
+                IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
 
-                    if (consoleCommand == null)
-                        throw new UnknownCommandException();
+                if (consoleCommand == null)
+                    throw new UnknownCommandException();
 
-                    SetParameters(consoleCommand, commandMetadata, commandRequest);
-                    RaiseCommandCreatedEvent(commandRequest, consoleCommand);
-                    await consoleCommand.Execute();
-                    ExecuteViewsFor(consoleCommand);
+                SetParameters(consoleCommand, commandMetadata, commandRequest);
+                RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+                await consoleCommand.Execute();
+                ExecuteViewsFor(consoleCommand);
 
-                    break;
-                }
+                break;
+            }
 
             case CommandKind.WithResult:
-                {
-                    object consoleCommand = commandFactory.Create(commandMetadata);
+            {
+                object consoleCommand = commandFactory.Create(commandMetadata);
 
-                    if (consoleCommand == null)
-                        throw new UnknownCommandException();
+                if (consoleCommand == null)
+                    throw new UnknownCommandException();
 
-                    SetParameters(consoleCommand, commandMetadata, commandRequest);
-                    RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+                SetParameters(consoleCommand, commandMetadata, commandRequest);
+                RaiseCommandCreatedEvent(commandRequest, consoleCommand);
 
-                    Type commandType = consoleCommand.GetType();
-                    MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
+                Type commandType = consoleCommand.GetType();
+                MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
 
-                    object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
-                    ExecuteViewsFor(viewModel);
+                object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
+                ExecuteViewsFor(viewModel);
 
-                    break;
-                }
+                break;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException();

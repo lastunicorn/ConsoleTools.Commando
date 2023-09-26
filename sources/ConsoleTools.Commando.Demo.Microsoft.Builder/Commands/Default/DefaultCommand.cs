@@ -21,7 +21,7 @@ internal class DefaultCommand : IConsoleCommand<DefaultViewModel>
 {
     [NamedParameter("text", ShortName = 't')]
     public string Text { get; set; }
-    
+
     public Task<DefaultViewModel> Execute()
     {
         DefaultViewModel viewModel = new()

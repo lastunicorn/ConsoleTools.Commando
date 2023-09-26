@@ -22,7 +22,7 @@ public class CommandAttribute : Attribute
     /// Gets or sets a short description that is displayed by the help command.
     /// </summary>
     public string Description { get; set; }
-    
+
     /// <summary>
     /// Gets or sets a value that specify if the command is allowed to be executed or not.
     /// If the command is disabled, the system behaves as if this command does not even exist.
