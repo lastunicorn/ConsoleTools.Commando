@@ -36,7 +36,7 @@ public class CommandParser_HavingOnlyOneShortOptionUsingColonSign_Tests
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsNullVerb()
     {
-        commandRequest.Verb.Should().BeNull();
+        commandRequest.CommandName.Should().BeNull();
     }
 
     [Fact]

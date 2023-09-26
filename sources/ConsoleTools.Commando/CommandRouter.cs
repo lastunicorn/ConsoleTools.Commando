@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
+using DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
@@ -37,51 +38,120 @@ public class CommandRouter
     {
         CommandMetadata commandMetadata = GetCommandMetadata(commandRequest);
 
-        if (commandMetadata == null)
-            throw new UnknownCommandException();
-
         switch (commandMetadata.CommandKind)
         {
             case CommandKind.None:
                 throw new UnknownCommandException();
 
             case CommandKind.WithoutResult:
-            {
-                IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
-
-                if (consoleCommand == null)
-                    throw new UnknownCommandException();
-
-                SetParameters(consoleCommand, commandMetadata, commandRequest);
-                RaiseCommandCreatedEvent(commandRequest, consoleCommand);
-                await consoleCommand.Execute();
-                ExecuteViewsFor(consoleCommand);
-
+                await ExecuteCommandWithoutResult(commandRequest, commandMetadata);
                 break;
-            }
 
             case CommandKind.WithResult:
-            {
-                object consoleCommand = commandFactory.Create(commandMetadata);
-
-                if (consoleCommand == null)
-                    throw new UnknownCommandException();
-
-                SetParameters(consoleCommand, commandMetadata, commandRequest);
-                RaiseCommandCreatedEvent(commandRequest, consoleCommand);
-
-                Type commandType = consoleCommand.GetType();
-                MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
-
-                object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
-                ExecuteViewsFor(viewModel);
-
+                await ExecuteCommandWithResult(commandRequest, commandMetadata);
                 break;
-            }
 
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private CommandMetadata GetCommandMetadata(CommandRequest commandRequest)
+    {
+        if (commandRequest.IsEmpty)
+            return commandMetadataCollection.GetHelpCommand();
+
+        CommandRequestAnalysis commandRequestAnalysis = new(commandMetadataCollection);
+        commandRequestAnalysis.Analyze(commandRequest);
+
+        switch (commandRequestAnalysis.MatchType)
+        {
+            case CommandMatchType.None:
+                throw new UnknownCommandException();
+
+            case CommandMatchType.Partial:
+            case CommandMatchType.Full:
+                return commandRequestAnalysis.Match;
+
+            case CommandMatchType.Multiple:
+                throw new Exception($"Multiple commands match the provided parameters.");
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        //IEnumerable<CommandMetadata> commandMetadataList = string.IsNullOrEmpty(commandRequest.CommandName)
+        //    ? commandMetadataCollection.GetAnonymous()
+        //    : commandMetadataCollection.GetAllByName(commandRequest.CommandName);
+
+        //List<CommandMetadata> matchingCommandMetadataList = commandMetadataList
+        //    .Where(x => IsMatch(commandRequest, x))
+        //    .ToList();
+
+        //if (matchingCommandMetadataList.Count > 1)
+        //    throw new Exception($"Multiple commands ({matchingCommandMetadataList.Count}) match the provided parameters.");
+
+        //return matchingCommandMetadataList.SingleOrDefault();
+    }
+
+    //private static bool IsMatch(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    //{
+    //    commandRequest.Reset();
+
+    //    foreach (ParameterMetadata parameterMetadata in commandMetadata.Parameters)
+    //    {
+    //        bool isMatch = IsMatch(parameterMetadata, commandRequest);
+
+    //        if (!isMatch)
+    //            return false;
+    //    }
+
+    //    return true;
+    //}
+
+    //private static bool IsMatch(ParameterMetadata parameterMetadata, CommandRequest commandRequest)
+    //{
+    //    CommandArgument commandArgument = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
+
+    //    if (commandArgument != null)
+    //        return true;
+
+    //    string operand = commandRequest.GetOperandAndMarkAsUsed(parameterMetadata);
+
+    //    if (operand != null)
+    //        return true;
+
+    //    return parameterMetadata.IsOptional;
+    //}
+
+    private async Task ExecuteCommandWithoutResult(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    {
+        IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
+
+        if (consoleCommand == null)
+            throw new UnknownCommandException();
+
+        SetParameters(consoleCommand, commandMetadata, commandRequest);
+        RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+        await consoleCommand.Execute();
+        ExecuteViewsFor(consoleCommand);
+    }
+
+    private async Task ExecuteCommandWithResult(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    {
+        object consoleCommand = commandFactory.Create(commandMetadata);
+
+        if (consoleCommand == null)
+            throw new UnknownCommandException();
+
+        SetParameters(consoleCommand, commandMetadata, commandRequest);
+        RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+
+        Type commandType = consoleCommand.GetType();
+        MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
+
+        object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
+        ExecuteViewsFor(viewModel);
     }
 
     private void RaiseCommandCreatedEvent(CommandRequest commandRequest, object consoleCommand)
@@ -97,16 +167,6 @@ public class CommandRouter
         OnCommandCreated(args);
     }
 
-    private CommandMetadata GetCommandMetadata(CommandRequest commandRequest)
-    {
-        if (commandRequest.IsEmpty)
-            return commandMetadataCollection.GetHelpCommand();
-
-        return string.IsNullOrEmpty(commandRequest.Verb)
-            ? commandMetadataCollection.GetAnonymous().FirstOrDefault()
-            : commandMetadataCollection.GetByName(commandRequest.Verb);
-    }
-
     private static void SetParameters(object consoleCommand, CommandMetadata commandMetadata, CommandRequest commandRequest)
     {
         commandRequest.Reset();
@@ -117,11 +177,11 @@ public class CommandRouter
 
     private static void SetParameter(object consoleCommand, ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
-        CommandArgument argument = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
+        CommandArgument commandArgument = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
 
-        if (argument != null)
+        if (commandArgument != null)
         {
-            parameterMetadata.SetValue(consoleCommand, argument.Value);
+            parameterMetadata.SetValue(consoleCommand, commandArgument.Value);
             return;
         }
 

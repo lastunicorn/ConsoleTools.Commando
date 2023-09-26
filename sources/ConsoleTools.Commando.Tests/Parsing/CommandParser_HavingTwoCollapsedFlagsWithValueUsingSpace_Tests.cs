@@ -36,7 +36,7 @@ public class CommandParser_HavingTwoCollapsedFlagsWithValueUsingSpace_Tests
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsNullVerb()
     {
-        commandRequest.Verb.Should().BeNull();
+        commandRequest.CommandName.Should().BeNull();
     }
 
     [Fact]

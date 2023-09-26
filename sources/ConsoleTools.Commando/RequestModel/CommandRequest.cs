@@ -25,7 +25,7 @@ public class CommandRequest
 
     public string[] UnderlyingArgs { get; init; }
 
-    public string Verb { get; set; }
+    public string CommandName { get; set; }
 
     public IReadOnlyCollection<CommandArgument> Options => arguments
         .Where(x => x.Name != null)
@@ -35,7 +35,9 @@ public class CommandRequest
         .Where(x => x.Name == null)
         .ToList();
 
-    public bool IsEmpty => Verb == null && arguments.Count == 0;
+    public bool IsEmpty => CommandName == null && arguments.Count == 0;
+
+    public bool HasUnusedArguments => unusedArguments.Count > 0;
 
     public void AddParameter(CommandArgument commandArgument)
     {

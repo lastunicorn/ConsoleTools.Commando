@@ -114,14 +114,6 @@ public class CommandMetadata
             return namedCommandAttribute.Name;
 
         return null;
-
-        //if (commandAttribute != null && !string.IsNullOrEmpty(commandAttribute.CommandName))
-        //    return commandAttribute.CommandName;
-
-        //if (commandType.Name.EndsWith("Command"))
-        //    return commandType.Name[..^"Command".Length].ToLower();
-
-        //return commandType.Name.ToLower();
     }
 
     private List<string> ComputeDescription()

@@ -33,7 +33,7 @@ public class CommandParser_HavingOnlyVerb_Tests
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
 
-        commandRequest.Verb.Should().Be(verb);
+        commandRequest.CommandName.Should().Be(verb);
     }
 
     [Theory]

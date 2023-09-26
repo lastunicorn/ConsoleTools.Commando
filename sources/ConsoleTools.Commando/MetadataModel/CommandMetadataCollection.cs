@@ -91,6 +91,13 @@ public class CommandMetadataCollection
             .MinBy(x => x.Order);
     }
 
+    public IEnumerable<CommandMetadata> GetAllByName(string commandName)
+    {
+        return commandsMetadata
+            .Where(x => x.IsEnabled && x.Name == commandName)
+            .OrderBy(x => x.Order);
+    }
+
     public IEnumerable<CommandMetadata> GetNamed()
     {
         return commandsMetadata

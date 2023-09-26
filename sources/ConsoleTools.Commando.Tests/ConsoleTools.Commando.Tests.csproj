@@ -45,4 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" PrivateAssets="All" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="MetadataModel\CommandMetadataCollectionTests\" />
+    </ItemGroup>
+
 </Project>

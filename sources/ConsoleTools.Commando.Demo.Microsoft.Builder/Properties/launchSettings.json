@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleTools.Commando.Demo": {
       "commandName": "Project",
-      "commandLineArgs": "read -e UTF-8 c:\\temp\\VPNConfig.ovpn"
+      "commandLineArgs": "test -t asd"
     }
   }
 }

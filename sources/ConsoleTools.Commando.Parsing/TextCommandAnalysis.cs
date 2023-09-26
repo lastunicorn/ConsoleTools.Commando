@@ -46,7 +46,7 @@ internal class TextCommandAnalysis
 
                 if (argument.IsAnonymousArgument && !argument.IsForcedToBeAnonymous)
                 {
-                    commandRequest.Verb = argument.Value;
+                    commandRequest.CommandName = argument.Value;
                     continue;
                 }
             }
