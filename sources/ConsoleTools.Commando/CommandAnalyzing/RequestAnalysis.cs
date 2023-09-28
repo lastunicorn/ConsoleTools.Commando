@@ -22,20 +22,19 @@ namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 
 internal class RequestAnalysis
 {
-    private readonly ExecutionContext executionContext;
     private CommandAnalysis matchedCommandAnalysis;
 
     public CommandMetadata MatchedCommand => matchedCommandAnalysis.Command;
 
     public RequestMatchType MatchType { get; private set; }
 
-    public RequestAnalysis(ExecutionContext executionContext)
-    {
-        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
-    }
+    public List<ParameterMatch> UnmatchedMandatoryParameters { get; } = new();
 
-    public void Analyze(CommandRequest commandRequest)
+    public RequestAnalysis(CommandRequest commandRequest, ExecutionContext executionContext)
     {
+        if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
+        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+
         matchedCommandAnalysis = null;
         MatchType = RequestMatchType.NoMatch;
 
@@ -44,23 +43,21 @@ internal class RequestAnalysis
             CommandMetadata commandMetadata = executionContext.Commands.GetHelpCommand();
 
             matchedCommandAnalysis = new CommandAnalysis(commandRequest, commandMetadata);
-
-            //matchedCommandAnalysis = commandAnalysis;
             MatchType = RequestMatchType.Help;
         }
         else
         {
-            IEnumerable<CommandMetadata> commands = string.IsNullOrEmpty(commandRequest.CommandName)
+            IEnumerable<CommandMetadata> commandMetadataCollection = string.IsNullOrEmpty(commandRequest.CommandName)
                 ? executionContext.Commands.GetAllAnonymous()
-                : executionContext.Commands.GetAllByName(commandRequest.CommandName);
+                : executionContext.Commands.GetAllByName(commandRequest.CommandName).ToList();
 
-            Analyze(commandRequest, commands);
+            Analyze(commandRequest, commandMetadataCollection);
         }
     }
 
-    private void Analyze(CommandRequest commandRequest, IEnumerable<CommandMetadata> commands)
+    private void Analyze(CommandRequest commandRequest, IEnumerable<CommandMetadata> commandMetadataCollection)
     {
-        CommandsAnalysis commandsAnalysis = new(commandRequest, commands);
+        CommandsAnalysis commandsAnalysis = new(commandRequest, commandMetadataCollection);
 
         switch (commandsAnalysis.FullMatches.Count)
         {
@@ -68,7 +65,15 @@ internal class RequestAnalysis
                 switch (commandsAnalysis.PartialMatches.Count)
                 {
                     case 0:
-                        MatchType = RequestMatchType.NoMatch;
+                        if (commandsAnalysis.NameMatches.Count > 0)
+                        {
+                            MatchType = RequestMatchType.OnlyName;
+                            UnmatchedMandatoryParameters.AddRange(commandsAnalysis.NameMatches.First().UnmatchedMandatoryParameters);
+                        }
+                        else
+                        {
+                            MatchType = RequestMatchType.NoMatch;
+                        }
                         break;
 
                     case 1:

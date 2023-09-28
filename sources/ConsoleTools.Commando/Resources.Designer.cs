@@ -70,11 +70,29 @@ namespace DustInTheWind.ConsoleTools.Commando {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid command. Parameter &quot;{0}&quot; was not provided..
+        ///   Looks up a localized string similar to Invalid command. One or more mandatory parameters were not provided..
         /// </summary>
-        internal static string ErrorMessage_ParameterMissing {
+        internal static string ErrorMessage_ParameterMissing_0 {
             get {
-                return ResourceManager.GetString("ErrorMessage_ParameterMissing", resourceCulture);
+                return ResourceManager.GetString("ErrorMessage_ParameterMissing_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid command. Mandatory parameter &quot;{0}&quot; was not provided..
+        /// </summary>
+        internal static string ErrorMessage_ParameterMissing_1 {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ParameterMissing_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid command. Mandatory parameters were not provided: {0}.
+        /// </summary>
+        internal static string ErrorMessage_ParameterMissing_N {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ParameterMissing_N", resourceCulture);
             }
         }
         

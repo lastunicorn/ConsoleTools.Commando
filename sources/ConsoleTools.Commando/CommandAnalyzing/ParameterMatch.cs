@@ -28,7 +28,9 @@ internal class ParameterMatch
     public bool IsMatch { get; private set; }
 
     public bool IsParameterMandatory => !parameterMetadata.IsOptional;
-    
+
+    public string Name => parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
+
     public ParameterMatch(ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
         if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
@@ -58,18 +60,10 @@ internal class ParameterMatch
 
     public void SetParameter(object consoleCommand)
     {
-        if (IsMatch)
-        {
-            SetParameterInternal(consoleCommand);
-        }
-        else
-        {
-            if (parameterMetadata.IsOptional)
-                return;
-
-            string parameterName = parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
-            throw new ParameterMissingException(parameterName);
-        }
+        if (!IsMatch)
+            throw new Exception("The argument does not match the parameter. Value cannot be set.");
+        
+        SetParameterInternal(consoleCommand);
     }
 
     private void SetParameterInternal(object consoleCommand)

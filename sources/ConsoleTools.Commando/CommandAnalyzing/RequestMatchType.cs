@@ -42,5 +42,10 @@ internal enum RequestMatchType
     /// <summary>
     /// Only the help command matches the request.
     /// </summary>
-    Help
+    Help,
+
+    /// <summary>
+    /// The command name matches but not the parameters.
+    /// </summary>
+    OnlyName
 }

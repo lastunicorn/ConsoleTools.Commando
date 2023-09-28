@@ -27,6 +27,8 @@ internal class CommandAnalysis
 
     public CommandMetadata Command { get; set; }
 
+    public List<ParameterMatch> UnmatchedMandatoryParameters { get; } = new();
+
     public CommandAnalysis(CommandRequest commandRequest, CommandMetadata commandMetadata)
     {
         if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
@@ -41,16 +43,25 @@ internal class CommandAnalysis
         ParametersAnalysis parametersAnalysis = new(parameterMatches);
 
         if (parametersAnalysis.HasUnmatchedMandatory)
+        {
+            UnmatchedMandatoryParameters.AddRange(parametersAnalysis.UnmatchedMandatory);
             MatchType = CommandMatchType.NoMatch;
+        }
         else if (parametersAnalysis.HasUnmatchedOptional)
+        {
             MatchType = CommandMatchType.Partial;
+        }
         else
+        {
             MatchType = CommandMatchType.Full;
+        }
     }
 
     public void SetParameters(object consoleCommand)
     {
-        foreach (ParameterMatch parameterMatch in parameterMatches)
+        IEnumerable<ParameterMatch> validParameters = parameterMatches.Where(x => x.IsMatch);
+
+        foreach (ParameterMatch parameterMatch in validParameters)
             parameterMatch.SetParameter(consoleCommand);
     }
 }

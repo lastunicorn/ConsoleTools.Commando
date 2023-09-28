@@ -123,7 +123,13 @@
   <data name="ErrorMessage_UnknownCommand" xml:space="preserve">
     <value>Unknown Command.</value>
   </data>
-  <data name="ErrorMessage_ParameterMissing" xml:space="preserve">
-    <value>Invalid command. Parameter "{0}" was not provided.</value>
+  <data name="ErrorMessage_ParameterMissing_1" xml:space="preserve">
+    <value>Invalid command. Mandatory parameter "{0}" was not provided.</value>
+  </data>
+  <data name="ErrorMessage_ParameterMissing_0" xml:space="preserve">
+    <value>Invalid command. One or more mandatory parameters were not provided.</value>
+  </data>
+  <data name="ErrorMessage_ParameterMissing_N" xml:space="preserve">
+    <value>Invalid command. Mandatory parameters were not provided: {0}</value>
   </data>
 </root>

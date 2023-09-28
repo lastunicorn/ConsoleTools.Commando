@@ -18,7 +18,9 @@ namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 
 internal class ParametersAnalysis
 {
-    public bool HasUnmatchedMandatory { get; }
+    public List<ParameterMatch> UnmatchedMandatory { get; } = new();
+
+    public bool HasUnmatchedMandatory => UnmatchedMandatory.Count > 0;
 
     public bool HasUnmatchedOptional { get; }
 
@@ -31,7 +33,7 @@ internal class ParametersAnalysis
         foreach (ParameterMatch parameterMatch in notMatched)
         {
             if (parameterMatch.IsParameterMandatory)
-                HasUnmatchedMandatory = true;
+                UnmatchedMandatory.Add(parameterMatch);
             else
                 HasUnmatchedOptional = true;
         }

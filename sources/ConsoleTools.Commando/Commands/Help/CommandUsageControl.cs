@@ -91,7 +91,7 @@ internal class CommandUsageControl
 
         foreach (CommandParameterInfo parameter in NamedParameters)
         {
-            string fullName = "-" + parameter.Name;
+            string fullName = "--" + parameter.Name;
             string shortName = "-" + parameter.ShortName;
             string isOptional = parameter.IsOptional
                 ? "(optional)"
@@ -117,7 +117,6 @@ internal class CommandUsageControl
         dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
         dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
         dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
         dataGrid.Columns.Add(new Column
         {
             CellPaddingRight = 0,
@@ -129,14 +128,13 @@ internal class CommandUsageControl
             string index = parameter.Order == null
                 ? string.Empty
                 : parameter.Order.Value.ToString();
-            string name = parameter.DisplayName.Replace(' ', '-');
             string isOptional = parameter.IsOptional
                 ? "(optional)"
                 : string.Empty;
             string type = parameter.ParameterType.ToUserFriendlyName();
             string description = parameter.Description;
 
-            dataGrid.Rows.Add(index, name, isOptional, type, description);
+            dataGrid.Rows.Add(index, isOptional, type, description);
         }
 
         dataGrid.Display();

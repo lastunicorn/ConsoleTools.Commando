@@ -37,7 +37,7 @@ public class CommandRouter
 
     public async Task Execute(CommandRequest commandRequest)
     {
-        RequestAnalysis requestAnalysis = AnalyzeCommand(commandRequest);
+        RequestAnalysis requestAnalysis = AnalyzeRequest(commandRequest);
 
         switch (requestAnalysis.MatchedCommand.CommandKind)
         {
@@ -57,10 +57,9 @@ public class CommandRouter
         }
     }
 
-    private RequestAnalysis AnalyzeCommand(CommandRequest commandRequest)
+    private RequestAnalysis AnalyzeRequest(CommandRequest commandRequest)
     {
-        RequestAnalysis requestAnalysis = new(executionContext);
-        requestAnalysis.Analyze(commandRequest);
+        RequestAnalysis requestAnalysis = new(commandRequest, executionContext);
 
         switch (requestAnalysis.MatchType)
         {
@@ -71,6 +70,10 @@ public class CommandRouter
             case RequestMatchType.Full:
             case RequestMatchType.Help:
                 return requestAnalysis;
+
+            case RequestMatchType.OnlyName:
+                string[] parameterNames = requestAnalysis.UnmatchedMandatoryParameters.Select(x => x.Name).ToArray();
+                throw new ParameterMissingException(parameterNames);
 
             case RequestMatchType.Multiple:
                 throw new MultipleCommandsMatchException();
@@ -96,20 +99,30 @@ public class CommandRouter
 
     private async Task ExecuteCommandWithResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
     {
-        CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
-        object consoleCommand = commandFactory.Create(commandMetadata);
+        try
+        {
+            CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
+            object consoleCommand = commandFactory.Create(commandMetadata);
 
-        if (consoleCommand == null)
-            throw new UnknownCommandException();
+            if (consoleCommand == null)
+                throw new UnknownCommandException();
 
-        requestAnalysis.SetParameters(consoleCommand);
-        RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+            requestAnalysis.SetParameters(consoleCommand);
+            RaiseCommandCreatedEvent(commandRequest, consoleCommand);
 
-        Type commandType = consoleCommand.GetType();
-        MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
+            Type commandType = consoleCommand.GetType();
+            MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
 
-        object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
-        ExecuteViewsFor(viewModel);
+            object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
+            ExecuteViewsFor(viewModel);
+        }
+        catch (TargetInvocationException ex)
+        {
+            if (ex.InnerException != null)
+                throw new Exception("Command execution error. " + ex.InnerException.Message, ex);
+
+            throw;
+        }
     }
 
     private void RaiseCommandCreatedEvent(CommandRequest commandRequest, object consoleCommand)

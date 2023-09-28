@@ -25,9 +25,11 @@ internal class CommandsAnalysis
 
     public List<CommandAnalysis> PartialMatches { get; } = new();
 
-    public CommandsAnalysis(CommandRequest commandRequest, IEnumerable<CommandMetadata> commands)
+    public List<CommandAnalysis> NameMatches { get; } = new();
+
+    public CommandsAnalysis(CommandRequest commandRequest, IEnumerable<CommandMetadata> commandMetadataCollection)
     {
-        foreach (CommandMetadata commandMetadata in commands)
+        foreach (CommandMetadata commandMetadata in commandMetadataCollection)
             Analyze(commandRequest, commandMetadata);
     }
 
@@ -51,5 +53,8 @@ internal class CommandsAnalysis
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        if (commandAnalysis.Command.Name == commandRequest.CommandName)
+            NameMatches.Add(commandAnalysis);
     }
 }
