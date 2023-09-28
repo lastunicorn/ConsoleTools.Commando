@@ -72,7 +72,9 @@ public class CommandRouter
                 return requestAnalysis;
 
             case RequestMatchType.OnlyName:
-                string[] parameterNames = requestAnalysis.UnmatchedMandatoryParameters.Select(x => x.Name).ToArray();
+                string[] parameterNames = requestAnalysis.UnmatchedMandatoryParameters
+                    .Select(x => x.Name)
+                    .ToArray();
                 throw new ParameterMissingException(parameterNames);
 
             case RequestMatchType.Multiple:
