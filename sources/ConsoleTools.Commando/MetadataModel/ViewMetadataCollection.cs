@@ -18,11 +18,12 @@ using System.Collections.ObjectModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
-public class CommandMetadataCollection : Collection<CommandMetadata>
+public class ViewMetadataCollection : Collection<ViewMetadata>
 {
+
     public bool IsFrozen { get; private set; }
 
-    protected override void InsertItem(int index, CommandMetadata item)
+    protected override void InsertItem(int index, ViewMetadata item)
     {
         if (IsFrozen)
             throw new ObjectFrozenException();
@@ -30,7 +31,7 @@ public class CommandMetadataCollection : Collection<CommandMetadata>
         base.InsertItem(index, item);
     }
 
-    protected override void SetItem(int index, CommandMetadata item)
+    protected override void SetItem(int index, ViewMetadata item)
     {
         if (IsFrozen)
             throw new ObjectFrozenException();
@@ -54,45 +55,16 @@ public class CommandMetadataCollection : Collection<CommandMetadata>
         base.ClearItems();
     }
 
-    public IEnumerable<Type> GetCommandTypes()
+    public IEnumerable<Type> GetViewTypes()
     {
         return Items.Select(x => x.Type);
     }
 
-    public CommandMetadata GetByName(string commandName)
+    public IEnumerable<Type> GetViewTypesForModel(Type viewModelType)
     {
         return Items
-            .Where(x => x.IsEnabled && x.Name == commandName)
-            .MinBy(x => x.Order);
-    }
-
-    public IEnumerable<CommandMetadata> GetAllByName(string commandName)
-    {
-        return Items
-            .Where(x => x.IsEnabled && x.Name == commandName)
-            .OrderBy(x => x.Order);
-    }
-
-    public IEnumerable<CommandMetadata> GetNamed()
-    {
-        return Items
-            .Where(x => x.IsEnabled && !x.IsHelpCommand && x.Name != null)
-            .OrderBy(x => x.Order)
-            .ThenBy(x => x.Name)
-            .Concat(new[] { GetHelpCommand() });
-    }
-
-    public IEnumerable<CommandMetadata> GetAllAnonymous()
-    {
-        return Items
-            .Where(x => x.IsEnabled && x.Name == null)
-            .OrderBy(x => x.Order)
-            .ThenBy(x => x.Name);
-    }
-
-    public CommandMetadata GetHelpCommand()
-    {
-        return Items.FirstOrDefault(x => x.IsHelpCommand);
+            .Where(x => x.IsViewFor(viewModelType))
+            .Select(x => x.Type);
     }
 
     public void Freeze()

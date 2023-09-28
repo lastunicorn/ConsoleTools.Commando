@@ -24,14 +24,14 @@ namespace DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 public class ApplicationBuilder
 {
     private readonly IServiceCollection serviceCollection;
-    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly ExecutionMetadata executionMetadata;
     private bool isCommandParserConfigured;
     private EventHandler<UnhandledApplicationExceptionEventArgs> unhandledExceptionHandler;
 
     public ApplicationBuilder()
     {
         serviceCollection = new ServiceCollection();
-        commandMetadataCollection = new CommandMetadataCollection();
+        executionMetadata = new ExecutionMetadata();
 
         ConfigureDefaultServices();
         LoadDefaultCommands();
@@ -49,15 +49,14 @@ public class ApplicationBuilder
         serviceCollection.AddTransient<CommandRouter>();
         serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
 
-        serviceCollection.AddSingleton(commandMetadataCollection);
+        serviceCollection.AddSingleton(executionMetadata);
 
         serviceCollection.AddSingleton<Application>();
     }
 
     private void LoadDefaultCommands()
     {
-        Assembly defaultCommandsAssembly = typeof(CommandMetadataCollection).Assembly;
-        commandMetadataCollection.LoadFrom(defaultCommandsAssembly);
+        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
     }
 
     public ApplicationBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
@@ -65,7 +64,7 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly assembly = assemblyProvider();
-        commandMetadataCollection.LoadFrom(assembly);
+        executionMetadata.LoadFrom(assembly);
 
         return this;
     }
@@ -75,14 +74,14 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly[] assemblies = assemblyProvider().ToArray();
-        commandMetadataCollection.LoadFrom(assemblies);
+        executionMetadata.LoadFrom(assemblies);
 
         return this;
     }
 
     public ApplicationBuilder RegisterCommandsFrom(params Assembly[] assemblies)
     {
-        commandMetadataCollection.LoadFrom(assemblies);
+        executionMetadata.LoadFrom(assemblies);
 
         return this;
     }
@@ -139,12 +138,12 @@ public class ApplicationBuilder
         if (!isCommandParserConfigured)
             serviceCollection.AddTransient(typeof(ICommandParser), typeof(CommandParser));
 
-        commandMetadataCollection.Freeze();
+        executionMetadata.Freeze();
 
-        foreach (Type type in commandMetadataCollection.GetCommandTypes())
+        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
             serviceCollection.AddTransient(type);
 
-        foreach (Type type in commandMetadataCollection.GetViewTypes())
+        foreach (Type type in executionMetadata.Views.GetViewTypes())
             serviceCollection.AddTransient(type);
 
         return serviceCollection.BuildServiceProvider();

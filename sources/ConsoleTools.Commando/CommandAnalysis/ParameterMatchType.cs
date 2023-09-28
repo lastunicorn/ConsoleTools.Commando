@@ -14,15 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Text;
+namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands.ReadFile;
-
-internal class ReadFileViewModel
+internal enum ParameterMatchType
 {
-    public string FilePath { get; set; }
-
-    public Encoding Encoding { get; set; }
-
-    public string Content { get; set; }
+    No = 0,
+    Yes,
+    NoButOptional
 }

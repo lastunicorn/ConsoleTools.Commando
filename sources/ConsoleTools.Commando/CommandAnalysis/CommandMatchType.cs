@@ -18,8 +18,9 @@ namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
 
 internal enum CommandMatchType
 {
-    None,
+    None = 0,
     Partial,
     Full,
-    Multiple
+    Multiple,
+    Help
 }

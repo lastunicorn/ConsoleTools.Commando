@@ -22,6 +22,7 @@ internal class ReadFileView : ViewBase<ReadFileViewModel>
     {
         WriteTitle("Reading a text file");
         WriteValue("File", viewModel.FilePath);
+        WriteValue("Encoding", viewModel.Encoding.EncodingName);
         WriteValueBelowName("Content", viewModel.Content);
     }
 }

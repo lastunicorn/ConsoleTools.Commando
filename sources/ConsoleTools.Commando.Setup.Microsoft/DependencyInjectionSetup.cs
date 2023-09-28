@@ -36,19 +36,18 @@ public static class DependencyInjectionSetup
         serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
         serviceCollection.AddTransient(typeof(ICommandParser), commandParserType);
 
-        CommandMetadataCollection commandMetadataCollection = new();
-        Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;
-        commandMetadataCollection.LoadFrom(commandoAssembly);
-        commandMetadataCollection.LoadFrom(assemblies);
+        ExecutionMetadata executionMetadata = new();
+        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
+        executionMetadata.LoadFrom(assemblies);
 
-        commandMetadataCollection.Freeze();
+        executionMetadata.Freeze();
 
-        serviceCollection.AddSingleton(commandMetadataCollection);
+        serviceCollection.AddSingleton(executionMetadata);
 
-        foreach (Type type in commandMetadataCollection.GetCommandTypes())
+        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
             serviceCollection.AddTransient(type);
 
-        foreach (Type type in commandMetadataCollection.GetViewTypes())
+        foreach (Type type in executionMetadata.Views.GetViewTypes())
             serviceCollection.AddTransient(type);
 
         serviceCollection.AddSingleton<Application>();

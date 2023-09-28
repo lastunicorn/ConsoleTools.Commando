@@ -36,6 +36,7 @@ internal class ReadFileCommand : IConsoleCommand<ReadFileViewModel>
         ReadFileViewModel viewModel = new()
         {
             FilePath = FilePath,
+            Encoding = Encoding,
             Content = content
         };
 

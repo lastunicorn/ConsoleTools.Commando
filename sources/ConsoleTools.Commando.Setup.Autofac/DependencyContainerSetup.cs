@@ -36,19 +36,18 @@ public static class DependencyContainerSetup
         containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
         containerBuilder.RegisterType(commandParserType).As<ICommandParser>();
 
-        CommandMetadataCollection commandMetadataCollection = new();
-        Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;
-        commandMetadataCollection.LoadFrom(commandoAssembly);
-        commandMetadataCollection.LoadFrom(assemblies);
+        ExecutionMetadata executionMetadata = new();
+        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
+        executionMetadata.LoadFrom(assemblies);
 
-        commandMetadataCollection.Freeze();
+        executionMetadata.Freeze();
 
-        containerBuilder.RegisterInstance(commandMetadataCollection).AsSelf().SingleInstance();
+        containerBuilder.RegisterInstance(executionMetadata).AsSelf().SingleInstance();
 
-        foreach (Type type in commandMetadataCollection.GetCommandTypes())
+        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
             containerBuilder.RegisterType(type).AsSelf();
 
-        foreach (Type type in commandMetadataCollection.GetViewTypes())
+        foreach (Type type in executionMetadata.Views.GetViewTypes())
             containerBuilder.RegisterType(type).AsSelf();
 
         containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();

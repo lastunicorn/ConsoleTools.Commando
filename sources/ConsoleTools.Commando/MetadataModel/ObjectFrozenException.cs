@@ -14,15 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Text;
+using System.Runtime.Serialization;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands.ReadFile;
+namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
-internal class ReadFileViewModel
+[Serializable]
+public class ObjectFrozenException : Exception
 {
-    public string FilePath { get; set; }
+    private const string DefaultMessage = "The object was frozen, Any further changes are not allowed.";
 
-    public Encoding Encoding { get; set; }
+    public ObjectFrozenException()
+        : base(DefaultMessage)
+    {
+    }
 
-    public string Content { get; set; }
+    protected ObjectFrozenException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
 }

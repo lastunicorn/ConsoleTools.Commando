@@ -14,15 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Text;
+namespace DustInTheWind.ConsoleTools.Commando;
 
-namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands.ReadFile;
-
-internal class ReadFileViewModel
+internal class MultipleCommandsMatchException : Exception
 {
-    public string FilePath { get; set; }
+    private const string DefaultMessage = "Multiple commands match the provided parameters.";
 
-    public Encoding Encoding { get; set; }
-
-    public string Content { get; set; }
+    public MultipleCommandsMatchException()
+        : base(DefaultMessage)
+    {
+    }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleTools.Commando.Demo": {
       "commandName": "Project",
-      "commandLineArgs": "test -t asd"
+      "commandLineArgs": "read \"c:\\temp\\test.txt\" -e UTF-8"
     }
   }
 }

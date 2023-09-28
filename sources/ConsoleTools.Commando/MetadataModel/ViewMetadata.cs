@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
-internal class ViewMetadata
+public class ViewMetadata
 {
     public Type Type { get; }
 

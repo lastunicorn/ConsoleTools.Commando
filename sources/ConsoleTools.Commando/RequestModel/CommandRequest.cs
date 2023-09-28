@@ -55,27 +55,27 @@ public class CommandRequest
     {
         if (parameterMetadata.Name != null)
         {
-            CommandArgument argument = arguments
+            CommandArgument commandArgument = arguments
                 .Where(x => x.Name != null)
                 .FirstOrDefault(x => x.Name == parameterMetadata.Name);
 
-            if (argument != null)
+            if (commandArgument != null)
             {
-                unusedArguments.Remove(argument);
-                return argument;
+                unusedArguments.Remove(commandArgument);
+                return commandArgument;
             }
         }
 
         if (parameterMetadata.ShortName != 0)
         {
-            CommandArgument argument = arguments
+            CommandArgument commandArgument = arguments
                 .Where(x => x.Name != null)
                 .FirstOrDefault(x => x.Name == parameterMetadata.ShortName.ToString());
 
-            if (argument != null)
+            if (commandArgument != null)
             {
-                unusedArguments.Remove(argument);
-                return argument;
+                unusedArguments.Remove(commandArgument);
+                return commandArgument;
             }
         }
 
@@ -99,6 +99,30 @@ public class CommandRequest
                 {
                     unusedArguments.Remove(operand);
                     return operand.Value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public CommandArgument GetOperandAndMarkAsUsed2(ParameterMetadata parameterMetadata)
+    {
+        if (parameterMetadata.Order != null)
+        {
+            int index = parameterMetadata.Order.Value - 1;
+
+            if (index >= 0)
+            {
+                CommandArgument commandArgument = arguments
+                    .Where(x => x.Name == null)
+                    .Skip(index)
+                    .FirstOrDefault();
+
+                if (commandArgument != null)
+                {
+                    unusedArguments.Remove(commandArgument);
+                    return commandArgument;
                 }
             }
         }

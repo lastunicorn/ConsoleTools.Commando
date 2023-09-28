@@ -33,19 +33,18 @@ public static class DependencyInjectionSetup
         kernel.Bind<ICommandFactory>().To<CommandFactory>();
         kernel.Bind<ICommandParser>().To(commandParserType);
 
-        CommandMetadataCollection commandMetadataCollection = new();
-        Assembly commandoAssembly = typeof(CommandMetadataCollection).Assembly;
-        commandMetadataCollection.LoadFrom(commandoAssembly);
-        commandMetadataCollection.LoadFrom(assemblies);
+        ExecutionMetadata executionMetadata = new();
+        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
+        executionMetadata.LoadFrom(assemblies);
 
-        commandMetadataCollection.Freeze();
+        executionMetadata.Freeze();
 
-        kernel.Bind<CommandMetadataCollection>().ToConstant(commandMetadataCollection).InSingletonScope();
+        kernel.Bind<ExecutionMetadata>().ToConstant(executionMetadata).InSingletonScope();
 
-        foreach (Type type in commandMetadataCollection.GetCommandTypes())
+        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
             kernel.Bind(type).ToSelf();
 
-        foreach (Type type in commandMetadataCollection.GetViewTypes())
+        foreach (Type type in executionMetadata.Views.GetViewTypes())
             kernel.Bind(type).ToSelf();
 
         kernel.Bind<Application>().ToSelf().InSingletonScope();

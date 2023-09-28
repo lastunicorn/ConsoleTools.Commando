@@ -21,33 +21,73 @@ namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
 
 internal class CommandRequestAnalysis
 {
-    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly ExecutionMetadata executionMetadata;
     private readonly List<CommandMetadata> fullMatches = new();
     private readonly List<CommandMetadata> partialMatches = new();
+    private List<ParameterMatch> parameterMatches;
 
-    public CommandMetadata Match { get; private set; }
+    public CommandMetadata MatchedCommand { get; private set; }
 
     public CommandMatchType MatchType { get; private set; }
 
-    public CommandRequestAnalysis(CommandMetadataCollection commandMetadataCollection)
+    public CommandRequestAnalysis(ExecutionMetadata executionMetadata)
     {
-        this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
+        this.executionMetadata = executionMetadata ?? throw new ArgumentNullException(nameof(executionMetadata));
     }
 
     public void Analyze(CommandRequest commandRequest)
     {
         fullMatches.Clear();
         partialMatches.Clear();
-        Match = null;
+        MatchedCommand = null;
         MatchType = CommandMatchType.None;
+        parameterMatches = null;
 
-        IEnumerable<CommandMetadata> commandMetadataList = string.IsNullOrEmpty(commandRequest.CommandName)
-            ? commandMetadataCollection.GetAnonymous()
-            : commandMetadataCollection.GetAllByName(commandRequest.CommandName);
+        if (commandRequest.IsEmpty)
+        {
+            MatchedCommand = executionMetadata.Commands.GetHelpCommand();
+            MatchType = CommandMatchType.Help;
+        }
+        else
+        {
+            IEnumerable<CommandMetadata> commandMetadataList = string.IsNullOrEmpty(commandRequest.CommandName)
+                ? executionMetadata.Commands.GetAllAnonymous()
+                : executionMetadata.Commands.GetAllByName(commandRequest.CommandName);
 
-        foreach (CommandMetadata commandMetadata in commandMetadataList)
-            Analyze(commandRequest, commandMetadata);
+            foreach (CommandMetadata commandMetadata in commandMetadataList)
+                Analyze(commandRequest, commandMetadata);
 
+            ComputeAnalysisResult();
+        }
+    }
+
+    private void Analyze(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    {
+        commandRequest.Reset();
+
+        int optionalCount = 0;
+
+        parameterMatches = commandMetadata.Parameters
+            .Select(x => new ParameterMatch(x, commandRequest))
+            .ToList();
+
+        foreach (ParameterMatch parameterMatch in parameterMatches)
+        {
+            if (parameterMatch.IsMatch)
+                continue;
+
+            if (parameterMatch.MatchType == ParameterMatchType.NoButOptional)
+                optionalCount++;
+        }
+
+        if (optionalCount > 0 || commandRequest.HasUnusedArguments)
+            partialMatches.Add(commandMetadata);
+        else
+            fullMatches.Add(commandMetadata);
+    }
+
+    private void ComputeAnalysisResult()
+    {
         switch (fullMatches.Count)
         {
             case 0:
@@ -58,7 +98,7 @@ internal class CommandRequestAnalysis
                         break;
 
                     case 1:
-                        Match = partialMatches.Single();
+                        MatchedCommand = partialMatches.Single();
                         MatchType = CommandMatchType.Partial;
                         break;
 
@@ -69,7 +109,7 @@ internal class CommandRequestAnalysis
                 break;
 
             case 1:
-                Match = fullMatches.Single();
+                MatchedCommand = fullMatches.Single();
                 MatchType = CommandMatchType.Full;
                 break;
 
@@ -79,47 +119,12 @@ internal class CommandRequestAnalysis
         }
     }
 
-    private void Analyze(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    public void SetParameters(object consoleCommand)
     {
-        commandRequest.Reset();
-
-        int missingCount = 0;
-        int optionalCount = 0;
-
-        foreach (ParameterMetadata parameterMetadata in commandMetadata.Parameters)
-        {
-            bool isMatch = IsMatch(parameterMetadata, commandRequest);
-
-            if (isMatch)
-                continue;
-
-            if (parameterMetadata.IsOptional)
-                optionalCount++;
-            else
-                missingCount++;
-        }
-
-        if (missingCount > 0)
+        if (parameterMatches == null)
             return;
 
-        if (optionalCount > 0 || commandRequest.HasUnusedArguments)
-            partialMatches.Add(commandMetadata);
-        else
-            fullMatches.Add(commandMetadata);
-    }
-
-    private static bool IsMatch(ParameterMetadata parameterMetadata, CommandRequest commandRequest)
-    {
-        CommandArgument commandArgument = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
-
-        if (commandArgument != null)
-            return true;
-
-        string operand = commandRequest.GetOperandAndMarkAsUsed(parameterMetadata);
-
-        if (operand != null)
-            return true;
-
-        return parameterMetadata.IsOptional;
+        foreach (ParameterMatch parameterMatch in parameterMatches)
+            parameterMatch.SetParameter(consoleCommand);
     }
 }

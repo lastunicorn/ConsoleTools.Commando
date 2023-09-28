@@ -24,14 +24,14 @@ namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
 public class ApplicationBuilder
 {
     private readonly IKernel kernel;
-    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly ExecutionMetadata executionMetadata;
     private bool isCommandParserConfigured;
     private EventHandler<UnhandledApplicationExceptionEventArgs> unhandledExceptionHandler;
 
     private ApplicationBuilder()
     {
         kernel = new StandardKernel();
-        commandMetadataCollection = new CommandMetadataCollection();
+        executionMetadata = new ExecutionMetadata();
 
         ConfigureDefaultServices();
         LoadDefaultCommands();
@@ -45,14 +45,13 @@ public class ApplicationBuilder
     private void ConfigureDefaultServices()
     {
         kernel.Bind<ICommandFactory>().To<CommandFactory>();
-        kernel.Bind<CommandMetadataCollection>().ToConstant(commandMetadataCollection).InSingletonScope();
+        kernel.Bind<ExecutionMetadata>().ToConstant(executionMetadata).InSingletonScope();
         kernel.Bind<Application>().ToSelf().InSingletonScope();
     }
 
     private void LoadDefaultCommands()
     {
-        Assembly defaultCommandsAssembly = typeof(CommandMetadataCollection).Assembly;
-        commandMetadataCollection.LoadFrom(defaultCommandsAssembly);
+        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
     }
 
     public ApplicationBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
@@ -60,7 +59,7 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly assembly = assemblyProvider();
-        commandMetadataCollection.LoadFrom(assembly);
+        executionMetadata.LoadFrom(assembly);
 
         return this;
     }
@@ -70,14 +69,14 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly[] assemblies = assemblyProvider().ToArray();
-        commandMetadataCollection.LoadFrom(assemblies);
+        executionMetadata.LoadFrom(assemblies);
 
         return this;
     }
 
     public ApplicationBuilder RegisterCommandsFrom(params Assembly[] assemblies)
     {
-        commandMetadataCollection.LoadFrom(assemblies);
+        executionMetadata.LoadFrom(assemblies);
 
         return this;
     }
@@ -134,12 +133,12 @@ public class ApplicationBuilder
         if (!isCommandParserConfigured)
             kernel.Bind<ICommandParser>().To<CommandParser>();
 
-        commandMetadataCollection.Freeze();
+        executionMetadata.Freeze();
 
-        foreach (Type type in commandMetadataCollection.GetCommandTypes())
+        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
             kernel.Bind(type).ToSelf();
 
-        foreach (Type type in commandMetadataCollection.GetViewTypes())
+        foreach (Type type in executionMetadata.Views.GetViewTypes())
             kernel.Bind(type).ToSelf();
 
         return kernel;
