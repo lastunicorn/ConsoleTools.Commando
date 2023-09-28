@@ -18,20 +18,21 @@ using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using Ninject;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
 
 public class ApplicationBuilder
 {
     private readonly IKernel kernel;
-    private readonly ExecutionMetadata executionMetadata;
+    private readonly ExecutionContext executionContext;
     private bool isCommandParserConfigured;
     private EventHandler<UnhandledApplicationExceptionEventArgs> unhandledExceptionHandler;
 
     private ApplicationBuilder()
     {
         kernel = new StandardKernel();
-        executionMetadata = new ExecutionMetadata();
+        executionContext = new ExecutionContext();
 
         ConfigureDefaultServices();
         LoadDefaultCommands();
@@ -45,13 +46,13 @@ public class ApplicationBuilder
     private void ConfigureDefaultServices()
     {
         kernel.Bind<ICommandFactory>().To<CommandFactory>();
-        kernel.Bind<ExecutionMetadata>().ToConstant(executionMetadata).InSingletonScope();
+        kernel.Bind<ExecutionContext>().ToConstant(executionContext).InSingletonScope();
         kernel.Bind<Application>().ToSelf().InSingletonScope();
     }
 
     private void LoadDefaultCommands()
     {
-        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
+        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
     }
 
     public ApplicationBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
@@ -59,7 +60,7 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly assembly = assemblyProvider();
-        executionMetadata.LoadFrom(assembly);
+        executionContext.LoadFrom(assembly);
 
         return this;
     }
@@ -69,14 +70,14 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly[] assemblies = assemblyProvider().ToArray();
-        executionMetadata.LoadFrom(assemblies);
+        executionContext.LoadFrom(assemblies);
 
         return this;
     }
 
     public ApplicationBuilder RegisterCommandsFrom(params Assembly[] assemblies)
     {
-        executionMetadata.LoadFrom(assemblies);
+        executionContext.LoadFrom(assemblies);
 
         return this;
     }
@@ -133,12 +134,12 @@ public class ApplicationBuilder
         if (!isCommandParserConfigured)
             kernel.Bind<ICommandParser>().To<CommandParser>();
 
-        executionMetadata.Freeze();
+        executionContext.Freeze();
 
-        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
+        foreach (Type type in executionContext.Commands.GetCommandTypes())
             kernel.Bind(type).ToSelf();
 
-        foreach (Type type in executionMetadata.Views.GetViewTypes())
+        foreach (Type type in executionContext.Views.GetViewTypes())
             kernel.Bind(type).ToSelf();
 
         return kernel;

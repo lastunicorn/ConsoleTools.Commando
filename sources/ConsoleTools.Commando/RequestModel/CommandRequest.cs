@@ -82,31 +82,7 @@ public class CommandRequest
         return null;
     }
 
-    public string GetOperandAndMarkAsUsed(ParameterMetadata parameterMetadata)
-    {
-        if (parameterMetadata.Order != null)
-        {
-            int index = parameterMetadata.Order.Value - 1;
-
-            if (index >= 0)
-            {
-                CommandArgument operand = arguments
-                    .Where(x => x.Name == null)
-                    .Skip(index)
-                    .FirstOrDefault();
-
-                if (operand != null)
-                {
-                    unusedArguments.Remove(operand);
-                    return operand.Value;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public CommandArgument GetOperandAndMarkAsUsed2(ParameterMetadata parameterMetadata)
+    public CommandArgument GetOperandAndMarkAsUsed(ParameterMetadata parameterMetadata)
     {
         if (parameterMetadata.Order != null)
         {

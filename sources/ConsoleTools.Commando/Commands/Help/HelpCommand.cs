@@ -16,21 +16,22 @@
 
 using System.Globalization;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 [HelpCommand("help", Description = "Display more details about the available commands.")]
 internal class HelpCommand : IConsoleCommand<HelpViewModel>
 {
-    private readonly ExecutionMetadata executionMetadata;
+    private readonly ExecutionContext executionContext;
     private readonly Application application;
 
     [AnonymousParameter(DisplayName = "command name", Order = 1, IsOptional = true, Description = "The name of the command for which to display detailed help information.")]
     public string CommandName { get; set; }
 
-    public HelpCommand(ExecutionMetadata executionMetadata, Application application)
+    public HelpCommand(ExecutionContext executionContext, Application application)
     {
-        this.executionMetadata = executionMetadata ?? throw new ArgumentNullException(nameof(executionMetadata));
+        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
         this.application = application ?? throw new ArgumentNullException(nameof(application));
     }
 
@@ -53,7 +54,7 @@ internal class HelpCommand : IConsoleCommand<HelpViewModel>
 
     private CommandFullInfo GetCommandFullInfo(string commandName)
     {
-        CommandMetadata commandMetadata = executionMetadata.Commands.GetByName(commandName);
+        CommandMetadata commandMetadata = executionContext.Commands.GetByName(commandName);
 
         if (commandMetadata == null)
             throw new CommandNotFoundException(commandName);
@@ -79,10 +80,10 @@ internal class HelpCommand : IConsoleCommand<HelpViewModel>
         return new CommandsOverviewInfo
         {
             ApplicationName = application.Name,
-            NamedCommands = executionMetadata.Commands.GetNamed()
+            NamedCommands = executionContext.Commands.GetNamed()
                 .Select(x => new CommandShortInfo(x))
                 .ToList(),
-            AnonymousCommands = executionMetadata.Commands.GetAllAnonymous()
+            AnonymousCommands = executionContext.Commands.GetAllAnonymous()
                 .Select(x => new CommandShortInfo(x))
                 .ToList()
         };

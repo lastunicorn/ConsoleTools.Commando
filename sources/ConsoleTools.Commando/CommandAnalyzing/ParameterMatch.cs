@@ -17,7 +17,7 @@
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
+namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 
 internal class ParameterMatch
 {
@@ -25,10 +25,10 @@ internal class ParameterMatch
     private readonly CommandArgument commandArgument;
     private readonly CommandArgumentType argumentType;
 
-    public bool IsMatch => MatchType is ParameterMatchType.NoButOptional or ParameterMatchType.Yes;
+    public bool IsMatch { get; private set; }
 
-    public ParameterMatchType MatchType { get; set; }
-
+    public bool IsParameterMandatory => !parameterMetadata.IsOptional;
+    
     public ParameterMatch(ParameterMetadata parameterMetadata, CommandRequest commandRequest)
     {
         if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
@@ -40,43 +40,35 @@ internal class ParameterMatch
         {
             commandArgument = option;
             argumentType = CommandArgumentType.Option;
-            MatchType = ParameterMatchType.Yes;
+            IsMatch = true;
             return;
         }
 
-        CommandArgument operand = commandRequest.GetOperandAndMarkAsUsed2(parameterMetadata);
+        CommandArgument operand = commandRequest.GetOperandAndMarkAsUsed(parameterMetadata);
 
         if (operand != null)
         {
             commandArgument = operand;
             argumentType = CommandArgumentType.Operand;
-            MatchType = ParameterMatchType.Yes;
+            IsMatch = true;
             return;
         }
-
-        MatchType = parameterMetadata.IsOptional
-            ? ParameterMatchType.NoButOptional
-            : ParameterMatchType.No;
     }
 
 
     public void SetParameter(object consoleCommand)
     {
-        switch (MatchType)
+        if (IsMatch)
         {
-            case ParameterMatchType.NoButOptional:
+            SetParameterInternal(consoleCommand);
+        }
+        else
+        {
+            if (parameterMetadata.IsOptional)
                 return;
 
-            case ParameterMatchType.No:
-                string parameterName = parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
-                throw new ParameterMissingException(parameterName);
-
-            case ParameterMatchType.Yes:
-                SetParameterInternal(consoleCommand);
-                break;
-
-            default:
-                throw new Exception($"Error setting the parameter value. Parameter: {parameterMetadata.Name}.");
+            string parameterName = parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
+            throw new ParameterMissingException(parameterName);
         }
     }
 
@@ -102,6 +94,6 @@ internal class ParameterMatch
 
     public override string ToString()
     {
-        return $"Match: {MatchType}; Parameter: {parameterMetadata}";
+        return $"IsMatch: {IsMatch}; Parameter: {parameterMetadata}";
     }
 }

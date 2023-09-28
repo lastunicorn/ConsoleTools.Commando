@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
-public class ExecutionMetadata
+public class ExecutionContext
 {
     private bool isFrozen;
 

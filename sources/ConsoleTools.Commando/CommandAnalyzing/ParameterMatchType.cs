@@ -14,13 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
+namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 
-internal enum CommandMatchType
+internal enum ParameterMatchType
 {
-    None = 0,
-    Partial,
-    Full,
-    Multiple,
-    Help
+    No = 0,
+    Yes,
+    NoButOptional
 }

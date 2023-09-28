@@ -15,20 +15,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
-using DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
+using DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public class CommandRouter
 {
-    private readonly ExecutionMetadata executionMetadata;
+    private readonly ExecutionContext executionContext;
     private readonly ICommandFactory commandFactory;
 
-    public CommandRouter(ExecutionMetadata executionMetadata, ICommandFactory commandFactory)
+    public CommandRouter(ExecutionContext executionContext, ICommandFactory commandFactory)
     {
-        this.executionMetadata = executionMetadata ?? throw new ArgumentNullException(nameof(executionMetadata));
+        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
         this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
     }
 
@@ -36,19 +37,19 @@ public class CommandRouter
 
     public async Task Execute(CommandRequest commandRequest)
     {
-        CommandRequestAnalysis commandRequestAnalysis = AnalyzeCommand(commandRequest);
+        RequestAnalysis requestAnalysis = AnalyzeCommand(commandRequest);
 
-        switch (commandRequestAnalysis.MatchedCommand.CommandKind)
+        switch (requestAnalysis.MatchedCommand.CommandKind)
         {
             case CommandKind.None:
                 throw new UnknownCommandException();
 
             case CommandKind.WithoutResult:
-                await ExecuteCommandWithoutResult(commandRequest, commandRequestAnalysis);
+                await ExecuteCommandWithoutResult(commandRequest, requestAnalysis);
                 break;
 
             case CommandKind.WithResult:
-                await ExecuteCommandWithResult(commandRequest, commandRequestAnalysis);
+                await ExecuteCommandWithResult(commandRequest, requestAnalysis);
                 break;
 
             default:
@@ -56,52 +57,52 @@ public class CommandRouter
         }
     }
 
-    private CommandRequestAnalysis AnalyzeCommand(CommandRequest commandRequest)
+    private RequestAnalysis AnalyzeCommand(CommandRequest commandRequest)
     {
-        CommandRequestAnalysis commandRequestAnalysis = new(executionMetadata);
-        commandRequestAnalysis.Analyze(commandRequest);
+        RequestAnalysis requestAnalysis = new(executionContext);
+        requestAnalysis.Analyze(commandRequest);
 
-        switch (commandRequestAnalysis.MatchType)
+        switch (requestAnalysis.MatchType)
         {
-            case CommandMatchType.None:
+            case RequestMatchType.NoMatch:
                 throw new UnknownCommandException();
 
-            case CommandMatchType.Partial:
-            case CommandMatchType.Full:
-            case CommandMatchType.Help:
-                return commandRequestAnalysis;
+            case RequestMatchType.Partial:
+            case RequestMatchType.Full:
+            case RequestMatchType.Help:
+                return requestAnalysis;
 
-            case CommandMatchType.Multiple:
+            case RequestMatchType.Multiple:
                 throw new MultipleCommandsMatchException();
 
             default:
-                throw new Exception("Invalid CommandMatchType. The analysis of the command failed in an unexpected way.");
+                throw new Exception("Invalid RequestMatchType. The analysis of the command failed in an unexpected way.");
         }
     }
 
-    private async Task ExecuteCommandWithoutResult(CommandRequest commandRequest, CommandRequestAnalysis commandRequestAnalysis)
+    private async Task ExecuteCommandWithoutResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
     {
-        CommandMetadata commandMetadata = commandRequestAnalysis.MatchedCommand;
+        CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
         IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
 
         if (consoleCommand == null)
             throw new UnknownCommandException();
 
-        commandRequestAnalysis.SetParameters(consoleCommand);
+        requestAnalysis.SetParameters(consoleCommand);
         RaiseCommandCreatedEvent(commandRequest, consoleCommand);
         await consoleCommand.Execute();
         ExecuteViewsFor(consoleCommand);
     }
 
-    private async Task ExecuteCommandWithResult(CommandRequest commandRequest, CommandRequestAnalysis commandRequestAnalysis)
+    private async Task ExecuteCommandWithResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
     {
-        CommandMetadata commandMetadata = commandRequestAnalysis.MatchedCommand;
+        CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
         object consoleCommand = commandFactory.Create(commandMetadata);
 
         if (consoleCommand == null)
             throw new UnknownCommandException();
 
-        commandRequestAnalysis.SetParameters(consoleCommand);
+        requestAnalysis.SetParameters(consoleCommand);
         RaiseCommandCreatedEvent(commandRequest, consoleCommand);
 
         Type commandType = consoleCommand.GetType();
@@ -128,7 +129,7 @@ public class CommandRouter
     {
         Type commandResultType = viewModel.GetType();
 
-        IEnumerable<Type> viewTypes = executionMetadata.Views.GetViewTypesForModel(commandResultType);
+        IEnumerable<Type> viewTypes = executionContext.Views.GetViewTypesForModel(commandResultType);
 
         foreach (Type viewType in viewTypes)
         {

@@ -18,6 +18,7 @@ using System.Reflection;
 using Autofac;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 
@@ -36,18 +37,18 @@ public static class DependencyContainerSetup
         containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
         containerBuilder.RegisterType(commandParserType).As<ICommandParser>();
 
-        ExecutionMetadata executionMetadata = new();
-        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
-        executionMetadata.LoadFrom(assemblies);
+        ExecutionContext executionContext = new();
+        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
+        executionContext.LoadFrom(assemblies);
 
-        executionMetadata.Freeze();
+        executionContext.Freeze();
 
-        containerBuilder.RegisterInstance(executionMetadata).AsSelf().SingleInstance();
+        containerBuilder.RegisterInstance(executionContext).AsSelf().SingleInstance();
 
-        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
+        foreach (Type type in executionContext.Commands.GetCommandTypes())
             containerBuilder.RegisterType(type).AsSelf();
 
-        foreach (Type type in executionMetadata.Views.GetViewTypes())
+        foreach (Type type in executionContext.Views.GetViewTypes())
             containerBuilder.RegisterType(type).AsSelf();
 
         containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();

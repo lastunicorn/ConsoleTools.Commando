@@ -14,11 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
+namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 
-internal enum ParameterMatchType
+internal class ParametersAnalysis
 {
-    No = 0,
-    Yes,
-    NoButOptional
+    public bool HasUnmatchedMandatory { get; }
+
+    public bool HasUnmatchedOptional { get; }
+
+    public ParametersAnalysis(IEnumerable<ParameterMatch> parameterMatches)
+    {
+        List<ParameterMatch> notMatched = parameterMatches
+            .Where(x => !x.IsMatch)
+            .ToList();
+
+        foreach (ParameterMatch parameterMatch in notMatched)
+        {
+            if (parameterMatch.IsParameterMandatory)
+                HasUnmatchedMandatory = true;
+            else
+                HasUnmatchedOptional = true;
+        }
+    }
 }

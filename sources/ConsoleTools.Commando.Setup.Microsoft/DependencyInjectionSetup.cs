@@ -18,6 +18,7 @@ using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using Microsoft.Extensions.DependencyInjection;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 
@@ -36,18 +37,18 @@ public static class DependencyInjectionSetup
         serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
         serviceCollection.AddTransient(typeof(ICommandParser), commandParserType);
 
-        ExecutionMetadata executionMetadata = new();
-        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
-        executionMetadata.LoadFrom(assemblies);
+        ExecutionContext executionContext = new();
+        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
+        executionContext.LoadFrom(assemblies);
 
-        executionMetadata.Freeze();
+        executionContext.Freeze();
 
-        serviceCollection.AddSingleton(executionMetadata);
+        serviceCollection.AddSingleton(executionContext);
 
-        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
+        foreach (Type type in executionContext.Commands.GetCommandTypes())
             serviceCollection.AddTransient(type);
 
-        foreach (Type type in executionMetadata.Views.GetViewTypes())
+        foreach (Type type in executionContext.Views.GetViewTypes())
             serviceCollection.AddTransient(type);
 
         serviceCollection.AddSingleton<Application>();

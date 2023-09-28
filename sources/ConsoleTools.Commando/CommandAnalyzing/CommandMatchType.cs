@@ -14,11 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandAnalysis;
+namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
 
-internal enum CommandArgumentType
+internal enum CommandMatchType
 {
-    Unknown,
-    Option,
-    Operand
+    /// <summary>
+    /// The command does not match the request.
+    /// </summary>
+    NoMatch = 0,
+
+    /// <summary>
+    /// The command has optional parameters that are not matched by the provided arguments or
+    /// there are arguments from the request that remain unused.
+    /// </summary>
+    Partial,
+
+    /// <summary>
+    /// The command has all the parameters matched by the provided arguments and
+    /// no arguments from th request remain unused.
+    /// </summary>
+    Full
 }

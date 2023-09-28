@@ -18,6 +18,7 @@ using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using Ninject;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
 
@@ -33,18 +34,18 @@ public static class DependencyInjectionSetup
         kernel.Bind<ICommandFactory>().To<CommandFactory>();
         kernel.Bind<ICommandParser>().To(commandParserType);
 
-        ExecutionMetadata executionMetadata = new();
-        executionMetadata.LoadFromAssemblyContaining<ExecutionMetadata>();
-        executionMetadata.LoadFrom(assemblies);
+        ExecutionContext executionContext = new();
+        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
+        executionContext.LoadFrom(assemblies);
 
-        executionMetadata.Freeze();
+        executionContext.Freeze();
 
-        kernel.Bind<ExecutionMetadata>().ToConstant(executionMetadata).InSingletonScope();
+        kernel.Bind<ExecutionContext>().ToConstant(executionContext).InSingletonScope();
 
-        foreach (Type type in executionMetadata.Commands.GetCommandTypes())
+        foreach (Type type in executionContext.Commands.GetCommandTypes())
             kernel.Bind(type).ToSelf();
 
-        foreach (Type type in executionMetadata.Views.GetViewTypes())
+        foreach (Type type in executionContext.Views.GetViewTypes())
             kernel.Bind(type).ToSelf();
 
         kernel.Bind<Application>().ToSelf().InSingletonScope();
