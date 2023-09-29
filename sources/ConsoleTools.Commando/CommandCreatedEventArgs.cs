@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
@@ -26,7 +24,7 @@ public class CommandCreatedEventArgs : EventArgs
 
     public string[] Args { get; init; }
 
-    public List<GenericCommandOption> UnusedOptions { get; init; }
+    public List<CommandArgument> UnusedOptions { get; init; }
 
     public List<string> UnusedOperands { get; init; }
 }

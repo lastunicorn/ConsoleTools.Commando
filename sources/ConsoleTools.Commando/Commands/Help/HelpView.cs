@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,36 +16,44 @@
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
-internal class HelpView : IView<HelpCommand>
+internal class HelpView : ViewBase<HelpViewModel>
 {
-    public void Display(HelpCommand command)
+    public override void Display(HelpViewModel viewModel)
     {
-        if (command.CommandsOverviewInfo != null)
-            DisplayCommandsOverview(command);
-        else if (command.CommandFullInfo != null)
-            DisplayCommandDetails(command);
+        if (viewModel.CommandsOverviewInfo != null)
+            DisplayCommandsOverview(viewModel);
+        else if (viewModel.CommandFullInfo != null)
+            DisplayCommandDetails(viewModel);
+
+        if (viewModel.CultureInfo != null)
+        {
+            WriteLine();
+            WriteValue("Current Culture", viewModel.CultureInfo.Name);
+            WriteNote("The current culture is determining how the arguments values are interpreted.");
+        }
     }
 
-    private static void DisplayCommandsOverview(HelpCommand command)
+    private static void DisplayCommandsOverview(HelpViewModel viewModel)
     {
         CommandsOverviewControl commandsOverviewControl = new()
         {
-            ApplicationName = command.CommandsOverviewInfo.ApplicationName,
-            Commands = command.CommandsOverviewInfo.Commands
+            ApplicationName = viewModel.CommandsOverviewInfo.ApplicationName,
+            NamedCommands = viewModel.CommandsOverviewInfo.NamedCommands,
+            AnonymousCommands = viewModel.CommandsOverviewInfo.AnonymousCommands
         };
 
         commandsOverviewControl.Display();
     }
 
-    private static void DisplayCommandDetails(HelpCommand command)
+    private static void DisplayCommandDetails(HelpViewModel viewModel)
     {
         CommandUsageControl commandUsageControl = new()
         {
-            Description = command.CommandFullInfo.Description,
-            ApplicationName = command.CommandFullInfo.ApplicationName,
-            CommandName = command.CommandFullInfo.Name,
-            NamedParameters = command.CommandFullInfo.OptionsInfo,
-            UnnamedParameters = command.CommandFullInfo.OperandsInfo
+            Description = viewModel.CommandFullInfo.Description,
+            ApplicationName = viewModel.CommandFullInfo.ApplicationName,
+            CommandName = viewModel.CommandFullInfo.Name,
+            NamedParameters = viewModel.CommandFullInfo.OptionsInfo,
+            UnnamedParameters = viewModel.CommandFullInfo.OperandsInfo
         };
 
         commandUsageControl.Display();

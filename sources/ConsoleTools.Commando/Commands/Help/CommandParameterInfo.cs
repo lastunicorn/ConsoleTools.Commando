@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,32 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 public class CommandParameterInfo
 {
-    public string Name { get; set; }
+    public string Name { get; }
 
-    public char ShortName { get; set; }
+    public char ShortName { get; }
 
-    public int? Order { get; set; }
+    public int? Order { get; }
 
-    public bool IsOptional { get; set; }
+    public bool IsOptional { get; }
 
-    public string DisplayName { get; set; }
+    public string DisplayName { get; }
 
-    public Type ParameterType { get; set; }
+    public string Description { get; }
 
-    public CommandParameterInfo(ParameterMetadata x)
+    public Type ParameterType { get; }
+
+    public CommandParameterInfo(ParameterMetadata parameterMetadata)
     {
-        Name = x.Name;
-        ShortName = x.ShortName;
-        DisplayName = x.DisplayName;
-        IsOptional = x.IsOptional;
-        Order = x.Order;
-        ParameterType = x.ParameterType;
+        Name = parameterMetadata.Name;
+        ShortName = parameterMetadata.ShortName;
+        DisplayName = parameterMetadata.DisplayName;
+        IsOptional = parameterMetadata.IsOptional;
+        Order = parameterMetadata.Order;
+        Description = parameterMetadata.Description;
+        ParameterType = parameterMetadata.ParameterType;
     }
 }

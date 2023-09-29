@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,13 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
-using DustInTheWind.ConsoleTools.Commando.Parsing;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
@@ -31,10 +26,17 @@ public class Application
 
     public string Name { get; set; }
 
-    public Application(CommandRouter commandRouter, ICommandParser commandParser)
+    public event EventHandler Starting;
+
+    public event EventHandler Ended;
+
+    public event EventHandler<UnhandledApplicationExceptionEventArgs> UnhandledApplicationException;
+
+    public Application(ICommandParser commandParser, CommandRouter commandRouter)
     {
-        this.commandRouter = commandRouter ?? throw new ArgumentNullException(nameof(commandRouter));
         this.commandParser = commandParser ?? throw new ArgumentNullException(nameof(commandParser));
+        this.commandRouter = commandRouter ?? throw new ArgumentNullException(nameof(commandRouter));
+
         commandRouter.CommandCreated += HandleCommandCreated;
 
         Assembly assembly = Assembly.GetEntryAssembly();
@@ -60,16 +62,47 @@ public class Application
         }
     }
 
-    public async Task Run(string[] args)
+    public async Task RunAsync(string[] args)
     {
         try
         {
-            GenericCommand genericCommand = commandParser.Parse(args);
-            await commandRouter.Execute(genericCommand);
+            OnStarting();
+
+            CommandRequest commandRequest = commandParser.Parse(args);
+            await commandRouter.Execute(commandRequest);
         }
         catch (Exception ex)
         {
-            CustomConsole.WriteError(ex.Message);
+            UnhandledApplicationExceptionEventArgs eventArgs = new(ex);
+            OnUnhandledException(eventArgs);
+
+            if (!eventArgs.IsHandled)
+            {
+#if DEBUG
+                CustomConsole.WriteLineError(ex);
+#else
+                CustomConsole.WriteLineError(ex.Message);
+#endif
+            }
         }
+        finally
+        {
+            OnEnded();
+        }
+    }
+
+    protected virtual void OnStarting()
+    {
+        Starting?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnEnded()
+    {
+        Ended?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnUnhandledException(UnhandledApplicationExceptionEventArgs e)
+    {
+        UnhandledApplicationException?.Invoke(this, e);
     }
 }

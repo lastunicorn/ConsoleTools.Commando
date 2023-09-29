@@ -1,6 +1,19 @@
 ConsoleTools Commando
 ====================================================================================================
 
+v2.0.0
+----------------------------------------------------------------------------------------------------
+- [syntax ] Allow '=' and ':' as name-value separators.
+- [syntax ] Used only '--' for parameter names.
+- [feature] Added a Ninject configuration helper package.
+- [feature] Added support for anonymous commands (command without a verb).
+- [feature] Added base classes for commands and views.
+- [feature] Changed the attributes for commands and parameters.
+- [feature] Extracted the parsing logic into a different package.
+- [feature] Added support for parameter of type Encoding.
+- [feature] Added Starting and Ended events for the Application.
+- [feature] Added support for multiple command with same name.
+
 v1.5.0
 ----------------------------------------------------------------------------------------------------
 - [feature] Improved the information displayed by the help command.

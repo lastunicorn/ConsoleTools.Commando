@@ -5,7 +5,7 @@
 	<PropertyGroup>
 		<OutputPath>output\</OutputPath>
 		<TempPath>temp\</TempPath>
-		<Version>1.5.0</Version>
+		<Version>2.0.0</Version>
 		<OutputFileName>ConsoleTools.Commando-$(Version).zip</OutputFileName>
 		<RepositoryRoot>..\</RepositoryRoot>
 	</PropertyGroup>
@@ -16,7 +16,11 @@
 		
 		<MSBuild
 			Projects="..\sources\ConsoleTools.Commando.sln"
-			Properties="Configuration=Release;Platform=Any CPU;Version=$(Version)"/>
+			Targets="Restore" />
+		
+		<MSBuild
+			Projects="..\sources\ConsoleTools.Commando.sln"
+			Properties="Configuration=Release;Platform=Any CPU;Version=$(Version)" />
 		
 		<!-- Copy the nuget package files. -->
 		
@@ -25,7 +29,19 @@
             DestinationFolder="$(OutputPath)" />
 		
         <Copy
-            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Autofac.DependencyInjection\bin\Release\ConsoleTools.Commando.Autofac.DependencyInjection.$(Version).nupkg"
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Setup.Autofac\bin\Release\ConsoleTools.Commando.Setup.Autofac.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Setup.Ninject\bin\Release\ConsoleTools.Commando.Setup.Ninject.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Setup.Microsoft\bin\Release\ConsoleTools.Commando.Setup.Microsoft.$(Version).nupkg"
+            DestinationFolder="$(OutputPath)" />
+		
+        <Copy
+            SourceFiles="$(RepositoryRoot)\sources\ConsoleTools.Commando.Parsing\bin\Release\ConsoleTools.Commando.Parsing.$(Version).nupkg"
             DestinationFolder="$(OutputPath)" />
 
 	</Target>

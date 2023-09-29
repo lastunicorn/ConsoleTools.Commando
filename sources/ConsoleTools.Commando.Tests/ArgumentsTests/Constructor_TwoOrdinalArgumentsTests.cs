@@ -1,5 +1,5 @@
 ﻿// Velo City
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,41 +18,41 @@ using DustInTheWind.ConsoleTools.Commando.Parsing;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
+namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests;
+
+public class Constructor_TwoOrdinalArgumentsTests
 {
-    public class Constructor_TwoOrdinalArgumentsTests
+    private readonly Arguments arguments;
+
+    public Constructor_TwoOrdinalArgumentsTests()
     {
-        private readonly Arguments arguments;
+        string[] args = { "param1", "param2" };
 
-        public Constructor_TwoOrdinalArgumentsTests()
-        {
-            string[] args = { "param1", "param2" };
+        arguments = new Arguments(args);
+    }
 
-            arguments = new Arguments(args);
-        }
+    [Fact]
+    public void HavingArgsStringWithTwoOrdinalArguments_WhenParsed_ThenArgumentsContainsTwoItems()
+    {
+        arguments.Count.Should().Be(2);
+    }
 
-        [Fact]
-        public void HavingArgsStringWithTwoOrdinalArguments_WhenParsed_ThenArgumentsContainsTwoItems()
-        {
-            arguments.Count.Should().Be(2);
-        }
+    [Fact]
+    public void HavingArgsStringWithTwoOrdinalArguments_WhenParsed_ThenSecondArgumentHasTypeOrdinal()
+    {
+        arguments[1].IsNamedArgument.Should().Be(false);
+        arguments[1].IsAnonymousArgument.Should().Be(true);
+    }
 
-        [Fact]
-        public void HavingArgsStringWithTwoOrdinalArguments_WhenParsed_ThenSecondArgumentHasTypeOrdinal()
-        {
-            arguments[1].Type.Should().Be(ArgumentType.Ordinal);
-        }
+    [Fact]
+    public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenSecondArgumentHasNullName()
+    {
+        arguments[1].Name.Should().BeNull();
+    }
 
-        [Fact]
-        public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenSecondArgumentHasNullName()
-        {
-            arguments[1].Name.Should().BeNull();
-        }
-
-        [Fact]
-        public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenSecondArgumentHasCorrectValue()
-        {
-            arguments[1].Value.Should().Be("param2");
-        }
+    [Fact]
+    public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenSecondArgumentHasCorrectValue()
+    {
+        arguments[1].Value.Should().Be("param2");
     }
 }

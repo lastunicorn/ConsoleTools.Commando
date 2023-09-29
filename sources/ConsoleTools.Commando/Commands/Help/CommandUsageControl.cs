@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using System.Text;
 using DustInTheWind.ConsoleTools.Controls.Tables;
 
@@ -35,7 +33,9 @@ internal class CommandUsageControl
 
     public void Display()
     {
-        DisplayDescription();
+        if (!string.IsNullOrEmpty(Description))
+            DisplayDescription();
+
         DisplayUsageOverview();
 
         if (NamedParameters?.Count > 0)
@@ -47,8 +47,8 @@ internal class CommandUsageControl
 
     private void DisplayDescription()
     {
-        Console.WriteLine();
-        Console.WriteLine(Description);
+        CustomConsole.WriteLine();
+        CustomConsole.WriteLine(ConsoleColor.DarkGray, Description);
     }
 
     private void DisplayUsageOverview()
@@ -63,7 +63,7 @@ internal class CommandUsageControl
             sb.Append(" [Options]");
 
         if (UnnamedParameters?.Count > 0)
-            sb.Append(" -- [Operands]");
+            sb.Append(" [Operands]");
 
         Console.WriteLine(sb.ToString());
     }
@@ -71,20 +71,35 @@ internal class CommandUsageControl
     private void DisplayOptions()
     {
         Console.WriteLine();
-        CustomConsole.WriteLineEmphasized("Options:");
+        CustomConsole.WriteLineEmphasized("Options (named arguments):");
 
         DataGrid dataGrid = new()
         {
-            Border = { IsVisible = false }
+            Border = { IsVisible = false },
+            MaxWidth = 80
         };
+
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            ForegroundColor = ConsoleColor.DarkGray
+        });
+
         foreach (CommandParameterInfo parameter in NamedParameters)
         {
-            string fullName = "-" + parameter.Name;
-            string parameterShortName = "-" + parameter.ShortName;
-            string isOptional = parameter.IsOptional ? "(optional)" : string.Empty;
-            string description = SerializeValueDescription(parameter);
+            string fullName = "--" + parameter.Name;
+            string shortName = "-" + parameter.ShortName;
+            string isOptional = parameter.IsOptional
+                ? "(optional)"
+                : string.Empty;
+            string type = parameter.ParameterType.ToUserFriendlyName();
+            string description = parameter.Description;
 
-            dataGrid.Rows.Add(fullName, parameterShortName, isOptional, description);
+            dataGrid.Rows.Add(fullName, shortName, isOptional, type, description);
         }
         dataGrid.Display();
     }
@@ -92,51 +107,36 @@ internal class CommandUsageControl
     private void DisplayOperands()
     {
         Console.WriteLine();
-        CustomConsole.WriteLineEmphasized("Operands:");
+        CustomConsole.WriteLineEmphasized("Operands (anonymous arguments):");
 
         DataGrid dataGrid = new()
         {
             Border = { IsVisible = false }
         };
 
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            ForegroundColor = ConsoleColor.DarkGray
+        });
+
         foreach (CommandParameterInfo parameter in UnnamedParameters)
         {
             string index = parameter.Order == null
                 ? string.Empty
                 : parameter.Order.Value.ToString();
-            string fullName = parameter.DisplayName.Replace(' ', '-');
-            string parameterShortName = string.Empty;
             string isOptional = parameter.IsOptional
                 ? "(optional)"
                 : string.Empty;
-            string description = SerializeValueDescription(parameter);
+            string type = parameter.ParameterType.ToUserFriendlyName();
+            string description = parameter.Description;
 
-            dataGrid.Rows.Add(index, fullName, parameterShortName, isOptional, description);
+            dataGrid.Rows.Add(index, isOptional, type, description);
         }
 
         dataGrid.Display();
-    }
-
-    private static string SerializeValueDescription(CommandParameterInfo parameter)
-    {
-        if (parameter.ParameterType.IsText())
-            return " Type: text";
-
-        if (parameter.ParameterType.IsNumber())
-            return " Type: number";
-
-        if (parameter.ParameterType.IsListOfNumbers())
-            return " Type: list-of-numbers";
-
-        if (parameter.ParameterType.IsListOfTexts())
-            return " Type: list-of-texts";
-
-        if (parameter.ParameterType.IsBoolean())
-            return " Type: flag";
-
-        if (parameter.ParameterType.IsCharacter())
-            return " Type: character";
-
-        return " Type: ?";
     }
 }

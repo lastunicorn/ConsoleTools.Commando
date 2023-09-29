@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 internal static class TypeExtensions
@@ -28,25 +25,53 @@ internal static class TypeExtensions
 
     public static bool IsListOfTexts(this Type type)
     {
-        return type == typeof(List<string>);
+        return type.GetInterfaces().Contains(typeof(IEnumerable<string>));
+    }
+
+    public static bool IsInteger(this Type type)
+    {
+        return type == typeof(int) ||
+               type == typeof(uint) ||
+               type == typeof(long) ||
+               type == typeof(ulong) ||
+               type == typeof(short) ||
+               type == typeof(ushort);
+    }
+
+    public static bool IsReal(this Type type)
+    {
+        return type == typeof(float) ||
+               type == typeof(double);
     }
 
     public static bool IsNumber(this Type type)
     {
-        return type == typeof(int) ||
-               type == typeof(long) ||
-               type == typeof(short) ||
-               type == typeof(float) ||
-               type == typeof(double);
+        return IsInteger(type) || IsReal(type);
+    }
+
+    public static bool IsListOfIntegers(this Type type)
+    {
+        Type[] interfaces = type.GetInterfaces();
+
+        return interfaces.Contains(typeof(IEnumerable<int>)) ||
+               interfaces.Contains(typeof(IEnumerable<uint>)) ||
+               interfaces.Contains(typeof(IEnumerable<long>)) ||
+               interfaces.Contains(typeof(IEnumerable<ulong>)) ||
+               interfaces.Contains(typeof(IEnumerable<short>)) ||
+               interfaces.Contains(typeof(IEnumerable<ushort>));
+    }
+
+    public static bool IsListOfReal(this Type type)
+    {
+        Type[] interfaces = type.GetInterfaces();
+
+        return interfaces.Contains(typeof(IEnumerable<float>)) ||
+               interfaces.Contains(typeof(IEnumerable<double>));
     }
 
     public static bool IsListOfNumbers(this Type type)
     {
-        return type == typeof(List<int>) ||
-               type == typeof(List<long>) ||
-               type == typeof(List<short>) ||
-               type == typeof(List<float>) ||
-               type == typeof(List<double>);
+        return IsListOfIntegers(type) || IsListOfReal(type);
     }
 
     public static bool IsBoolean(this Type type)
@@ -57,5 +82,34 @@ internal static class TypeExtensions
     public static bool IsCharacter(this Type type)
     {
         return type == typeof(char);
+    }
+
+    public static string ToUserFriendlyName(this Type type)
+    {
+        if (type.IsText())
+            return "text";
+
+        if (type.IsInteger())
+            return "integer";
+
+        if (type.IsReal())
+            return "real";
+
+        if (type.IsListOfIntegers())
+            return "list-of-integers";
+
+        if (type.IsListOfReal())
+            return "list-of-real";
+
+        if (type.IsListOfTexts())
+            return "list-of-texts";
+
+        if (type.IsBoolean())
+            return "flag";
+
+        if (type.IsCharacter())
+            return "character";
+
+        return type.Name;
     }
 }

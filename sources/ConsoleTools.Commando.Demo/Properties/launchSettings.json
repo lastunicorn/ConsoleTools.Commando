@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ConsoleTools.Commando.Demo": {
-      "commandName": "Project",
-      "commandLineArgs": "dummy -t text -f"
-    }
-  }
-}

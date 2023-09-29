@@ -1,5 +1,5 @@
 ﻿// Velo City
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,45 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
+namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests;
+
+public class CountTests
 {
-    public class CountTests
+    [Fact]
+    public void HavingArgumentsInstanceWithNoArgument_ThenCountIs0()
     {
-        [Fact]
-        public void HavingArgumentsInstanceWithNoArgument_ThenCountIs0()
-        {
-            Arguments arguments = new(Array.Empty<string>());
+        Arguments arguments = new(Array.Empty<string>());
 
-            arguments.Count.Should().Be(0);
-        }
+        arguments.Count.Should().Be(0);
+    }
 
-        [Fact]
-        public void HavingArgumentsInstanceWithOneArgument_ThenCountIs1()
-        {
-            Arguments arguments = new(new[] { "argument1" });
+    [Fact]
+    public void HavingArgumentsInstanceWithOneArgument_ThenCountIs1()
+    {
+        Arguments arguments = new(new[] { "argument1" });
 
-            arguments.Count.Should().Be(1);
-        }
+        arguments.Count.Should().Be(1);
+    }
 
-        [Fact]
-        public void HavingArgumentsInstanceWithTwoArguments_ThenCountIs2()
-        {
-            Arguments arguments = new(new[] { "argument1", "argument2" });
+    [Fact]
+    public void HavingArgumentsInstanceWithTwoArguments_ThenCountIs2()
+    {
+        Arguments arguments = new(new[] { "argument1", "argument2" });
 
-            arguments.Count.Should().Be(2);
-        }
+        arguments.Count.Should().Be(2);
+    }
 
-        [Fact]
-        public void HavingArgumentsInstanceWithThreeArguments_ThenCountIs3()
-        {
-            Arguments arguments = new(new[] { "argument1", "argument2", "argument3" });
+    [Fact]
+    public void HavingArgumentsInstanceWithThreeArguments_ThenCountIs3()
+    {
+        Arguments arguments = new(new[] { "argument1", "argument2", "argument3" });
 
-            arguments.Count.Should().Be(3);
-        }
+        arguments.Count.Should().Be(3);
     }
 }

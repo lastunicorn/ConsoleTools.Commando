@@ -1,28 +1,40 @@
 # Console Tools Commando
 
-It is a presentation layer framework using MVVM that helps to implement a CLI (command line interface).
+This is an MVVM presentation layer framework that helps you create a CLI (command line interface).
 
 ## How to use (with Autofac)
 
-1. Include `ConsoleTools.Commando.Autofac.DependencyInjection` nuget package.
+### 1) Include the nuget package:
 
-2. Register `Commando` into `Autofac`.
+- `ConsoleTools.Commando.Setup.Autofac`
+- Note:
+  - The `ConsoleTools.Commando` package will be automatically included.
 
-   ```csharp
-   Assembly presentationAssembly = typeof(SomeCommand).Assembly;
-   containerBuilder.RegisterCommando(presentationAssembly);
-   ```
+### 2) Build and run the `Application`.
 
-3. Instantiate the `Application`
-   ```csharp
-   Application application = container.Resolve<Application>();
-   ```
+```c#
+Application application = ApplicationBuilder.Create()
+    .RegisterCommandsFrom(typeof(ReadCommand).Assembly) // Provide here the assembly containing your commands.
+    .Build();
 
-4. Execute
+await application.RunAsync(args);
+```
 
-   ```csharp
-   await application.Run(args);
-   ```
+### 3) Create your commands.
+
+```c#
+[NamedCommand("read", Description = "Display the content of a text file.")]
+internal class ReadCommand : ICommand
+{
+    [NamedParameter("file", ShortName = 'f', Description = "The full path of the file.")]
+    public string FilePath { get; set; }
+    
+	public Task Execute()
+	{
+		...
+	}
+}
+```
 
 ## Discussions and Suggestions
 

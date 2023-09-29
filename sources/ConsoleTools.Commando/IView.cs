@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
-public interface IView<in TCommand>
-    where TCommand : ICommand
+public interface IView<in TCommandResult>
 {
-    void Display(TCommand command);
+    void Display(TCommandResult viewModel);
 }

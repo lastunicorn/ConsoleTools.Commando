@@ -1,0 +1,45 @@
+<!--
+ConsoleTools.Commando
+Copyright (C) 2022-2023 Dust in the Wind
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <AssemblyName>DustInTheWind.ConsoleTools.Commando.Parsing</AssemblyName>
+        <RootNamespace>DustInTheWind.ConsoleTools.Commando.Parsing</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>ConsoleTools.Commando.Parsing</PackageId>
+        <Description>A plug-in package for Console Tools Commando. Contains the algorithm for parsing the console commands typed by the user.</Description>
+        <PackageTags>console;mvvm;command;command-line;cli;command-line-interface;parsing;command-texts</PackageTags>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="readme.md" Pack="true" PackagePath="readme.md" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ConsoleTools.Commando\ConsoleTools.Commando.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="DustInTheWind.ConsoleTools.Commando.Tests" />
+    </ItemGroup>
+
+</Project>

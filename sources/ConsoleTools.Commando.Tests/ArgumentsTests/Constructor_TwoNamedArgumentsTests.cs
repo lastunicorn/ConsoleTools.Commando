@@ -1,5 +1,5 @@
 // Velo City
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,41 +18,41 @@ using DustInTheWind.ConsoleTools.Commando.Parsing;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
+namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests;
+
+public class Constructor_TwoNamedArgumentsTests
 {
-    public class Constructor_TwoNamedArgumentsTests
+    private readonly Arguments arguments;
+
+    public Constructor_TwoNamedArgumentsTests()
     {
-        private readonly Arguments arguments;
+        string[] args = { "--param1", "value1", "--param2", "value2" };
 
-        public Constructor_TwoNamedArgumentsTests()
-        {
-            string[] args = { "-param1", "value1", "-param2", "value2" };
+        arguments = new Arguments(args);
+    }
 
-            arguments = new Arguments(args);
-        }
+    [Fact]
+    public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentsContainsTwoItems()
+    {
+        arguments.Count.Should().Be(2);
+    }
 
-        [Fact]
-        public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentsContainsTwoItems()
-        {
-            arguments.Count.Should().Be(2);
-        }
+    [Fact]
+    public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasTypeNamed()
+    {
+        arguments[1].IsNamedArgument.Should().Be(true);
+        arguments[1].IsAnonymousArgument.Should().Be(false);
+    }
 
-        [Fact]
-        public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasTypeNamed()
-        {
-            arguments[1].Type.Should().Be(ArgumentType.Named);
-        }
+    [Fact]
+    public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasCorrectName()
+    {
+        arguments[1].Name.Should().Be("param2");
+    }
 
-        [Fact]
-        public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasCorrectName()
-        {
-            arguments[1].Name.Should().Be("param2");
-        }
-
-        [Fact]
-        public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasCorrectValue()
-        {
-            arguments[1].Value.Should().Be("value2");
-        }
+    [Fact]
+    public void HavingArgsStringWithTwoNamedArgument_WhenParsed_ThenSecondArgumentHasCorrectValue()
+    {
+        arguments[1].Value.Should().Be("value2");
     }
 }

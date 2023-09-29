@@ -1,6 +1,6 @@
 ﻿<!--
 ConsoleTools.Commando
-Copyright (C) 2022 Dust in the Wind
+Copyright (C) 2022-2023 Dust in the Wind
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,9 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>DustInTheWind.ConsoleTools.Commando</AssemblyName>
         <RootNamespace>DustInTheWind.ConsoleTools.Commando</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>ConsoleTools.Commando</PackageId>
+        <Description>An MVVM presentation layer framework that helps you create a CLI (command line interface).</Description>
+        <PackageTags>console;mvvm;command;command-line;cli;command-line-interface</PackageTags>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="readme.md" Pack="true" PackagePath="readme.md" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="ConsoleTools.Controls.Menus" Version="1.1.0" />

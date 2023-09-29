@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleTools.Commando.Demo": {
+      "commandName": "Project",
+      "commandLineArgs": "read \"c:\\temp\\test.txt\""
+    }
+  }
+}

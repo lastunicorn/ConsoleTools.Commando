@@ -1,0 +1,116 @@
+
+----------------------------------------------------------------------------------------------------
+No verb
+----------------------------------------------------------------------------------------------------
+
+Default
+
+* tool
+
+----------------------------------------
+
+Name-value Options
+
+* tool --option:value
+* tool --option=value
+* tool --option value
+
+* tool -o:value
+* tool -o=value
+* tool -o value
+
+----------------------------------------
+
+Flags
+
+* tool --flag
+* tool -f
+
+* tool -abc
+* tool -a -b -c
+
+----------------------------------------
+
+Flags & name-values
+
+* tool -abc:value
+* tool -abc=value
+* tool -abc value
+
+* tool -a -b -c:value
+* tool -a -b -c=value
+* tool -a -b -c value
+
+----------------------------------------
+
+Operands after option
+
+* tool --option:value operand
+* tool --option=value operand
+* tool --option value operand
+
+----------------------------------------
+
+Operand after flag (x)
+
+tool --flag operand
+tool -f operand
+tool -abc operand
+
+- The operand may be confused with a name-value argument.
+- Only after inspecting the parameter's type, it can be decided if the operand is the value of the specified name, or the name is actually a flag and the value is an operand.
+
+----------------------------------------
+
+Operand as first argument (not valid syntax)
+
+tool operand
+tool operand --option:value
+tool operand --flag
+
+- The operand may be confused with a verb.
+- Only after inspecting the list of available commands, it can be decided if the argument is an operand for an anonymous command or a verb identifying a command.
+
+----------------------------------------
+
+Operand (strict syntax)
+
+tool --option:value -- operand
+tool --flag -- operand
+tool -- operand
+
+----------------------------------------
+
+Verb
+
+tool verb --option:value --flag -- operand
+
+----------------------------------------
+
+
+
+Parsing
+- Returns a verb and an ordered list of name-value parameters.
+- The parameter's name is optional.
+- The parameter's value is optional.
+- The parameter cannot have both name and value missing.
+
+
+Command Parser (default):
+- A possible flag fallowed by an option will be interpreted as a name-value parameter. There is no way, at this level, to correctly decide if a name is a flag or not.
+
+- A full name starts with "--" or "/".
+- A short name (one char) starts with "-".
+- A value may be provided immediately after the name. The name and value must be separated by a single character: ":", "=" or " ".
+- If a value is not provided, the name is considered to represent a flag (boolean value). If the flag is present its value is considered "true". If it is not present, its value will remain the default one (usually it is "false", decided by the actual implementation of the command).
+- if the name or the value of a property contain white spaces, thy must be enclosed within double quotes.
+- The keyword "--" (without a name) is a separator after which everything is interpreted to be an operand, regardless of any mark that, usually would represent parameter names.
+
+Command Router
+- If one of the command's parameters is a flag (boolean), but the provided value is different than the accepted values for a flag, than its value is promoted as an operand.
+- Accepted values for a flag:
+	- null (true)
+	- "true" (true), "false" (false) - case insensitive
+	- 1 (true), 0 (false)
+	- "on" (true), "off" (false) - case insensitive
+	- "yes" (true), "no" (false) - case insensitive

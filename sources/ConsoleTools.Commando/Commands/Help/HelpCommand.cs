@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,45 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
+using System.Globalization;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
-[HelpCommand("help", ShortDescription = "Obtain more details and explanation about the available commands.", Order = int.MaxValue)]
-internal class HelpCommand : ICommand
+[HelpCommand("help", Description = "Display more details about the available commands.")]
+internal class HelpCommand : IConsoleCommand<HelpViewModel>
 {
-    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly ExecutionContext executionContext;
     private readonly Application application;
 
-    [CommandParameter(DisplayName = "command name", Order = 1, IsOptional = true)]
+    [AnonymousParameter(DisplayName = "command name", Order = 1, IsOptional = true, Description = "The name of the command for which to display detailed help information.")]
     public string CommandName { get; set; }
 
-    public CommandsOverviewInfo CommandsOverviewInfo { get; private set; }
-
-    public CommandFullInfo CommandFullInfo { get; private set; }
-
-    public HelpCommand(CommandMetadataCollection commandMetadataCollection, Application application)
+    public HelpCommand(ExecutionContext executionContext, Application application)
     {
-        this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
+        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
         this.application = application ?? throw new ArgumentNullException(nameof(application));
     }
 
-    public Task Execute()
+    public Task<HelpViewModel> Execute()
     {
-        if (CommandName != null)
-            CommandFullInfo = GetCommandFullInfo(CommandName);
-        else
-            CommandsOverviewInfo = GetAllCommandsOverview();
+        HelpViewModel viewModel = new();
 
-        return Task.CompletedTask;
+        if (CommandName == null)
+        {
+            viewModel.CommandsOverviewInfo = GetAllCommandsOverview();
+            viewModel.CultureInfo = CultureInfo.CurrentCulture;
+        }
+        else
+        {
+            viewModel.CommandFullInfo = GetCommandFullInfo(CommandName);
+        }
+
+        return Task.FromResult(viewModel);
     }
 
     private CommandFullInfo GetCommandFullInfo(string commandName)
     {
-        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(commandName);
+        CommandMetadata commandMetadata = executionContext.Commands.GetByName(commandName);
 
         if (commandMetadata == null)
             throw new CommandNotFoundException(commandName);
@@ -78,7 +80,10 @@ internal class HelpCommand : ICommand
         return new CommandsOverviewInfo
         {
             ApplicationName = application.Name,
-            Commands = commandMetadataCollection.GetAllEnabled()
+            NamedCommands = executionContext.Commands.GetNamed()
+                .Select(x => new CommandShortInfo(x))
+                .ToList(),
+            AnonymousCommands = executionContext.Commands.GetAllAnonymous()
                 .Select(x => new CommandShortInfo(x))
                 .ToList()
         };

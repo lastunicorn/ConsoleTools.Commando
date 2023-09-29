@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,19 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
 internal class ParameterMissingException : Exception
 {
-    public ParameterMissingException(string parameterName)
-        : base(BuildMessage(parameterName))
+    public ParameterMissingException(ICollection<string> parameterNames)
+        : base(BuildMessage(parameterNames))
     {
     }
 
-    private static string BuildMessage(string parameterName)
+    private static string BuildMessage(ICollection<string> parameterNames)
     {
-        return string.Format(Resources.ErrorMessage_ParameterMissing, parameterName);
+        switch (parameterNames.Count)
+        {
+            case 0:
+                return Resources.ErrorMessage_ParameterMissing_0;
+
+            case 1:
+                {
+                    string parameterName = parameterNames.First();
+                    return string.Format(Resources.ErrorMessage_ParameterMissing_1, parameterName);
+                }
+
+            case > 1:
+                {
+                    string parameterNamesAsString = string.Join(", ", parameterNames);
+                    return string.Format(Resources.ErrorMessage_ParameterMissing_N, parameterNamesAsString);
+                }
+
+            default:
+                return Resources.ErrorMessage_ParameterMissing_0;
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,127 +14,144 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using DustInTheWind.ConsoleTools.Commando.CommandMetadataModel;
-using DustInTheWind.ConsoleTools.Commando.Commands.Empty;
-using DustInTheWind.ConsoleTools.Commando.GenericCommandModel;
+using DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
+using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public class CommandRouter
 {
-    private readonly CommandMetadataCollection commandMetadataCollection;
+    private readonly ExecutionContext executionContext;
     private readonly ICommandFactory commandFactory;
 
-    public event EventHandler<CommandCreatedEventArgs> CommandCreated;
-
-    public CommandRouter(CommandMetadataCollection commandMetadataCollection, ICommandFactory commandFactory)
+    public CommandRouter(ExecutionContext executionContext, ICommandFactory commandFactory)
     {
-        this.commandMetadataCollection = commandMetadataCollection ?? throw new ArgumentNullException(nameof(commandMetadataCollection));
+        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
         this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
     }
 
-    public async Task Execute(GenericCommand genericCommand)
+    public event EventHandler<CommandCreatedEventArgs> CommandCreated;
+
+    public async Task Execute(CommandRequest commandRequest)
     {
-        ICommand command = CreateCommandToExecute(genericCommand);
+        RequestAnalysis requestAnalysis = AnalyzeRequest(commandRequest);
 
-        await command.Execute();
+        switch (requestAnalysis.MatchedCommand.CommandKind)
+        {
+            case CommandKind.None:
+                throw new UnknownCommandException();
 
-        ExecuteViewsFor(command);
+            case CommandKind.WithoutResult:
+                await ExecuteCommandWithoutResult(commandRequest, requestAnalysis);
+                break;
+
+            case CommandKind.WithResult:
+                await ExecuteCommandWithResult(commandRequest, requestAnalysis);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
-    private ICommand CreateCommandToExecute(GenericCommand genericCommand)
+    private RequestAnalysis AnalyzeRequest(CommandRequest commandRequest)
     {
-        ICommand command = CreateCommandIfExists(genericCommand)
-                           ?? CreateHelpCommand()
-                           ?? new EmptyCommand();
+        RequestAnalysis requestAnalysis = new(commandRequest, executionContext);
 
+        switch (requestAnalysis.MatchType)
+        {
+            case RequestMatchType.NoMatch:
+                throw new UnknownCommandException();
+
+            case RequestMatchType.Partial:
+            case RequestMatchType.Full:
+            case RequestMatchType.Help:
+                return requestAnalysis;
+
+            case RequestMatchType.OnlyName:
+                string[] parameterNames = requestAnalysis.UnmatchedMandatoryParameters
+                    .Select(x => x.Name)
+                    .ToArray();
+                throw new ParameterMissingException(parameterNames);
+
+            case RequestMatchType.Multiple:
+                throw new MultipleCommandsMatchException();
+
+            default:
+                throw new Exception("Invalid RequestMatchType. The analysis of the command failed in an unexpected way.");
+        }
+    }
+
+    private async Task ExecuteCommandWithoutResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
+    {
+        CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
+        IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
+
+        if (consoleCommand == null)
+            throw new UnknownCommandException();
+
+        requestAnalysis.SetParameters(consoleCommand);
+        RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+        await consoleCommand.Execute();
+        ExecuteViewsFor(consoleCommand);
+    }
+
+    private async Task ExecuteCommandWithResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
+    {
+        try
+        {
+            CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
+            object consoleCommand = commandFactory.Create(commandMetadata);
+
+            if (consoleCommand == null)
+                throw new UnknownCommandException();
+
+            requestAnalysis.SetParameters(consoleCommand);
+            RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+
+            Type commandType = consoleCommand.GetType();
+            MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
+
+            object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
+            ExecuteViewsFor(viewModel);
+        }
+        catch (TargetInvocationException ex)
+        {
+            if (ex.InnerException != null)
+                throw new Exception("Command execution error. " + ex.InnerException.Message, ex);
+
+            throw;
+        }
+    }
+
+    private void RaiseCommandCreatedEvent(CommandRequest commandRequest, object consoleCommand)
+    {
         CommandCreatedEventArgs args = new()
         {
-            Args = genericCommand.UnderlyingArgs,
-            CommandFullName = command.GetType().FullName,
-            UnusedOptions = genericCommand.EnumerateUnusedOptions().ToList(),
-            UnusedOperands = genericCommand.EnumerateUnusedOperands().ToList()
+            Args = commandRequest.UnderlyingArgs,
+            CommandFullName = consoleCommand.GetType().FullName,
+            UnusedOptions = commandRequest.EnumerateUnusedOptions().ToList(),
+            UnusedOperands = commandRequest.EnumerateUnusedOperands().ToList()
         };
+
         OnCommandCreated(args);
-
-        return command;
     }
 
-    private ICommand CreateCommandIfExists(GenericCommand genericCommand)
+    private void ExecuteViewsFor(object viewModel)
     {
-        if (string.IsNullOrEmpty(genericCommand.Verb))
-            return null;
+        Type commandResultType = viewModel.GetType();
 
-        CommandMetadata commandMetadata = commandMetadataCollection.GetByName(genericCommand.Verb);
-
-        if (commandMetadata == null)
-            throw new InvalidCommandException();
-
-        ICommand command = commandFactory.Create(commandMetadata.Type);
-        SetParameters(command, commandMetadata, genericCommand);
-
-        return command;
-    }
-
-    private ICommand CreateHelpCommand()
-    {
-        CommandMetadata helpCommandMetadata = commandMetadataCollection.GetHelpCommand();
-
-        return helpCommandMetadata == null
-            ? null
-            : commandFactory.Create(helpCommandMetadata.Type);
-    }
-
-    private static void SetParameters(ICommand command, CommandMetadata commandMetadata, GenericCommand genericCommand)
-    {
-        genericCommand.Reset();
-
-        foreach (ParameterMetadata parameterMetadata in commandMetadata.Parameters)
-            SetParameter(command, parameterMetadata, genericCommand);
-    }
-
-    private static void SetParameter(ICommand command, ParameterMetadata parameterMetadata, GenericCommand genericCommand)
-    {
-        GenericCommandOption option = genericCommand.GetOptionAndMarkAsUsed(parameterMetadata);
-
-        if (option != null)
-        {
-            parameterMetadata.SetValue(command, option.Value);
-            return;
-        }
-
-        string operand = genericCommand.GetOperandAndMarkAsUsed(parameterMetadata);
-
-        if (operand != null)
-        {
-            parameterMetadata.SetValue(command, operand);
-            return;
-        }
-
-        if (!parameterMetadata.IsOptional)
-        {
-            string parameterName = parameterMetadata.Name ?? parameterMetadata.Order.ToString();
-            throw new ParameterMissingException(parameterName);
-        }
-    }
-
-    private void ExecuteViewsFor(ICommand command)
-    {
-        Type commandType = command.GetType();
-
-        IEnumerable<Type> viewTypes = commandMetadataCollection.GetViewTypesForCommand(commandType);
+        IEnumerable<Type> viewTypes = executionContext.Views.GetViewTypesForModel(commandResultType);
 
         foreach (Type viewType in viewTypes)
         {
             object view = commandFactory.CreateView(viewType);
 
-            MethodInfo displayMethodInfo = viewType.GetMethod(nameof(IView<ICommand>.Display));
-            displayMethodInfo?.Invoke(view, new object[] { command });
+            MethodInfo displayMethodInfo = viewType.GetMethod(nameof(IView<IConsoleCommand>.Display));
+            displayMethodInfo?.Invoke(view, new[] { viewModel });
         }
     }
 

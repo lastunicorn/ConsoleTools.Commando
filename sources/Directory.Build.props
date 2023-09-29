@@ -1,6 +1,6 @@
 <!--
 ConsoleTools.Commando
-Copyright (C) 2022 Dust in the Wind
+Copyright (C) 2022-2023 Dust in the Wind
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,21 +19,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <Project>
 
     <PropertyGroup>
-        <Version>1.5.0.0</Version>
         <Product>ConsoleTools Commando</Product>
         <Company>Dust in the Wind</Company>
-        <Copyright>Copyright © Dust in the Wind 2022</Copyright>
+        <Copyright>Copyright © Dust in the Wind 2022-2023</Copyright>
         <Authors>Dust in the Wind</Authors>
         <Owners>Dust in the Wind</Owners>
         <NeutralLanguage>en</NeutralLanguage>
         <RepositoryType>git</RepositoryType>
-        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>license.txt</PackageLicenseFile>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/lastunicorn/ConsoleTools.Commando</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/lastunicorn/ConsoleTools.Commando</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="..\LICENSE.txt" Link="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
-        <Content Include="..\README.md" Link="README.md" Pack="true" PackagePath="README.md" />
+        <Content Include="..\license.txt" Link="license.txt" Pack="true" PackagePath="license.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
 </Project>

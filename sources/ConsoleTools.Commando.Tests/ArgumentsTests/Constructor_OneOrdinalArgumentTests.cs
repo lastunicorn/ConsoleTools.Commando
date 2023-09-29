@@ -1,5 +1,5 @@
 // Velo City
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,41 +18,41 @@ using DustInTheWind.ConsoleTools.Commando.Parsing;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests
+namespace DustInTheWind.ConsoleTools.Commando.Tests.ArgumentsTests;
+
+public class Constructor_OneOrdinalArgumentTests
 {
-    public class Constructor_OneOrdinalArgumentTests
+    private readonly Arguments arguments;
+
+    public Constructor_OneOrdinalArgumentTests()
     {
-        private readonly Arguments arguments;
+        string[] args = { "param1" };
 
-        public Constructor_OneOrdinalArgumentTests()
-        {
-            string[] args = { "param1" };
+        arguments = new Arguments(args);
+    }
 
-            arguments = new Arguments(args);
-        }
+    [Fact]
+    public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentsContainsOneItem()
+    {
+        arguments.Count.Should().Be(1);
+    }
 
-        [Fact]
-        public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentsContainsOneItem()
-        {
-            arguments.Count.Should().Be(1);
-        }
+    [Fact]
+    public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasTypeOrdinal()
+    {
+        arguments[0].IsNamedArgument.Should().Be(false);
+        arguments[0].IsAnonymousArgument.Should().Be(true);
+    }
 
-        [Fact]
-        public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasTypeOrdinal()
-        {
-            arguments[0].Type.Should().Be(ArgumentType.Ordinal);
-        }
+    [Fact]
+    public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasNullName()
+    {
+        arguments[0].Name.Should().BeNull();
+    }
 
-        [Fact]
-        public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasNullName()
-        {
-            arguments[0].Name.Should().BeNull();
-        }
-
-        [Fact]
-        public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasCorrectValue()
-        {
-            arguments[0].Value.Should().Be("param1");
-        }
+    [Fact]
+    public void HavingArgsStringWithOneOrdinalArgument_WhenParsed_ThenArgumentHasCorrectValue()
+    {
+        arguments[0].Value.Should().Be("param1");
     }
 }

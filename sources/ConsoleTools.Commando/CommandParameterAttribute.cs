@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,20 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace DustInTheWind.ConsoleTools.Commando;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class CommandParameterAttribute : Attribute
 {
-    public string Name { get; set; }
-
-    public char ShortName { get; set; }
-
-    public string DisplayName { get; set; }
-
-    public int Order { get; set; }
-
     public bool IsOptional { get; set; }
+
+    public string Description { get; set; }
 }

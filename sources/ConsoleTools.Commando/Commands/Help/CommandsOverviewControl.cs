@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022 Dust in the Wind
+// Copyright (C) 2022-2023 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DustInTheWind.ConsoleTools.Controls.Tables;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
@@ -25,13 +22,30 @@ internal class CommandsOverviewControl
 {
     public string ApplicationName { get; set; }
 
-    public List<CommandShortInfo> Commands { get; set; }
+    public List<CommandShortInfo> NamedCommands { get; set; }
+
+    public List<CommandShortInfo> AnonymousCommands { get; set; }
 
     public void Display()
     {
         Console.WriteLine();
         CustomConsole.WriteLineEmphasized("Usage:");
-        Console.WriteLine($" {ApplicationName} [command]");
+
+        if (NamedCommands?.Count > 0)
+            Console.WriteLine($" {ApplicationName} [command] [parameters]");
+
+        if (AnonymousCommands?.Count > 0)
+            Console.WriteLine($" {ApplicationName} [parameters]");
+
+        if (NamedCommands?.Count > 0)
+            DisplayNamedCommands();
+
+        if (AnonymousCommands?.Count > 0)
+            DisplayDefaultCommands();
+    }
+
+    private void DisplayNamedCommands()
+    {
         Console.WriteLine();
         Console.WriteLine("Commands:");
 
@@ -41,17 +55,53 @@ internal class CommandsOverviewControl
             MaxWidth = 80
         };
 
-        IEnumerable<ContentRow> rows = Commands.Select(CreateContentRow);
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+
+        IEnumerable<ContentRow> rows = NamedCommands.Select(CreateContentRowForNamedCommand);
         dataGrid.Rows.AddRange(rows);
 
         dataGrid.Display();
     }
 
-    private static ContentRow CreateContentRow(CommandShortInfo commandShortInfo)
+    private static ContentRow CreateContentRowForNamedCommand(CommandShortInfo commandShortInfo)
     {
         ContentRow row = new();
 
-        row.AddCell(commandShortInfo.Name);
+        row.AddCell(commandShortInfo.Name ?? "<anonymous command>");
+
+        row.AddCell(new ContentCell
+        {
+            Content = commandShortInfo.Description,
+            ForegroundColor = ConsoleColor.DarkGray
+        });
+
+        return row;
+    }
+
+    private void DisplayDefaultCommands()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Anonymous Command:");
+
+        DataGrid dataGrid = new()
+        {
+            Border = { IsVisible = false },
+            MaxWidth = 80
+        };
+
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+
+        IEnumerable<ContentRow> rows = AnonymousCommands.Select(CreateContentRowForAnonymousCommand);
+        dataGrid.Rows.AddRange(rows);
+
+        dataGrid.Display();
+    }
+
+    private static ContentRow CreateContentRowForAnonymousCommand(CommandShortInfo commandShortInfo)
+    {
+        ContentRow row = new();
 
         row.AddCell(new ContentCell
         {
