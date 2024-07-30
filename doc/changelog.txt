@@ -3,7 +3,7 @@ ConsoleTools Commando
 
 v2.1.0
 ----------------------------------------------------------------------------------------------------
-- [feature] Added helper setup method: RegisterCommandsFromAssemblyContaining(Type)
+- [feature] Added more helper setup methods for registering commands.
 
 v2.0.0
 ----------------------------------------------------------------------------------------------------

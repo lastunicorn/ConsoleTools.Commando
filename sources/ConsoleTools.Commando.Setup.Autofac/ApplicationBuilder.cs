@@ -95,6 +95,22 @@ public class ApplicationBuilder
         return this;
     }
 
+    public ApplicationBuilder RegisterCommandsFromCurrentAssembly()
+    {
+        Assembly assembly = Assembly.GetCallingAssembly();
+        executionContext.LoadFrom(assembly);
+
+        return this;
+    }
+
+    public ApplicationBuilder RegisterCommandsFromEntryAssembly()
+    {
+        Assembly assembly = Assembly.GetEntryAssembly();
+        executionContext.LoadFrom(assembly);
+
+        return this;
+    }
+
     public ApplicationBuilder UseCommandParser(Type commandParserType)
     {
         if (commandParserType == null) throw new ArgumentNullException(nameof(commandParserType));

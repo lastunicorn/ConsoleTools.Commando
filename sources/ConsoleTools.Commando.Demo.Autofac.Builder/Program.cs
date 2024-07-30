@@ -24,7 +24,7 @@ internal class Program
     public static async Task Main(string[] args)
     {
         Application application = ApplicationBuilder.Create()
-            .RegisterCommandsFrom(typeof(DummyCommand).Assembly)
+            .RegisterCommandsFromAssemblyContaining(typeof(DummyCommand))
             .HandleExceptions(HandleUnhandledApplicationException)
             .Build();
 
@@ -38,6 +38,12 @@ internal class Program
     /// </summary>
     private static void HandleUnhandledApplicationException(object sender, UnhandledApplicationExceptionEventArgs e)
     {
-        Console.WriteLine("An exception happened.");
+#if DEBUG
+        CustomConsole.WriteLineError(e.Exception);
+#else
+        CustomConsole.WriteLineError(e.Exception.Message);
+#endif
+
+        e.IsHandled = true;
     }
 }
