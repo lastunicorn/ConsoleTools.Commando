@@ -28,20 +28,23 @@ internal class CommandsOverviewControl
 
     public void Display()
     {
-        Console.WriteLine();
-        CustomConsole.WriteLineEmphasized("Usage:");
-
         if (NamedCommands?.Count > 0)
+        {
+            Console.WriteLine();
+            CustomConsole.WriteLineEmphasized("Usage:");
+
             Console.WriteLine($" {ApplicationName} [command] [parameters]");
-
-        if (AnonymousCommands?.Count > 0)
-            Console.WriteLine($" {ApplicationName} [parameters]");
-
-        if (NamedCommands?.Count > 0)
             DisplayNamedCommands();
+        }
 
         if (AnonymousCommands?.Count > 0)
+        {
+            Console.WriteLine();
+            CustomConsole.WriteLineEmphasized("Usage:");
+
+            Console.WriteLine($" {ApplicationName} [parameters]");
             DisplayDefaultCommands();
+        }
     }
 
     private void DisplayNamedCommands()

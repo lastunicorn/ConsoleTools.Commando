@@ -16,7 +16,6 @@
 
 using System.Reflection;
 using Autofac;
-using DustInTheWind.ConsoleTools.Commando.MetadataModel;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
 using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
@@ -87,6 +86,15 @@ public class ApplicationBuilder
         return this;
     }
 
+    public ApplicationBuilder RegisterCommandsFromAssemblyContaining(Type type)
+    {
+        if (type == null) throw new ArgumentNullException(nameof(type));
+
+        executionContext.LoadFrom(type.Assembly);
+
+        return this;
+    }
+
     public ApplicationBuilder UseCommandParser(Type commandParserType)
     {
         if (commandParserType == null) throw new ArgumentNullException(nameof(commandParserType));
@@ -111,6 +119,8 @@ public class ApplicationBuilder
 
     public ApplicationBuilder ConfigureServices(Action<ContainerBuilder> action)
     {
+        if (action == null) throw new ArgumentNullException(nameof(action));
+
         action(containerBuilder);
 
         return this;
