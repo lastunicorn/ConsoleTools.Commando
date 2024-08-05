@@ -19,15 +19,18 @@ using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.Operands;
 
-public class CommandParser_HavingTwoFlags_Tests
+public class CommandParser_HavingOnlyOneOperand_Tests
 {
     private readonly CommandRequest commandRequest;
 
-    public CommandParser_HavingTwoFlags_Tests()
+    public CommandParser_HavingOnlyOneOperand_Tests()
     {
-        string[] args = { "-f", "-g" };
+        // If the "--" is omitted, the operand ("operand1") is interpreted as
+        // being the command name.
+
+        string[] args = { "--", "operand1" };
 
         CommandParser commandParser = new();
         commandRequest = commandParser.Parse(args);
@@ -40,19 +43,18 @@ public class CommandParser_HavingTwoFlags_Tests
     }
 
     [Fact]
-    public void WhenParsed_ThenOptionsListContainsTheTwoFlags()
+    public void WhenParsed_ThenOptionsListIsEmpty()
     {
-        CommandArgument[] expected =
-        {
-            new("f", null),
-            new("g", null)
-        };
-        commandRequest.Options.Should().Equal(expected);
+        commandRequest.Options.Should().BeEmpty();
     }
 
     [Fact]
-    public void WhenParsed_ThenOperandsListIsEmpty()
+    public void WhenParsed_ThenOperandsListContainsTheOperand()
     {
-        commandRequest.Operands.Should().BeEmpty();
+        CommandArgument[] expected =
+        {
+            new(null, "operand1")
+        };
+        commandRequest.Operands.Should().Equal(expected);
     }
 }

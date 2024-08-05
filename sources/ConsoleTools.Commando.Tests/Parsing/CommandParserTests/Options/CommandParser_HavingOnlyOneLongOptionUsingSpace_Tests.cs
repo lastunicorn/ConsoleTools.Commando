@@ -19,15 +19,15 @@ using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.Options;
 
-public class CommandParser_HavingOneOptionUsingSpaceAndOneOperand_Tests
+public class CommandParser_HavingOnlyOneLongOptionUsingSpace_Tests
 {
     private readonly CommandRequest commandRequest;
 
-    public CommandParser_HavingOneOptionUsingSpaceAndOneOperand_Tests()
+    public CommandParser_HavingOnlyOneLongOptionUsingSpace_Tests()
     {
-        string[] args = { "--name1", "value1", "operand1" };
+        string[] args = { "--name1", "value1" };
 
         CommandParser commandParser = new();
         commandRequest = commandParser.Parse(args);
@@ -50,12 +50,8 @@ public class CommandParser_HavingOneOptionUsingSpaceAndOneOperand_Tests
     }
 
     [Fact]
-    public void WhenParsed_ThenOperandsListContainsTheOperand()
+    public void WhenParsed_ThenOperandsListIsEmpty()
     {
-        CommandArgument[] expected =
-        {
-            new(null, "operand1")
-        };
-        commandRequest.Operands.Should().Equal(expected);
+        commandRequest.Operands.Should().BeEmpty();
     }
 }

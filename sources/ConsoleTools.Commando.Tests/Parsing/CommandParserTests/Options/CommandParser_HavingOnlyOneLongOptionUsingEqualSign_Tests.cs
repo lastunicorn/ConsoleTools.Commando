@@ -19,15 +19,15 @@ using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.Options;
 
-public class CommandParser_HavingOnlyOneShortOptionUsingColonSign_Tests
+public class CommandParser_HavingOnlyOneLongOptionUsingEqualSign_Tests
 {
     private readonly CommandRequest commandRequest;
 
-    public CommandParser_HavingOnlyOneShortOptionUsingColonSign_Tests()
+    public CommandParser_HavingOnlyOneLongOptionUsingEqualSign_Tests()
     {
-        string[] args = { "-n:value1" };
+        string[] args = { "--name1=value1" };
 
         CommandParser commandParser = new();
         commandRequest = commandParser.Parse(args);
@@ -44,7 +44,7 @@ public class CommandParser_HavingOnlyOneShortOptionUsingColonSign_Tests
     {
         CommandArgument[] expected =
         {
-            new("n", "value1")
+            new("name1", "value1")
         };
         commandRequest.Options.Should().Equal(expected);
     }
