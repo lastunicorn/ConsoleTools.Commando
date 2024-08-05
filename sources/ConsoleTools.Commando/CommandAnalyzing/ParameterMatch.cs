@@ -27,7 +27,7 @@ internal class ParameterMatch
 
     public bool IsMatch { get; private set; }
 
-    public bool IsParameterMandatory => !parameterMetadata.IsOptional;
+    public bool IsParameterMandatory => parameterMetadata.IsMandatory;
 
     public string Name => parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
 

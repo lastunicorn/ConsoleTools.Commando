@@ -26,7 +26,10 @@ public class CommandParameterInfo
 
     public int? Order { get; }
 
+    [Obsolete("Replaced by the IsMandatory property.")]
     public bool IsOptional { get; }
+    
+    public bool IsMandatory { get; }
 
     public string DisplayName { get; }
 
@@ -40,6 +43,7 @@ public class CommandParameterInfo
         ShortName = parameterMetadata.ShortName;
         DisplayName = parameterMetadata.DisplayName;
         IsOptional = parameterMetadata.IsOptional;
+        IsMandatory = parameterMetadata.IsMandatory;
         Order = parameterMetadata.Order;
         Description = parameterMetadata.Description;
         ParameterType = parameterMetadata.ParameterType;

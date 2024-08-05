@@ -93,9 +93,9 @@ internal class CommandUsageControl
         {
             string fullName = "--" + parameter.Name;
             string shortName = "-" + parameter.ShortName;
-            string isOptional = parameter.IsOptional
-                ? "(optional)"
-                : string.Empty;
+            string isOptional = parameter.IsMandatory
+                ? null
+                : "(optional)";
             string type = parameter.ParameterType.ToUserFriendlyName();
             string description = parameter.Description;
 
@@ -125,12 +125,10 @@ internal class CommandUsageControl
 
         foreach (CommandParameterInfo parameter in UnnamedParameters)
         {
-            string index = parameter.Order == null
-                ? string.Empty
-                : parameter.Order.Value.ToString();
-            string isOptional = parameter.IsOptional
-                ? "(optional)"
-                : string.Empty;
+            string index = parameter.Order?.ToString();
+            string isOptional = parameter.IsMandatory
+                ? null
+                : "(optional)";
             string type = parameter.ParameterType.ToUserFriendlyName();
             string description = parameter.Description;
 
