@@ -84,6 +84,28 @@ internal static class TypeExtensions
         return type == typeof(char);
     }
 
+    public static bool IsNullable(this Type type)
+    {
+        if (!type.IsGenericType)
+            return false;
+
+        Type genericType = type.GetGenericTypeDefinition();
+        return genericType == typeof(Nullable<>);
+    }
+
+    public static bool IsNullable(this Type type, out Type underlyingType)
+    {
+        if (!type.IsGenericType)
+        {
+            underlyingType = null;
+            return false;
+        }
+
+        Type genericType = type.GetGenericTypeDefinition();
+        underlyingType = type.GetGenericArguments().First();
+        return genericType == typeof(Nullable<>);
+    }
+
     public static string ToUserFriendlyName(this Type type)
     {
         if (type.IsText())
@@ -109,6 +131,9 @@ internal static class TypeExtensions
 
         if (type.IsCharacter())
             return "character";
+
+        if (type.IsNullable(out Type underlyingType))
+            return underlyingType.ToUserFriendlyName();
 
         return type.Name;
     }
