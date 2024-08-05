@@ -26,7 +26,7 @@ internal class HelpCommand : IConsoleCommand<HelpViewModel>
     private readonly ExecutionContext executionContext;
     private readonly Application application;
 
-    [AnonymousParameter(DisplayName = "command name", Order = 1, IsOptional = true, Description = "The name of the command for which to display detailed help information.")]
+    [AnonymousParameter(DisplayName = "command name", Order = 1, IsMandatory = false, Description = "The name of the command for which to display detailed help information.")]
     public string CommandName { get; set; }
 
     public HelpCommand(ExecutionContext executionContext, Application application)
