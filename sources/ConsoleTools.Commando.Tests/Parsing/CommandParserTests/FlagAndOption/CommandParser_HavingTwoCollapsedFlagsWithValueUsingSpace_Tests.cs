@@ -19,15 +19,25 @@ using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.FlagAndOption;
 
-public class CommandParser_HavingOnlyOneFullOptionUsingColonSign_Tests
+public class CommandParser_HavingTwoCollapsedFlagsWithValueUsingSpace_Tests
 {
     private readonly CommandRequest commandRequest;
 
-    public CommandParser_HavingOnlyOneFullOptionUsingColonSign_Tests()
+    public CommandParser_HavingTwoCollapsedFlagsWithValueUsingSpace_Tests()
     {
-        string[] args = { "--name1:value1" };
+        // The second flag ("g") is interpreted, for now, as being an ordinary option. The "value1" being its value.
+        // Another possible way to interpret these arguments is as being two flags and an operand.
+        
+        // To decide between the two possibilities the algorithm needs additional information about "g":
+        // - If "g" is a bool => In this case it is a flag and "value1" is an operand.
+        // - If "g" is NOT a bool => In this case it is a regular option and "value1" is its value.
+        
+        // This type of information about "g" will be available later in the execution flow.
+        // So, the decision will be taken later.
+
+        string[] args = { "-fg", "value1" };
 
         CommandParser commandParser = new();
         commandRequest = commandParser.Parse(args);
@@ -40,11 +50,12 @@ public class CommandParser_HavingOnlyOneFullOptionUsingColonSign_Tests
     }
 
     [Fact]
-    public void WhenParsed_ThenOptionsListContainsTheOption()
+    public void WhenParsed_ThenOptionsListContainsTheTwoFlags()
     {
         CommandArgument[] expected =
         {
-            new("name1", "value1")
+            new("f", null),
+            new("g", "value1")
         };
         commandRequest.Options.Should().Equal(expected);
     }

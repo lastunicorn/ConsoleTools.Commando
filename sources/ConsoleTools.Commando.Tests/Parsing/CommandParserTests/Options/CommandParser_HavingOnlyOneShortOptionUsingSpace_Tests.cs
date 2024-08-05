@@ -19,15 +19,15 @@ using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using FluentAssertions;
 using Xunit;
 
-namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
+namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.Options;
 
-public class CommandParser_HavingTwoCollapsedFlags_Tests
+public class CommandParser_HavingOnlyOneShortOptionUsingSpace_Tests
 {
     private readonly CommandRequest commandRequest;
 
-    public CommandParser_HavingTwoCollapsedFlags_Tests()
+    public CommandParser_HavingOnlyOneShortOptionUsingSpace_Tests()
     {
-        string[] args = { "-fg" };
+        string[] args = { "-n", "value1" };
 
         CommandParser commandParser = new();
         commandRequest = commandParser.Parse(args);
@@ -40,12 +40,11 @@ public class CommandParser_HavingTwoCollapsedFlags_Tests
     }
 
     [Fact]
-    public void WhenParsed_ThenOptionsListContainsTheTwoFlags()
+    public void WhenParsed_ThenOptionsListContainsTheOption()
     {
         CommandArgument[] expected =
         {
-            new("f", null),
-            new("g", null)
+            new("n", "value1")
         };
         commandRequest.Options.Should().Equal(expected);
     }
