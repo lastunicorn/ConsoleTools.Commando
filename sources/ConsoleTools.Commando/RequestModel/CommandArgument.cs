@@ -25,7 +25,7 @@ public record CommandArgument
     public CommandArgument(string name, string value)
     {
         if (name == null && value == null)
-            throw new ArgumentException("Both name and value cannot be null.", nameof(name));
+            throw new ArgumentException("Both name and value cannot be null in the same time.", nameof(name));
 
         Name = name;
         Value = value;

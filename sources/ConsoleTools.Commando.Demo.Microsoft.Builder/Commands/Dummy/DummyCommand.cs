@@ -19,28 +19,28 @@ namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder.Commands.Du
 [NamedCommand("dummy", Description = "A dummy command that shows how to create parameters of different types.")]
 internal class DummyCommand : IConsoleCommand<DummyViewModel>
 {
-    [NamedParameter("text", ShortName = 't', IsOptional = true, Description = "A simple text.")]
+    [NamedParameter("text", ShortName = 't', IsMandatory = false, Description = "A simple text.")]
     public string Text { get; set; }
 
-    [NamedParameter("flag", ShortName = 'f', IsOptional = true, Description = "An optional flag. Default value = false. If it is provided without a value, the value is considered true.")]
+    [NamedParameter("flag", ShortName = 'f', IsMandatory = false, Description = "An optional flag. Default value = false. If it is provided without a value, the value is considered true.")]
     public bool Flag { get; set; }
 
-    [NamedParameter("flag2", ShortName = 'g', IsOptional = true, Description = "An optional flag. Default value = false. If it is provided without a value, the value is considered true.")]
+    [NamedParameter("flag2", ShortName = 'g', IsMandatory = false, Description = "An optional flag. Default value = false. If it is provided without a value, the value is considered true.")]
     public bool Flag2 { get; set; }
 
-    [NamedParameter("integer", ShortName = 'i', IsOptional = true, Description = "An optional integer number.")]
+    [NamedParameter("integer", ShortName = 'i', IsMandatory = false, Description = "An optional integer number.")]
     public int IntegerNumber { get; set; }
 
-    [NamedParameter("real", ShortName = 'r', IsOptional = true, Description = "An optional real number.")]
+    [NamedParameter("real", ShortName = 'r', IsMandatory = false, Description = "An optional real number.")]
     public float RealNumber { get; set; }
 
-    [NamedParameter("char", ShortName = 'c', IsOptional = true, Description = "An optional character. It accepts a single character as value.")]
+    [NamedParameter("char", ShortName = 'c', IsMandatory = false, Description = "An optional character. It accepts a single character as value.")]
     public char Character { get; set; }
 
-    [AnonymousParameter(Order = 1, IsOptional = true, Description = "An anonymous text. It is identified based on its index in the list of arguments.")]
+    [AnonymousParameter(Order = 1, IsMandatory = false, Description = "An anonymous text. It is identified based on its index in the list of arguments.")]
     public string Param1 { get; set; }
 
-    [AnonymousParameter(Order = 2, IsOptional = true, Description = "An anonymous number. It is identified based on its index in the list of arguments.")]
+    [AnonymousParameter(Order = 2, IsMandatory = false, Description = "An anonymous number. It is identified based on its index in the list of arguments.")]
     public int? Param2 { get; set; }
 
     public Task<DummyViewModel> Execute()

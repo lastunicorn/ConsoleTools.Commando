@@ -24,7 +24,7 @@ internal class ReadFileCommand : IConsoleCommand<ReadFileViewModel>
     [AnonymousParameter(Order = 1, DisplayName = "file path", Description = "The path to the file that should be displayed.")]
     public string FilePath { get; set; }
 
-    [NamedParameter("encoding", ShortName = 'e', IsOptional = true, Description = "The text encoding to be used when reading the file.")]
+    [NamedParameter("encoding", ShortName = 'e', IsMandatory = false, Description = "The text encoding to be used when reading the file.")]
     public Encoding Encoding { get; set; }
 
     public Task<ReadFileViewModel> Execute()

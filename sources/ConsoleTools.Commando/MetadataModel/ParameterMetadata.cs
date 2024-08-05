@@ -53,7 +53,14 @@ public class ParameterMetadata
 
     public int? Order => AnonymousParameterAttribute?.Order;
 
-    public bool IsOptional => customAttribute.IsOptional;
+    [Obsolete("Replaced by the IsMandatory property.")]
+    public bool IsOptional => customAttribute.IsMandatorySelected
+        ? !customAttribute.IsMandatory
+        : customAttribute.IsOptional;
+
+    public bool IsMandatory => customAttribute.IsMandatorySelected
+        ? customAttribute.IsMandatory
+        : !customAttribute.IsOptional;
 
     public string Description => customAttribute.Description;
 
