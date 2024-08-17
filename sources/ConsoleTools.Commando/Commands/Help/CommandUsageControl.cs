@@ -75,14 +75,30 @@ internal class CommandUsageControl
 
         DataGrid dataGrid = new()
         {
-            Border = { IsVisible = false },
+            IsBorderVisible = false,
             MaxWidth = 80
         };
 
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
         dataGrid.Columns.Add(new Column
         {
             CellPaddingRight = 0,
@@ -95,7 +111,7 @@ internal class CommandUsageControl
             string shortName = "-" + parameter.ShortName;
             string isOptional = parameter.IsMandatory
                 ? null
-                : "(optional)";
+                : "(?)";
             string type = parameter.ParameterType.ToUserFriendlyName();
             string description = parameter.Description;
 
@@ -111,12 +127,25 @@ internal class CommandUsageControl
 
         DataGrid dataGrid = new()
         {
-            Border = { IsVisible = false }
+            IsBorderVisible = false,
+            MaxWidth = 80
         };
 
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
         dataGrid.Columns.Add(new Column
         {
             CellPaddingRight = 0,
@@ -128,7 +157,7 @@ internal class CommandUsageControl
             string index = parameter.Order?.ToString();
             string isOptional = parameter.IsMandatory
                 ? null
-                : "(optional)";
+                : "(?)";
             string type = parameter.ParameterType.ToUserFriendlyName();
             string description = parameter.Description;
 

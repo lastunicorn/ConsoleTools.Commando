@@ -16,7 +16,7 @@
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
-public interface IView<in TCommandResult>
+public interface IView<in TViewModel>
 {
-    void Display(TCommandResult viewModel);
+    void Display(TViewModel viewModel);
 }

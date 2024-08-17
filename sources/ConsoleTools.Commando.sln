@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools.Commando", "ConsoleTools.Commando\ConsoleTools.Commando.csproj", "{E9125FDB-B912-472E-AB8C-2AEFF0543F95}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{933C5DEC-024E-46AE-914D-017F4F93726A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{933C5DEC-024E-46AE-914D-017F4F93726A}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		license.txt = license.txt
