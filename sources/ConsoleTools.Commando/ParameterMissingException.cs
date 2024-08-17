@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022-2023 Dust in the Wind
+// Copyright (C) 2022-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,16 +31,16 @@ internal class ParameterMissingException : Exception
                 return Resources.ErrorMessage_ParameterMissing_0;
 
             case 1:
-                {
-                    string parameterName = parameterNames.First();
-                    return string.Format(Resources.ErrorMessage_ParameterMissing_1, parameterName);
-                }
+            {
+                string parameterName = parameterNames.First();
+                return string.Format(Resources.ErrorMessage_ParameterMissing_1, parameterName);
+            }
 
             case > 1:
-                {
-                    string parameterNamesAsString = string.Join(", ", parameterNames);
-                    return string.Format(Resources.ErrorMessage_ParameterMissing_N, parameterNamesAsString);
-                }
+            {
+                string parameterNamesAsString = string.Join(", ", parameterNames);
+                return string.Format(Resources.ErrorMessage_ParameterMissing_N, parameterNamesAsString);
+            }
 
             default:
                 return Resources.ErrorMessage_ParameterMissing_0;

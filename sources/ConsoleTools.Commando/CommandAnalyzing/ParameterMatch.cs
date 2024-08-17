@@ -25,7 +25,7 @@ internal class ParameterMatch
     private readonly CommandArgument commandArgument;
     private readonly CommandArgumentType argumentType;
 
-    public bool IsMatch { get; private set; }
+    public bool IsMatch { get; }
 
     public bool IsParameterMandatory => parameterMetadata.IsMandatory;
 
@@ -62,7 +62,7 @@ internal class ParameterMatch
     {
         if (!IsMatch)
             throw new Exception("The argument does not match the parameter. Value cannot be set.");
-        
+
         SetParameterInternal(consoleCommand);
     }
 

@@ -1,5 +1,5 @@
 ﻿// ConsoleTools.Commando
-// Copyright (C) 2022-2023 Dust in the Wind
+// Copyright (C) 2022-2024 Dust in the Wind
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,11 +29,11 @@ public class CommandParser_HavingTwoCollapsedFlagsWithValueUsingSpace_Tests
     {
         // The second flag ("g") is interpreted, for now, as being an ordinary option. The "value1" being its value.
         // Another possible way to interpret these arguments is as being two flags and an operand.
-        
+
         // To decide between the two possibilities the algorithm needs additional information about "g":
         // - If "g" is a bool => In this case it is a flag and "value1" is an operand.
         // - If "g" is NOT a bool => In this case it is a regular option and "value1" is its value.
-        
+
         // This type of information about "g" will be available later in the execution flow.
         // So, the decision will be taken later.
 
