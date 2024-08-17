@@ -20,7 +20,6 @@ namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
 
 public class ViewMetadataCollection : Collection<ViewMetadata>
 {
-
     public bool IsFrozen { get; private set; }
 
     protected override void InsertItem(int index, ViewMetadata item)

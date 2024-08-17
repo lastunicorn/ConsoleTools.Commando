@@ -31,16 +31,16 @@ internal class ParameterMissingException : Exception
                 return Resources.ErrorMessage_ParameterMissing_0;
 
             case 1:
-                {
-                    string parameterName = parameterNames.First();
-                    return string.Format(Resources.ErrorMessage_ParameterMissing_1, parameterName);
-                }
+            {
+                string parameterName = parameterNames.First();
+                return string.Format(Resources.ErrorMessage_ParameterMissing_1, parameterName);
+            }
 
             case > 1:
-                {
-                    string parameterNamesAsString = string.Join(", ", parameterNames);
-                    return string.Format(Resources.ErrorMessage_ParameterMissing_N, parameterNamesAsString);
-                }
+            {
+                string parameterNamesAsString = string.Join(", ", parameterNames);
+                return string.Format(Resources.ErrorMessage_ParameterMissing_N, parameterNamesAsString);
+            }
 
             default:
                 return Resources.ErrorMessage_ParameterMissing_0;

@@ -28,7 +28,7 @@ public class CommandParameterInfo
 
     [Obsolete("Replaced by the IsMandatory property.")]
     public bool IsOptional { get; }
-    
+
     public bool IsMandatory { get; }
 
     public string DisplayName { get; }

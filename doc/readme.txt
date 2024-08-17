@@ -1,7 +1,7 @@
 ConsoleTools Commando 2.1.0
 ====================================================================================================
 
-A presentation layer framework using MVVM that helps to implement a CLI (command line interface). 
+A presentation layer framework for creating console applications - CLI (command line interface). 
 
 
 Note: For any bug or feature request please use the "Discussions" page in GitHub:
