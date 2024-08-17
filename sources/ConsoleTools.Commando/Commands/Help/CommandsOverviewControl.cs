@@ -54,11 +54,15 @@ internal class CommandsOverviewControl
 
         DataGrid dataGrid = new()
         {
-            Border = { IsVisible = false },
+            IsBorderVisible = false,
             MaxWidth = 80
         };
 
-        dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
+        dataGrid.Columns.Add(new Column
+        {
+            CellPaddingRight = 0,
+            CellContentOverflow = CellContentOverflow.PreserveOverflow
+        });
         dataGrid.Columns.Add(new Column { CellPaddingRight = 0 });
 
         IEnumerable<ContentRow> rows = NamedCommands.Select(CreateContentRowForNamedCommand);
@@ -89,7 +93,7 @@ internal class CommandsOverviewControl
 
         DataGrid dataGrid = new()
         {
-            Border = { IsVisible = false },
+            IsBorderVisible = false,
             MaxWidth = 80
         };
 

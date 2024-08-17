@@ -29,7 +29,7 @@ internal class HelpView : ViewBase<HelpViewModel>
         {
             WriteLine();
             WriteValue("Current Culture", viewModel.CultureInfo.Name);
-            WriteNote("The current culture is determining how the arguments values are interpreted.");
+            WriteNote("The current culture influences the parsing of argument's values.");
         }
     }
 

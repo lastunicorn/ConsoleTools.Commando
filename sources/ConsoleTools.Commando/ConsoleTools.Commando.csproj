@@ -35,8 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ConsoleTools.Controls.Menus" Version="1.1.0" />
-        <PackageReference Include="ConsoleTools.Controls.Tables" Version="1.1.0" />
+        <PackageReference Include="ConsoleTools.Controls.Menus" Version="1.2.0" />
+        <PackageReference Include="ConsoleTools.Controls.Tables" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup>

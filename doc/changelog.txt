@@ -4,6 +4,8 @@ ConsoleTools Commando
 v2.1.0
 ----------------------------------------------------------------------------------------------------
 - [feature] Added more helper setup methods for registering commands.
+- [feature] Help command - limited the display width to 80 chars.
+- [misc   ] Upgrade the usage of ConsoleTools.Controls to 1.2.0
 
 v2.0.0
 ----------------------------------------------------------------------------------------------------
