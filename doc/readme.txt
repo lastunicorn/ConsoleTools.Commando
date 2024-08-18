@@ -1,4 +1,4 @@
-ConsoleTools Commando 2.1.0
+ConsoleTools Commando 2.2.0
 ====================================================================================================
 
 A presentation layer framework for creating console applications - CLI (command line interface). 
