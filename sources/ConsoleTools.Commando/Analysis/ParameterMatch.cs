@@ -1,40 +1,40 @@
 ﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal class ParameterMatch
 {
     private readonly ParameterMetadata parameterMetadata;
-    private readonly CommandArgument commandArgument;
+    private readonly XArgument xArgument;
     private readonly CommandArgumentType argumentType;
 
     public bool IsMatch { get; }
 
-    public bool IsParameterMandatory => parameterMetadata.IsMandatory;
+    public bool IsMandatory => parameterMetadata.IsMandatory;
 
     public string Name => parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
 
-    public ParameterMatch(ParameterMetadata parameterMetadata, CommandRequest commandRequest)
+    public ParameterMatch(ParameterMetadata parameterMetadata, XCommand xCommand)
     {
-        if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
+        if (xCommand == null) throw new ArgumentNullException(nameof(xCommand));
         this.parameterMetadata = parameterMetadata ?? throw new ArgumentNullException(nameof(parameterMetadata));
 
-        CommandArgument option = commandRequest.GetOptionAndMarkAsUsed(parameterMetadata);
+        XArgument option = xCommand.GetOptionAndMarkAsUsed(parameterMetadata);
 
         if (option != null)
         {
-            commandArgument = option;
+            xArgument = option;
             argumentType = CommandArgumentType.Option;
             IsMatch = true;
             return;
         }
 
-        CommandArgument operand = commandRequest.GetOperandAndMarkAsUsed(parameterMetadata);
+        XArgument operand = xCommand.GetOperandAndMarkAsUsed(parameterMetadata);
 
         if (operand != null)
         {
-            commandArgument = operand;
+            xArgument = operand;
             argumentType = CommandArgumentType.Operand;
             IsMatch = true;
             return;
@@ -58,11 +58,11 @@ internal class ParameterMatch
                 throw new Exception($"Error setting the parameter value. Parameter: {parameterMetadata.Name}.");
 
             case CommandArgumentType.Option:
-                parameterMetadata.SetValue(consoleCommand, commandArgument.Value);
+                parameterMetadata.SetValue(consoleCommand, xArgument.Value);
                 break;
 
             case CommandArgumentType.Operand:
-                parameterMetadata.SetValue(consoleCommand, commandArgument.Value);
+                parameterMetadata.SetValue(consoleCommand, xArgument.Value);
                 break;
 
             default:

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using FluentAssertions;
 using Xunit;
 
@@ -23,35 +23,35 @@ namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.F
 
 public class CommandParser_HavingOnlyOneLongFlag_Tests
 {
-    private readonly CommandRequest commandRequest;
+    private readonly XCommand xCommand;
 
     public CommandParser_HavingOnlyOneLongFlag_Tests()
     {
         string[] args = { "--flag1" };
 
-        CommandParser commandParser = new();
-        commandRequest = commandParser.Parse(args);
+        CliSyntax cliSyntax = new();
+        xCommand = cliSyntax.Parse(args);
     }
 
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsNullVerb()
     {
-        commandRequest.CommandName.Should().BeNull();
+        xCommand.Name.Should().BeNull();
     }
 
     [Fact]
     public void WhenParsed_ThenOptionsListContainsTheOption()
     {
-        CommandArgument[] expected =
+        XArgument[] expected =
         {
             new("flag1", null)
         };
-        commandRequest.NamedArguments.Should().Equal(expected);
+        xCommand.NamedArguments.Should().Equal(expected);
     }
 
     [Fact]
     public void WhenParsed_ThenOperandsListIsEmpty()
     {
-        commandRequest.UnnamedArguments.Should().BeEmpty();
+        xCommand.UnnamedArguments.Should().BeEmpty();
     }
 }

@@ -1,11 +1,11 @@
 ﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal class CommandAnalysis
 {
-    private readonly List<ParameterMatch> parameterMatches;
+    private readonly List<ParameterMatch> parameterMatches = new();
 
     public CommandMatchType MatchType { get; }
 
@@ -13,32 +13,43 @@ internal class CommandAnalysis
 
     public List<ParameterMatch> UnmatchedMandatoryParameters { get; } = new();
 
-    public CommandAnalysis(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    public CommandAnalysis(XCommand xCommand, CommandMetadata commandMetadata)
     {
-        if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
+        if (xCommand == null) throw new ArgumentNullException(nameof(xCommand));
         Command = commandMetadata ?? throw new ArgumentNullException(nameof(commandMetadata));
 
-        commandRequest.Reset();
+        xCommand.Reset();
 
-        parameterMatches = commandMetadata.EnumerateParameters()
-            .Select(x => new ParameterMatch(x, commandRequest))
-            .ToList();
+        IEnumerable<ParameterMatch> enumerable = commandMetadata.EnumerateParameters()
+            .Select(x => new ParameterMatch(x, xCommand));
 
-        ParametersAnalysis parametersAnalysis = new(parameterMatches);
+        bool hasUnmatchedMandatory = false;
+        bool hasUnmatchedOptional = false;
 
-        if (parametersAnalysis.HasUnmatchedMandatory)
+        foreach (ParameterMatch parameterMatch in enumerable)
         {
-            UnmatchedMandatoryParameters.AddRange(parametersAnalysis.UnmatchedMandatory);
+            parameterMatches.Add(parameterMatch);
+
+            if (!parameterMatch.IsMatch)
+            {
+                if (parameterMatch.IsMandatory)
+                {
+                    UnmatchedMandatoryParameters.Add(parameterMatch);
+                    hasUnmatchedMandatory = true;
+                }
+                else
+                {
+                    hasUnmatchedOptional = true;
+                }
+            }
+        }
+
+        if (hasUnmatchedMandatory)
             MatchType = CommandMatchType.NoMatch;
-        }
-        else if (parametersAnalysis.HasUnmatchedOptional)
-        {
+        else if (hasUnmatchedOptional)
             MatchType = CommandMatchType.Partial;
-        }
         else
-        {
             MatchType = CommandMatchType.Full;
-        }
     }
 
     public void SetParameters(object consoleCommand)

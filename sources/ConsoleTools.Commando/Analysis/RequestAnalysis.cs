@@ -1,5 +1,5 @@
 ﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
@@ -13,34 +13,34 @@ internal class RequestAnalysis
 
     public List<ParameterMatch> UnmatchedMandatoryParameters { get; } = new();
 
-    public RequestAnalysis(CommandRequest commandRequest, MetadataContext metadataContext)
+    public RequestAnalysis(XCommand xCommand, MetadataContext metadataContext)
     {
-        if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
+        if (xCommand == null) throw new ArgumentNullException(nameof(xCommand));
         if (metadataContext == null) throw new ArgumentNullException(nameof(metadataContext));
 
         matchedCommandAnalysis = null;
         MatchType = RequestMatchType.NoMatch;
 
-        if (commandRequest.IsEmpty)
+        if (xCommand.IsEmpty)
         {
             CommandMetadata commandMetadata = metadataContext.Commands.GetHelpCommand();
 
-            matchedCommandAnalysis = new CommandAnalysis(commandRequest, commandMetadata);
+            matchedCommandAnalysis = new CommandAnalysis(xCommand, commandMetadata);
             MatchType = RequestMatchType.Help;
         }
         else
         {
-            IEnumerable<CommandMetadata> commandMetadataCollection = string.IsNullOrEmpty(commandRequest.CommandName)
+            IEnumerable<CommandMetadata> commandMetadataCollection = string.IsNullOrEmpty(xCommand.Name)
                 ? metadataContext.Commands.GetAllAnonymous()
-                : metadataContext.Commands.GetAllByName(commandRequest.CommandName).ToList();
+                : metadataContext.Commands.GetAllByName(xCommand.Name).ToList();
 
-            Analyze(commandRequest, commandMetadataCollection);
+            Analyze(xCommand, commandMetadataCollection);
         }
     }
 
-    private void Analyze(CommandRequest commandRequest, IEnumerable<CommandMetadata> commandMetadataCollection)
+    private void Analyze(XCommand xCommand, IEnumerable<CommandMetadata> commandMetadataCollection)
     {
-        CommandsAnalysis commandsAnalysis = new(commandRequest, commandMetadataCollection);
+        CommandsAnalysis commandsAnalysis = new(xCommand, commandMetadataCollection);
 
         switch (commandsAnalysis.FullMatches.Count)
         {

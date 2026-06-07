@@ -17,8 +17,8 @@
 using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using DustInTheWind.ConsoleTools.Commando.Routing;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using Ninject;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
@@ -27,13 +27,13 @@ public static class DependencyInjectionSetup
 {
     public static void RegisterCommando(this IKernel kernel, params Assembly[] assemblies)
     {
-        RegisterCommando(kernel, typeof(CommandParser), assemblies);
+        RegisterCommando(kernel, typeof(CliSyntax), assemblies);
     }
 
     public static void RegisterCommando(this IKernel kernel, Type commandParserType, params Assembly[] assemblies)
     {
         kernel.Bind<ICommandFactory>().To<CommandFactory>();
-        kernel.Bind<ICommandParser>().To(commandParserType);
+        kernel.Bind<ICliSyntax>().To(commandParserType);
 
         MetadataContext metadataContext = new();
         metadataContext.LoadFromAssemblyContaining<MetadataContext>();

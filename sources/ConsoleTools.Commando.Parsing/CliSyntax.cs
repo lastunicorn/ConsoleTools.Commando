@@ -1,13 +1,13 @@
-﻿using DustInTheWind.ConsoleTools.Commando.RequestModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
-public class CommandParser : ICommandParser
+public class CliSyntax : ICliSyntax
 {
-    public CommandRequest Parse(string[] args)
+    public XCommand Parse(string[] args)
     {
         if (args == null)
-            return new CommandRequest();
+            return new XCommand();
 
         TextCommandAnalysis textCommandAnalysis = new(args);
         return textCommandAnalysis.Analyze();

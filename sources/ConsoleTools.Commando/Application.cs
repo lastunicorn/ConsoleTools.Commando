@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using DustInTheWind.ConsoleTools.Commando.Routing;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando;
 
 public class Application
 {
     private readonly CommandRouter commandRouter;
-    private readonly ICommandParser commandParser;
+    private readonly ICliSyntax cliSyntax;
 
     public string Name { get; set; }
 
@@ -17,9 +17,9 @@ public class Application
 
     public event EventHandler<UnhandledApplicationExceptionEventArgs> UnhandledApplicationException;
 
-    public Application(ICommandParser commandParser, CommandRouter commandRouter)
+    public Application(ICliSyntax cliSyntax, CommandRouter commandRouter)
     {
-        this.commandParser = commandParser ?? throw new ArgumentNullException(nameof(commandParser));
+        this.cliSyntax = cliSyntax ?? throw new ArgumentNullException(nameof(cliSyntax));
         this.commandRouter = commandRouter ?? throw new ArgumentNullException(nameof(commandRouter));
 
         commandRouter.CommandCreated += HandleCommandCreated;
@@ -53,8 +53,8 @@ public class Application
         {
             OnStarting();
 
-            CommandRequest commandRequest = commandParser.Parse(args);
-            await commandRouter.Execute(commandRequest);
+            XCommand xCommand = cliSyntax.Parse(args);
+            await commandRouter.Execute(xCommand);
         }
         catch (Exception ex)
         {

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using FluentAssertions;
 using Xunit;
 
@@ -23,31 +23,31 @@ namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing;
 
 public class CommandParser_HavingEmptyArgsArray_Tests
 {
-    private readonly CommandRequest commandRequest;
+    private readonly XCommand xCommand;
 
     public CommandParser_HavingEmptyArgsArray_Tests()
     {
         string[] args = Array.Empty<string>();
 
-        CommandParser commandParser = new();
-        commandRequest = commandParser.Parse(args);
+        CliSyntax cliSyntax = new();
+        xCommand = cliSyntax.Parse(args);
     }
 
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsNullVerb()
     {
-        commandRequest.CommandName.Should().BeNull();
+        xCommand.Name.Should().BeNull();
     }
 
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsEmptyOptionsList()
     {
-        commandRequest.NamedArguments.Should().BeEmpty();
+        xCommand.NamedArguments.Should().BeEmpty();
     }
 
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsEmptyOperandsList()
     {
-        commandRequest.UnnamedArguments.Should().BeEmpty();
+        xCommand.UnnamedArguments.Should().BeEmpty();
     }
 }

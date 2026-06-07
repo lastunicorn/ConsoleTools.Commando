@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using FluentAssertions;
 using Xunit;
 
@@ -30,10 +30,10 @@ public class CommandParser_HavingOnlyVerb_Tests
     {
         string[] args = { verb };
 
-        CommandParser commandParser = new();
-        CommandRequest commandRequest = commandParser.Parse(args);
+        CliSyntax cliSyntax = new();
+        XCommand xCommand = cliSyntax.Parse(args);
 
-        commandRequest.CommandName.Should().Be(verb);
+        xCommand.Name.Should().Be(verb);
     }
 
     [Theory]
@@ -43,10 +43,10 @@ public class CommandParser_HavingOnlyVerb_Tests
     {
         string[] args = { verb };
 
-        CommandParser commandParser = new();
-        CommandRequest commandRequest = commandParser.Parse(args);
+        CliSyntax cliSyntax = new();
+        XCommand xCommand = cliSyntax.Parse(args);
 
-        commandRequest.NamedArguments.Should().BeEmpty();
+        xCommand.NamedArguments.Should().BeEmpty();
     }
 
     [Theory]
@@ -56,9 +56,9 @@ public class CommandParser_HavingOnlyVerb_Tests
     {
         string[] args = { verb };
 
-        CommandParser commandParser = new();
-        CommandRequest commandRequest = commandParser.Parse(args);
+        CliSyntax cliSyntax = new();
+        XCommand xCommand = cliSyntax.Parse(args);
 
-        commandRequest.UnnamedArguments.Should().BeEmpty();
+        xCommand.UnnamedArguments.Should().BeEmpty();
     }
 }

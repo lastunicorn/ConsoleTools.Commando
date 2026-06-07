@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.Analysis;
 using DustInTheWind.ConsoleTools.Commando.Metadata;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Routing;
 
@@ -18,9 +18,9 @@ public class CommandRouter
 
     public event EventHandler<CommandCreatedEventArgs> CommandCreated;
 
-    public async Task Execute(CommandRequest commandRequest)
+    public async Task Execute(XCommand xCommand)
     {
-        RequestAnalysis requestAnalysis = AnalyzeRequest(commandRequest);
+        RequestAnalysis requestAnalysis = AnalyzeRequest(xCommand);
 
         switch (requestAnalysis.MatchedCommand.CommandKind)
         {
@@ -28,11 +28,11 @@ public class CommandRouter
                 throw new UnknownCommandException();
 
             case CommandKind.WithoutResult:
-                await ExecuteCommandWithoutResult(commandRequest, requestAnalysis);
+                await ExecuteCommandWithoutResult(xCommand, requestAnalysis);
                 break;
 
             case CommandKind.WithResult:
-                await ExecuteCommandWithResult(commandRequest, requestAnalysis);
+                await ExecuteCommandWithResult(xCommand, requestAnalysis);
                 break;
 
             default:
@@ -40,9 +40,9 @@ public class CommandRouter
         }
     }
 
-    private RequestAnalysis AnalyzeRequest(CommandRequest commandRequest)
+    private RequestAnalysis AnalyzeRequest(XCommand xCommand)
     {
-        RequestAnalysis requestAnalysis = new(commandRequest, metadataContext);
+        RequestAnalysis requestAnalysis = new(xCommand, metadataContext);
 
         switch (requestAnalysis.MatchType)
         {
@@ -68,7 +68,7 @@ public class CommandRouter
         }
     }
 
-    private async Task ExecuteCommandWithoutResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
+    private async Task ExecuteCommandWithoutResult(XCommand xCommand, RequestAnalysis requestAnalysis)
     {
         CommandMetadata commandMetadata = requestAnalysis.MatchedCommand;
         IConsoleCommand consoleCommand = commandFactory.Create(commandMetadata) as IConsoleCommand;
@@ -77,12 +77,12 @@ public class CommandRouter
             throw new UnknownCommandException();
 
         requestAnalysis.SetParameters(consoleCommand);
-        RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+        RaiseCommandCreatedEvent(xCommand, consoleCommand);
         await consoleCommand.Execute();
         ExecuteViewsFor(consoleCommand);
     }
 
-    private async Task ExecuteCommandWithResult(CommandRequest commandRequest, RequestAnalysis requestAnalysis)
+    private async Task ExecuteCommandWithResult(XCommand xCommand, RequestAnalysis requestAnalysis)
     {
         try
         {
@@ -93,7 +93,7 @@ public class CommandRouter
                 throw new UnknownCommandException();
 
             requestAnalysis.SetParameters(consoleCommand);
-            RaiseCommandCreatedEvent(commandRequest, consoleCommand);
+            RaiseCommandCreatedEvent(xCommand, consoleCommand);
 
             Type commandType = consoleCommand.GetType();
             MethodInfo executeMemberInfo = commandType.GetMethod(nameof(IConsoleCommand<object>.Execute));
@@ -110,14 +110,14 @@ public class CommandRouter
         }
     }
 
-    private void RaiseCommandCreatedEvent(CommandRequest commandRequest, object consoleCommand)
+    private void RaiseCommandCreatedEvent(XCommand xCommand, object consoleCommand)
     {
         CommandCreatedEventArgs args = new()
         {
-            Args = commandRequest.UnderlyingArgs,
+            Args = xCommand.UnderlyingArgs,
             CommandFullName = consoleCommand.GetType().FullName,
-            UnusedOptions = commandRequest.EnumerateUnusedOptions().ToList(),
-            UnusedOperands = commandRequest.EnumerateUnusedOperands().ToList()
+            UnusedOptions = xCommand.EnumerateUnusedOptions().ToList(),
+            UnusedOperands = xCommand.EnumerateUnusedOperands().ToList()
         };
 
         OnCommandCreated(args);

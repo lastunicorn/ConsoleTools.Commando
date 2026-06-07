@@ -1,5 +1,5 @@
 ﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
@@ -11,15 +11,15 @@ internal class CommandsAnalysis
 
     public List<CommandAnalysis> NameMatches { get; } = new();
 
-    public CommandsAnalysis(CommandRequest commandRequest, IEnumerable<CommandMetadata> commandMetadataCollection)
+    public CommandsAnalysis(XCommand xCommand, IEnumerable<CommandMetadata> commandMetadataCollection)
     {
         foreach (CommandMetadata commandMetadata in commandMetadataCollection)
-            Analyze(commandRequest, commandMetadata);
+            Analyze(xCommand, commandMetadata);
     }
 
-    private void Analyze(CommandRequest commandRequest, CommandMetadata commandMetadata)
+    private void Analyze(XCommand xCommand, CommandMetadata commandMetadata)
     {
-        CommandAnalysis commandAnalysis = new(commandRequest, commandMetadata);
+        CommandAnalysis commandAnalysis = new(xCommand, commandMetadata);
 
         switch (commandAnalysis.MatchType)
         {
@@ -38,7 +38,7 @@ internal class CommandsAnalysis
                 throw new ArgumentOutOfRangeException();
         }
 
-        if (commandAnalysis.Command.Name == commandRequest.CommandName)
+        if (commandAnalysis.Command.Name == xCommand.Name)
             NameMatches.Add(commandAnalysis);
     }
 }

@@ -17,8 +17,8 @@
 using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using DustInTheWind.ConsoleTools.Commando.Routing;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using Ninject;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
@@ -112,18 +112,18 @@ public class ApplicationBuilder
     {
         if (commandParserType == null) throw new ArgumentNullException(nameof(commandParserType));
 
-        bool typeIsCommandParser = typeof(ICommandParser).IsAssignableFrom(commandParserType);
+        bool typeIsCommandParser = typeof(ICliSyntax).IsAssignableFrom(commandParserType);
 
         if (!typeIsCommandParser)
         {
             string typeFullName = commandParserType.FullName;
-            string commandParserTypeFullName = typeof(ICommandParser).FullName;
+            string commandParserTypeFullName = typeof(ICliSyntax).FullName;
             string message = $"Type {typeFullName} does not represent a command parser. A command parser must implement the {commandParserTypeFullName} interface.";
 
             throw new ArgumentException(message, nameof(commandParserType));
         }
 
-        kernel.Bind<ICommandParser>().To(commandParserType);
+        kernel.Bind<ICliSyntax>().To(commandParserType);
 
         isCommandParserConfigured = true;
 
@@ -160,7 +160,7 @@ public class ApplicationBuilder
     private IKernel FinalizeContainerSetup()
     {
         if (!isCommandParserConfigured)
-            kernel.Bind<ICommandParser>().To<CommandParser>();
+            kernel.Bind<ICliSyntax>().To<CliSyntax>();
 
         metadataContext.Freeze();
 

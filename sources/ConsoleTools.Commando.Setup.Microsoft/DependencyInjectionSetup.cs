@@ -17,8 +17,8 @@
 using System.Reflection;
 using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using DustInTheWind.ConsoleTools.Commando.Routing;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
@@ -27,7 +27,7 @@ public static class DependencyInjectionSetup
 {
     public static void AddCommando(this IServiceCollection serviceCollection, params Assembly[] assemblies)
     {
-        AddCommando(serviceCollection, typeof(CommandParser), assemblies);
+        AddCommando(serviceCollection, typeof(CliSyntax), assemblies);
     }
 
     public static void AddCommando(this IServiceCollection serviceCollection, Type commandParserType, params Assembly[] assemblies)
@@ -36,7 +36,7 @@ public static class DependencyInjectionSetup
 
         serviceCollection.AddTransient<CommandRouter>();
         serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
-        serviceCollection.AddTransient(typeof(ICommandParser), commandParserType);
+        serviceCollection.AddTransient(typeof(ICliSyntax), commandParserType);
 
         MetadataContext metadataContext = new();
         metadataContext.LoadFromAssemblyContaining<MetadataContext>();

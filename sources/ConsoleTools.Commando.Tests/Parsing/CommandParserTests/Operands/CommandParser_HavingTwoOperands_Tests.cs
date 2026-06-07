@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 using FluentAssertions;
 using Xunit;
 
@@ -23,7 +23,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Tests.Parsing.CommandParserTests.O
 
 public class CommandParser_HavingTwoOperands_Tests
 {
-    private readonly CommandRequest commandRequest;
+    private readonly XCommand xCommand;
 
     public CommandParser_HavingTwoOperands_Tests()
     {
@@ -32,30 +32,30 @@ public class CommandParser_HavingTwoOperands_Tests
 
         string[] args = { "--", "operand1", "operand2" };
 
-        CommandParser commandParser = new();
-        commandRequest = commandParser.Parse(args);
+        CliSyntax cliSyntax = new();
+        xCommand = cliSyntax.Parse(args);
     }
 
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsNullVerb()
     {
-        commandRequest.CommandName.Should().BeNull();
+        xCommand.Name.Should().BeNull();
     }
 
     [Fact]
     public void WhenParsed_ThenOptionsListIsEmpty()
     {
-        commandRequest.NamedArguments.Should().BeEmpty();
+        xCommand.NamedArguments.Should().BeEmpty();
     }
 
     [Fact]
     public void WhenParsed_ThenOperandsListContainsTwoOperands()
     {
-        CommandArgument[] expected =
+        XArgument[] expected =
         {
             new(null, "operand1"),
             new(null, "operand2")
         };
-        commandRequest.UnnamedArguments.Should().Equal(expected);
+        xCommand.UnnamedArguments.Should().Equal(expected);
     }
 }

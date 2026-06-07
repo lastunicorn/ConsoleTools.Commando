@@ -1,44 +1,56 @@
-﻿using DustInTheWind.ConsoleTools.Commando.RequestModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Parsing;
 
 internal class TextCommandAnalysis
 {
-    private readonly Arguments arguments;
+    private readonly string[] args;
 
     public TextCommandAnalysis(string[] args)
     {
-        if (args == null) throw new ArgumentNullException(nameof(args));
-
-        arguments = new Arguments(args);
+        this.args = args ?? throw new ArgumentNullException(nameof(args));
     }
 
-    public CommandRequest Analyze()
+    public XCommand Analyze()
     {
-        CommandRequest commandRequest = new()
+        XCommand xCommand = new()
         {
-            UnderlyingArgs = arguments.UnderlyingArgs
+            UnderlyingArgs = args
         };
 
-        bool isFirst = true;
-
+        IEnumerable<Argument> arguments = EnumerateArguments();
+        int index = 0;
+        
         foreach (Argument argument in arguments)
         {
-            if (isFirst)
+            bool isCommandName = index == 0 && argument.IsAnonymousArgument && !argument.IsForcedToBeAnonymous;
+            if (isCommandName)
             {
-                isFirst = false;
-
-                if (argument.IsAnonymousArgument && !argument.IsForcedToBeAnonymous)
-                {
-                    commandRequest.CommandName = argument.Value;
-                    continue;
-                }
+                xCommand.Name = argument.Value;
+                continue;
             }
 
-            CommandArgument commandArgument = new(argument.Name, argument.Value);
-            commandRequest.AddParameter(commandArgument);
+            bool isCommandAction = index == 1 && xCommand.Name != null && argument.IsAnonymousArgument && !argument.IsForcedToBeAnonymous;
+            if (isCommandAction)
+            {
+                xCommand.Action = argument.Value;
+                continue;
+            }
+
+            XArgument xArgument = new(argument.Name, argument.Value);
+            xCommand.AddParameter(xArgument);
+
+            index++;
         }
 
-        return commandRequest;
+        return xCommand;
+    }
+
+    private IEnumerable<Argument> EnumerateArguments()
+    {
+        using ArgumentEnumerator argumentEnumerator = new(args);
+
+        while (argumentEnumerator.MoveNext())
+            yield return argumentEnumerator.Current;
     }
 }

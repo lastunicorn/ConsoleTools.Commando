@@ -1,39 +1,43 @@
 ﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
 
-namespace DustInTheWind.ConsoleTools.Commando.RequestModel;
+namespace DustInTheWind.ConsoleTools.Commando.Syntax;
 
-public class CommandRequest
+public class XCommand
 {
-    private readonly List<CommandArgument> arguments = new();
-    private List<CommandArgument> unusedArguments = new();
+    private readonly List<XArgument> arguments = new();
+    private List<XArgument> unusedArguments = new();
 
     public string[] UnderlyingArgs { get; init; }
 
-    public string CommandName { get; set; }
+    public string Name { get; set; }
+    
+    public string Action { get; set; }
 
     /// <summary>
-    /// Gets the named arguments, also called flags, e.g. --option=value or -o value.
+    /// Gets the named arguments.
+    /// They are called options when the value is explicitly specified (e.g. --option=value or -o value)
+    /// or flags when the value is not specified (e.g. --flag or -f).
     /// </summary>
-    public IReadOnlyCollection<CommandArgument> NamedArguments => arguments
+    public IReadOnlyCollection<XArgument> NamedArguments => arguments
         .Where(x => x.Name != null)
         .ToList();
 
     /// <summary>
     /// Gets the arguments that do not have a name, e.g. value.
     /// </summary>
-    public IReadOnlyCollection<CommandArgument> UnnamedArguments => arguments
+    public IReadOnlyCollection<XArgument> UnnamedArguments => arguments
         .Where(x => x.Name == null)
         .ToList();
 
-    public bool IsEmpty => CommandName == null && arguments.Count == 0;
+    public bool IsEmpty => Name == null && arguments.Count == 0;
 
     public bool HasUnusedArguments => unusedArguments.Count > 0;
 
-    public void AddParameter(CommandArgument commandArgument)
+    public void AddParameter(XArgument xArgument)
     {
-        if (commandArgument == null) throw new ArgumentNullException(nameof(commandArgument));
+        if (xArgument == null) throw new ArgumentNullException(nameof(xArgument));
 
-        arguments.Add(commandArgument);
+        arguments.Add(xArgument);
     }
 
     public void Reset()
@@ -41,38 +45,38 @@ public class CommandRequest
         unusedArguments = arguments.ToList();
     }
 
-    public CommandArgument GetOptionAndMarkAsUsed(ParameterMetadata parameterMetadata)
+    public XArgument GetOptionAndMarkAsUsed(ParameterMetadata parameterMetadata)
     {
         if (parameterMetadata.Name != null)
         {
-            CommandArgument commandArgument = arguments
+            XArgument xArgument = arguments
                 .Where(x => x.Name != null)
                 .FirstOrDefault(x => x.Name == parameterMetadata.Name);
 
-            if (commandArgument != null)
+            if (xArgument != null)
             {
-                unusedArguments.Remove(commandArgument);
-                return commandArgument;
+                unusedArguments.Remove(xArgument);
+                return xArgument;
             }
         }
 
         if (parameterMetadata.ShortName != 0)
         {
-            CommandArgument commandArgument = arguments
+            XArgument xArgument = arguments
                 .Where(x => x.Name != null)
                 .FirstOrDefault(x => x.Name == parameterMetadata.ShortName.ToString());
 
-            if (commandArgument != null)
+            if (xArgument != null)
             {
-                unusedArguments.Remove(commandArgument);
-                return commandArgument;
+                unusedArguments.Remove(xArgument);
+                return xArgument;
             }
         }
 
         return null;
     }
 
-    public CommandArgument GetOperandAndMarkAsUsed(ParameterMetadata parameterMetadata)
+    public XArgument GetOperandAndMarkAsUsed(ParameterMetadata parameterMetadata)
     {
         if (parameterMetadata.Order != null)
         {
@@ -80,15 +84,15 @@ public class CommandRequest
 
             if (index >= 0)
             {
-                CommandArgument commandArgument = arguments
+                XArgument xArgument = arguments
                     .Where(x => x.Name == null)
                     .Skip(index)
                     .FirstOrDefault();
 
-                if (commandArgument != null)
+                if (xArgument != null)
                 {
-                    unusedArguments.Remove(commandArgument);
-                    return commandArgument;
+                    unusedArguments.Remove(xArgument);
+                    return xArgument;
                 }
             }
         }
@@ -96,7 +100,7 @@ public class CommandRequest
         return null;
     }
 
-    public IEnumerable<CommandArgument> EnumerateUnusedOptions()
+    public IEnumerable<XArgument> EnumerateUnusedOptions()
     {
         return unusedArguments
             .Where(x => x.Name != null);

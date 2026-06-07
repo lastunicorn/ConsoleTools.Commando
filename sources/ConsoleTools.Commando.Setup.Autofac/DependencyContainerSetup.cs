@@ -18,8 +18,8 @@ using System.Reflection;
 using Autofac;
 using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using DustInTheWind.ConsoleTools.Commando.RequestModel;
 using DustInTheWind.ConsoleTools.Commando.Routing;
+using DustInTheWind.ConsoleTools.Commando.Syntax;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 
@@ -27,7 +27,7 @@ public static class DependencyContainerSetup
 {
     public static void RegisterCommando(this ContainerBuilder containerBuilder, params Assembly[] assemblies)
     {
-        RegisterCommando(containerBuilder, typeof(CommandParser), assemblies);
+        RegisterCommando(containerBuilder, typeof(CliSyntax), assemblies);
     }
 
     public static void RegisterCommando(this ContainerBuilder containerBuilder, Type commandParserType, params Assembly[] assemblies)
@@ -36,7 +36,7 @@ public static class DependencyContainerSetup
 
         containerBuilder.RegisterType<CommandRouter>().AsSelf();
         containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
-        containerBuilder.RegisterType(commandParserType).As<ICommandParser>();
+        containerBuilder.RegisterType(commandParserType).As<ICliSyntax>();
 
         MetadataContext metadataContext = new();
         metadataContext.LoadFromAssemblyContaining<MetadataContext>();
