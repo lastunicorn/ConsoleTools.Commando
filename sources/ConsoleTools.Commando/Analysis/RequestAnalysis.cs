@@ -5,9 +5,11 @@ namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal class RequestAnalysis
 {
-    private CommandAnalysis matchedCommandAnalysis;
+    private CommandMatch matchedCommandMatch;
 
-    public CommandMetadata MatchedCommand => matchedCommandAnalysis.Command;
+    public CommandMetadata MatchedCommand => matchedCommandMatch.Command;
+    
+    public UnusedArguments UnusedArguments => matchedCommandMatch.UnusedArguments;
 
     public RequestMatchType MatchType { get; private set; }
 
@@ -18,14 +20,14 @@ internal class RequestAnalysis
         if (xCommand == null) throw new ArgumentNullException(nameof(xCommand));
         if (metadataContext == null) throw new ArgumentNullException(nameof(metadataContext));
 
-        matchedCommandAnalysis = null;
+        matchedCommandMatch = null;
         MatchType = RequestMatchType.NoMatch;
 
         if (xCommand.IsEmpty)
         {
             CommandMetadata commandMetadata = metadataContext.Commands.GetHelpCommand();
 
-            matchedCommandAnalysis = new CommandAnalysis(xCommand, commandMetadata);
+            matchedCommandMatch = new CommandMatch(xCommand, commandMetadata);
             MatchType = RequestMatchType.Help;
         }
         else
@@ -60,7 +62,7 @@ internal class RequestAnalysis
                         break;
 
                     case 1:
-                        matchedCommandAnalysis = commandsAnalysis.PartialMatches.Single();
+                        matchedCommandMatch = commandsAnalysis.PartialMatches.Single();
                         MatchType = RequestMatchType.Partial;
                         break;
 
@@ -71,7 +73,7 @@ internal class RequestAnalysis
                 break;
 
             case 1:
-                matchedCommandAnalysis = commandsAnalysis.FullMatches.Single();
+                matchedCommandMatch = commandsAnalysis.FullMatches.Single();
                 MatchType = RequestMatchType.Full;
                 break;
 
@@ -83,6 +85,6 @@ internal class RequestAnalysis
 
     public void SetParameters(object consoleCommand)
     {
-        matchedCommandAnalysis?.SetParameters(consoleCommand);
+        matchedCommandMatch?.SetParameters(consoleCommand);
     }
 }

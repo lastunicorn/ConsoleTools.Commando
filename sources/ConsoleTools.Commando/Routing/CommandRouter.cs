@@ -77,7 +77,7 @@ public class CommandRouter
             throw new UnknownCommandException();
 
         requestAnalysis.SetParameters(consoleCommand);
-        RaiseCommandCreatedEvent(xCommand, consoleCommand);
+        RaiseCommandCreatedEvent(xCommand, requestAnalysis.UnusedArguments, consoleCommand);
         await consoleCommand.Execute();
         ExecuteViewsFor(consoleCommand);
     }
@@ -93,7 +93,7 @@ public class CommandRouter
                 throw new UnknownCommandException();
 
             requestAnalysis.SetParameters(consoleCommand);
-            RaiseCommandCreatedEvent(xCommand, consoleCommand);
+            RaiseCommandCreatedEvent(xCommand, requestAnalysis.UnusedArguments, consoleCommand);
 
             Type commandType = consoleCommand.GetType();
             MethodInfo executeMemberInfo = commandType.GetMethod(nameof(IConsoleCommand<object>.Execute));
@@ -110,14 +110,14 @@ public class CommandRouter
         }
     }
 
-    private void RaiseCommandCreatedEvent(XCommand xCommand, object consoleCommand)
+    private void RaiseCommandCreatedEvent(XCommand xCommand, UnusedArguments unusedArguments, object consoleCommand)
     {
         CommandCreatedEventArgs args = new()
         {
             Args = xCommand.UnderlyingArgs,
             CommandFullName = consoleCommand.GetType().FullName,
-            UnusedOptions = xCommand.EnumerateUnusedOptions().ToList(),
-            UnusedOperands = xCommand.EnumerateUnusedOperands().ToList()
+            UnusedOptions = unusedArguments.EnumerateOptions().ToList(),
+            UnusedOperands = unusedArguments.EnumerateOperands().ToList()
         };
 
         OnCommandCreated(args);

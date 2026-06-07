@@ -5,11 +5,11 @@ namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal class CommandsAnalysis
 {
-    public List<CommandAnalysis> FullMatches { get; } = new();
+    public List<CommandMatch> FullMatches { get; } = new();
 
-    public List<CommandAnalysis> PartialMatches { get; } = new();
+    public List<CommandMatch> PartialMatches { get; } = new();
 
-    public List<CommandAnalysis> NameMatches { get; } = new();
+    public List<CommandMatch> NameMatches { get; } = new();
 
     public CommandsAnalysis(XCommand xCommand, IEnumerable<CommandMetadata> commandMetadataCollection)
     {
@@ -19,26 +19,26 @@ internal class CommandsAnalysis
 
     private void Analyze(XCommand xCommand, CommandMetadata commandMetadata)
     {
-        CommandAnalysis commandAnalysis = new(xCommand, commandMetadata);
+        CommandMatch commandMatch = new(xCommand, commandMetadata);
 
-        switch (commandAnalysis.MatchType)
+        switch (commandMatch.MatchType)
         {
             case CommandMatchType.NoMatch:
                 break;
 
             case CommandMatchType.Partial:
-                PartialMatches.Add(commandAnalysis);
+                PartialMatches.Add(commandMatch);
                 break;
 
             case CommandMatchType.Full:
-                FullMatches.Add(commandAnalysis);
+                FullMatches.Add(commandMatch);
                 break;
 
             default:
                 throw new ArgumentOutOfRangeException();
         }
 
-        if (commandAnalysis.Command.Name == xCommand.Name)
-            NameMatches.Add(commandAnalysis);
+        if (commandMatch.Command.Name == xCommand.Name)
+            NameMatches.Add(commandMatch);
     }
 }

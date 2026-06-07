@@ -15,12 +15,12 @@ internal class ParameterMatch
 
     public string Name => parameterMetadata.Name ?? parameterMetadata.DisplayName ?? parameterMetadata.Order.ToString();
 
-    public ParameterMatch(ParameterMetadata parameterMetadata, XCommand xCommand)
+    public ParameterMatch(ParameterMetadata parameterMetadata, UnusedArguments unusedArguments)
     {
-        if (xCommand == null) throw new ArgumentNullException(nameof(xCommand));
+        if (unusedArguments == null) throw new ArgumentNullException(nameof(unusedArguments));
         this.parameterMetadata = parameterMetadata ?? throw new ArgumentNullException(nameof(parameterMetadata));
 
-        XArgument option = xCommand.GetOptionAndMarkAsUsed(parameterMetadata);
+        XArgument option = unusedArguments.PopOption(parameterMetadata);
 
         if (option != null)
         {
@@ -30,7 +30,7 @@ internal class ParameterMatch
             return;
         }
 
-        XArgument operand = xCommand.GetOperandAndMarkAsUsed(parameterMetadata);
+        XArgument operand = unusedArguments.PopOperand(parameterMetadata);
 
         if (operand != null)
         {
