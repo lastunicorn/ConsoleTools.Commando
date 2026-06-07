@@ -21,7 +21,7 @@ namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.DependencyInjection;
 /// <summary>
 /// Note: The suggested setup approach is the one using <see cref="DustInTheWind.ConsoleTools.Commando.Setup.Ninject.ApplicationBuilder"/>.
 /// </summary>
-internal class Program
+internal static class Program
 {
     private static async Task Main(string[] args)
     {

@@ -19,7 +19,7 @@ using DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Microsoft.Builder;
 
-internal class Program
+internal static class Program
 {
     public static async Task Main(string[] args)
     {

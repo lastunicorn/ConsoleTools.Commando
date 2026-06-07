@@ -19,7 +19,7 @@ using DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
 
 namespace DustInTheWind.ConsoleTools.Commando.Demo.Ninject.Builder;
 
-internal class Program
+internal static class Program
 {
     public static async Task Main(string[] args)
     {

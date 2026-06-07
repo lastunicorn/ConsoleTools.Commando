@@ -21,19 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <PropertyGroup>
         <Product>ConsoleTools Commando</Product>
         <Company>Dust in the Wind</Company>
-        <Copyright>Copyright © Dust in the Wind 2022-2024</Copyright>
+        <Copyright>Copyright © Dust in the Wind 2022-2026</Copyright>
         <Authors>Dust in the Wind</Authors>
         <Owners>Dust in the Wind</Owners>
         <NeutralLanguage>en</NeutralLanguage>
         <RepositoryType>git</RepositoryType>
-        <PackageLicenseFile>license.txt</PackageLicenseFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/lastunicorn/ConsoleTools.Commando</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lastunicorn/ConsoleTools.Commando</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="..\license.txt" Link="license.txt" Pack="true" PackagePath="license.txt" />
+        <None Include="$(MSBuildThisFileDirectory)..\LICENSE" Link="LICENSE" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>

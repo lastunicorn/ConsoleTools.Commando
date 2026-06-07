@@ -19,12 +19,12 @@ namespace DustInTheWind.ConsoleTools.Commando;
 public class CommandAttribute : Attribute
 {
     /// <summary>
-    /// Gets or sets a short description that is displayed by the help command.
+    /// Gets or sets a short description displayed by the help command.
     /// </summary>
     public string Description { get; set; }
 
     /// <summary>
-    /// Gets or sets a value that specify if the command is allowed to be executed or not.
+    /// Gets or sets a value that specifies if the command is allowed to be executed or not.
     /// If the command is disabled, the system behaves as if this command does not even exist.
     /// </summary>
     public bool Enabled { get; set; } = true;
