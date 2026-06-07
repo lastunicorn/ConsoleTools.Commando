@@ -15,9 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Routing;
 using Ninject;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;
 
@@ -33,18 +35,18 @@ public static class DependencyInjectionSetup
         kernel.Bind<ICommandFactory>().To<CommandFactory>();
         kernel.Bind<ICommandParser>().To(commandParserType);
 
-        ExecutionContext executionContext = new();
-        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
-        executionContext.LoadFrom(assemblies);
+        MetadataContext metadataContext = new();
+        metadataContext.LoadFromAssemblyContaining<MetadataContext>();
+        metadataContext.LoadFrom(assemblies);
 
-        executionContext.Freeze();
+        metadataContext.Freeze();
 
-        kernel.Bind<ExecutionContext>().ToConstant(executionContext).InSingletonScope();
+        kernel.Bind<MetadataContext>().ToConstant(metadataContext).InSingletonScope();
 
-        foreach (Type type in executionContext.Commands.GetCommandTypes())
+        foreach (Type type in metadataContext.Commands.GetCommandTypes())
             kernel.Bind(type).ToSelf();
 
-        foreach (Type type in executionContext.Views.GetViewTypes())
+        foreach (Type type in metadataContext.Views.GetViewTypes())
             kernel.Bind(type).ToSelf();
 
         kernel.Bind<Application>().ToSelf().InSingletonScope();

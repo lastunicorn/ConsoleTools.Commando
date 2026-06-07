@@ -46,12 +46,12 @@ public class CommandParser_HavingOnlyOneLongOptionUsingEqualSign_Tests
         {
             new("name1", "value1")
         };
-        commandRequest.Options.Should().Equal(expected);
+        commandRequest.NamedArguments.Should().Equal(expected);
     }
 
     [Fact]
     public void WhenParsed_ThenOperandsListIsEmpty()
     {
-        commandRequest.Operands.Should().BeEmpty();
+        commandRequest.UnnamedArguments.Should().BeEmpty();
     }
 }

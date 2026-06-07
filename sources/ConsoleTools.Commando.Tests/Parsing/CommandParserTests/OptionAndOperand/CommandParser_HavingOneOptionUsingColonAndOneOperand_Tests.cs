@@ -46,7 +46,7 @@ public class CommandParser_HavingOneOptionUsingColonAndOneOperand_Tests
         {
             new("name1", "value1")
         };
-        commandRequest.Options.Should().Equal(expected);
+        commandRequest.NamedArguments.Should().Equal(expected);
     }
 
     [Fact]
@@ -56,6 +56,6 @@ public class CommandParser_HavingOneOptionUsingColonAndOneOperand_Tests
         {
             new(null, "operand1")
         };
-        commandRequest.Operands.Should().Equal(expected);
+        commandRequest.UnnamedArguments.Should().Equal(expected);
     }
 }

@@ -47,12 +47,12 @@ public class CommandParser_HavingTwoFlags_Tests
             new("f", null),
             new("g", null)
         };
-        commandRequest.Options.Should().Equal(expected);
+        commandRequest.NamedArguments.Should().Equal(expected);
     }
 
     [Fact]
     public void WhenParsed_ThenOperandsListIsEmpty()
     {
-        commandRequest.Operands.Should().BeEmpty();
+        commandRequest.UnnamedArguments.Should().BeEmpty();
     }
 }

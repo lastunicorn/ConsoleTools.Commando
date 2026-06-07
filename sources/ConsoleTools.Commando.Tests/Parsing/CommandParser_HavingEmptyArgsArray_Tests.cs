@@ -42,12 +42,12 @@ public class CommandParser_HavingEmptyArgsArray_Tests
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsEmptyOptionsList()
     {
-        commandRequest.Options.Should().BeEmpty();
+        commandRequest.NamedArguments.Should().BeEmpty();
     }
 
     [Fact]
     public void WhenParsed_ThenGenericCommandContainsEmptyOperandsList()
     {
-        commandRequest.Operands.Should().BeEmpty();
+        commandRequest.UnnamedArguments.Should().BeEmpty();
     }
 }

@@ -15,7 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Autofac;
-using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
+using DustInTheWind.ConsoleTools.Commando.Routing;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 

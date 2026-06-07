@@ -1,6 +1,6 @@
-﻿using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.Routing;
 
 public interface ICommandFactory
 {

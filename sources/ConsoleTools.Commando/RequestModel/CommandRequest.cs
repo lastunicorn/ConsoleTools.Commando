@@ -1,4 +1,4 @@
-﻿using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
 
 namespace DustInTheWind.ConsoleTools.Commando.RequestModel;
 
@@ -11,11 +11,17 @@ public class CommandRequest
 
     public string CommandName { get; set; }
 
-    public IReadOnlyCollection<CommandArgument> Options => arguments
+    /// <summary>
+    /// Gets the named arguments, also called flags, e.g. --option=value or -o value.
+    /// </summary>
+    public IReadOnlyCollection<CommandArgument> NamedArguments => arguments
         .Where(x => x.Name != null)
         .ToList();
 
-    public IReadOnlyCollection<CommandArgument> Operands => arguments
+    /// <summary>
+    /// Gets the arguments that do not have a name, e.g. value.
+    /// </summary>
+    public IReadOnlyCollection<CommandArgument> UnnamedArguments => arguments
         .Where(x => x.Name == null)
         .ToList();
 

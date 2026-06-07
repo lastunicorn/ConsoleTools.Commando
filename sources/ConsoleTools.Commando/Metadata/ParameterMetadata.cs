@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 
-namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
+namespace DustInTheWind.ConsoleTools.Commando.Metadata;
 
 public class ParameterMetadata
 {

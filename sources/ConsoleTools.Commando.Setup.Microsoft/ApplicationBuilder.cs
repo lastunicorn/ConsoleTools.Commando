@@ -15,23 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 
 public class ApplicationBuilder
 {
     private readonly IServiceCollection serviceCollection;
-    private readonly ExecutionContext executionContext;
+    private readonly MetadataContext metadataContext;
     private bool isCommandParserConfigured;
     private EventHandler<UnhandledApplicationExceptionEventArgs> unhandledExceptionHandler;
 
     public ApplicationBuilder()
     {
         serviceCollection = new ServiceCollection();
-        executionContext = new ExecutionContext();
+        metadataContext = new MetadataContext();
 
         ConfigureDefaultServices();
         LoadDefaultCommands();
@@ -49,14 +51,14 @@ public class ApplicationBuilder
         serviceCollection.AddTransient<CommandRouter>();
         serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
 
-        serviceCollection.AddSingleton(executionContext);
+        serviceCollection.AddSingleton(metadataContext);
 
         serviceCollection.AddSingleton<Application>();
     }
 
     private void LoadDefaultCommands()
     {
-        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
+        metadataContext.LoadFromAssemblyContaining<MetadataContext>();
     }
 
     public ApplicationBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
@@ -64,7 +66,7 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly assembly = assemblyProvider();
-        executionContext.LoadFrom(assembly);
+        metadataContext.LoadFrom(assembly);
 
         return this;
     }
@@ -74,14 +76,14 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly[] assemblies = assemblyProvider().ToArray();
-        executionContext.LoadFrom(assemblies);
+        metadataContext.LoadFrom(assemblies);
 
         return this;
     }
 
     public ApplicationBuilder RegisterCommandsFrom(params Assembly[] assemblies)
     {
-        executionContext.LoadFrom(assemblies);
+        metadataContext.LoadFrom(assemblies);
 
         return this;
     }
@@ -90,7 +92,7 @@ public class ApplicationBuilder
     {
         if (type == null) throw new ArgumentNullException(nameof(type));
 
-        executionContext.LoadFrom(type.Assembly);
+        metadataContext.LoadFrom(type.Assembly);
 
         return this;
     }
@@ -98,7 +100,7 @@ public class ApplicationBuilder
     public ApplicationBuilder RegisterCommandsFromCurrentAssembly()
     {
         Assembly assembly = Assembly.GetCallingAssembly();
-        executionContext.LoadFrom(assembly);
+        metadataContext.LoadFrom(assembly);
 
         return this;
     }
@@ -106,7 +108,7 @@ public class ApplicationBuilder
     public ApplicationBuilder RegisterCommandsFromEntryAssembly()
     {
         Assembly assembly = Assembly.GetEntryAssembly();
-        executionContext.LoadFrom(assembly);
+        metadataContext.LoadFrom(assembly);
 
         return this;
     }
@@ -165,12 +167,12 @@ public class ApplicationBuilder
         if (!isCommandParserConfigured)
             serviceCollection.AddTransient(typeof(ICommandParser), typeof(CommandParser));
 
-        executionContext.Freeze();
+        metadataContext.Freeze();
 
-        foreach (Type type in executionContext.Commands.GetCommandTypes())
+        foreach (Type type in metadataContext.Commands.GetCommandTypes())
             serviceCollection.AddTransient(type);
 
-        foreach (Type type in executionContext.Views.GetViewTypes())
+        foreach (Type type in metadataContext.Views.GetViewTypes())
             serviceCollection.AddTransient(type);
 
         return serviceCollection.BuildServiceProvider();

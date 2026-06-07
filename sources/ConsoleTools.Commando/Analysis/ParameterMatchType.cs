@@ -1,4 +1,4 @@
-﻿namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
+﻿namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal enum ParameterMatchType
 {

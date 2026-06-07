@@ -45,7 +45,7 @@ public class CommandParser_HavingTwoOperands_Tests
     [Fact]
     public void WhenParsed_ThenOptionsListIsEmpty()
     {
-        commandRequest.Options.Should().BeEmpty();
+        commandRequest.NamedArguments.Should().BeEmpty();
     }
 
     [Fact]
@@ -56,6 +56,6 @@ public class CommandParser_HavingTwoOperands_Tests
             new(null, "operand1"),
             new(null, "operand2")
         };
-        commandRequest.Operands.Should().Equal(expected);
+        commandRequest.UnnamedArguments.Should().Equal(expected);
     }
 }

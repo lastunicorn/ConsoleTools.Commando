@@ -15,9 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Microsoft;
 
@@ -36,18 +38,18 @@ public static class DependencyInjectionSetup
         serviceCollection.AddTransient<ICommandFactory, CommandFactory>();
         serviceCollection.AddTransient(typeof(ICommandParser), commandParserType);
 
-        ExecutionContext executionContext = new();
-        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
-        executionContext.LoadFrom(assemblies);
+        MetadataContext metadataContext = new();
+        metadataContext.LoadFromAssemblyContaining<MetadataContext>();
+        metadataContext.LoadFrom(assemblies);
 
-        executionContext.Freeze();
+        metadataContext.Freeze();
 
-        serviceCollection.AddSingleton(executionContext);
+        serviceCollection.AddSingleton(metadataContext);
 
-        foreach (Type type in executionContext.Commands.GetCommandTypes())
+        foreach (Type type in metadataContext.Commands.GetCommandTypes())
             serviceCollection.AddTransient(type);
 
-        foreach (Type type in executionContext.Views.GetViewTypes())
+        foreach (Type type in metadataContext.Views.GetViewTypes())
             serviceCollection.AddTransient(type);
 
         serviceCollection.AddSingleton<Application>();

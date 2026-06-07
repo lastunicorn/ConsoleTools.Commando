@@ -1,19 +1,18 @@
 ﻿using System.Reflection;
-using DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
-using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using DustInTheWind.ConsoleTools.Commando.Analysis;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.RequestModel;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
-namespace DustInTheWind.ConsoleTools.Commando;
+namespace DustInTheWind.ConsoleTools.Commando.Routing;
 
 public class CommandRouter
 {
-    private readonly ExecutionContext executionContext;
+    private readonly MetadataContext metadataContext;
     private readonly ICommandFactory commandFactory;
 
-    public CommandRouter(ExecutionContext executionContext, ICommandFactory commandFactory)
+    public CommandRouter(MetadataContext metadataContext, ICommandFactory commandFactory)
     {
-        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
+        this.metadataContext = metadataContext ?? throw new ArgumentNullException(nameof(metadataContext));
         this.commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
     }
 
@@ -43,7 +42,7 @@ public class CommandRouter
 
     private RequestAnalysis AnalyzeRequest(CommandRequest commandRequest)
     {
-        RequestAnalysis requestAnalysis = new(commandRequest, executionContext);
+        RequestAnalysis requestAnalysis = new(commandRequest, metadataContext);
 
         switch (requestAnalysis.MatchType)
         {
@@ -97,7 +96,7 @@ public class CommandRouter
             RaiseCommandCreatedEvent(commandRequest, consoleCommand);
 
             Type commandType = consoleCommand.GetType();
-            MethodInfo executeMemberInfo = commandType.GetMethod("Execute");
+            MethodInfo executeMemberInfo = commandType.GetMethod(nameof(IConsoleCommand<object>.Execute));
 
             object viewModel = await executeMemberInfo.InvokeAsync(consoleCommand);
             ExecuteViewsFor(viewModel);
@@ -128,7 +127,7 @@ public class CommandRouter
     {
         Type commandResultType = viewModel.GetType();
 
-        IEnumerable<Type> viewTypes = executionContext.Views.GetViewTypesForModel(commandResultType);
+        IEnumerable<Type> viewTypes = metadataContext.Views.GetViewTypesForModel(commandResultType);
 
         foreach (Type viewType in viewTypes)
         {

@@ -1,4 +1,4 @@
-﻿using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 

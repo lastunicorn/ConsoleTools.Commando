@@ -1,8 +1,7 @@
-﻿using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.RequestModel;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
+namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal class RequestAnalysis
 {
@@ -14,17 +13,17 @@ internal class RequestAnalysis
 
     public List<ParameterMatch> UnmatchedMandatoryParameters { get; } = new();
 
-    public RequestAnalysis(CommandRequest commandRequest, ExecutionContext executionContext)
+    public RequestAnalysis(CommandRequest commandRequest, MetadataContext metadataContext)
     {
         if (commandRequest == null) throw new ArgumentNullException(nameof(commandRequest));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        if (metadataContext == null) throw new ArgumentNullException(nameof(metadataContext));
 
         matchedCommandAnalysis = null;
         MatchType = RequestMatchType.NoMatch;
 
         if (commandRequest.IsEmpty)
         {
-            CommandMetadata commandMetadata = executionContext.Commands.GetHelpCommand();
+            CommandMetadata commandMetadata = metadataContext.Commands.GetHelpCommand();
 
             matchedCommandAnalysis = new CommandAnalysis(commandRequest, commandMetadata);
             MatchType = RequestMatchType.Help;
@@ -32,8 +31,8 @@ internal class RequestAnalysis
         else
         {
             IEnumerable<CommandMetadata> commandMetadataCollection = string.IsNullOrEmpty(commandRequest.CommandName)
-                ? executionContext.Commands.GetAllAnonymous()
-                : executionContext.Commands.GetAllByName(commandRequest.CommandName).ToList();
+                ? metadataContext.Commands.GetAllAnonymous()
+                : metadataContext.Commands.GetAllByName(commandRequest.CommandName).ToList();
 
             Analyze(commandRequest, commandMetadataCollection);
         }

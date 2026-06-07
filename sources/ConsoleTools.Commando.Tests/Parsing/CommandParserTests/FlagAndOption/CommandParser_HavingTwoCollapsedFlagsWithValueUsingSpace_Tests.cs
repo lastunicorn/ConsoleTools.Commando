@@ -57,12 +57,12 @@ public class CommandParser_HavingTwoCollapsedFlagsWithValueUsingSpace_Tests
             new("f", null),
             new("g", "value1")
         };
-        commandRequest.Options.Should().Equal(expected);
+        commandRequest.NamedArguments.Should().Equal(expected);
     }
 
     [Fact]
     public void WhenParsed_ThenOperandsListIsEmpty()
     {
-        commandRequest.Operands.Should().BeEmpty();
+        commandRequest.UnnamedArguments.Should().BeEmpty();
     }
 }

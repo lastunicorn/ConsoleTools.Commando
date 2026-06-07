@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
+using DustInTheWind.ConsoleTools.Commando.Routing;
 using Ninject;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Ninject;

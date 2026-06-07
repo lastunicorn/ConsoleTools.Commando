@@ -16,22 +16,24 @@
 
 using System.Reflection;
 using Autofac;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.Parsing;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
+using DustInTheWind.ConsoleTools.Commando.RequestModel;
+using DustInTheWind.ConsoleTools.Commando.Routing;
 
 namespace DustInTheWind.ConsoleTools.Commando.Setup.Autofac;
 
 public class ApplicationBuilder
 {
     private readonly ContainerBuilder containerBuilder;
-    private readonly ExecutionContext executionContext;
+    private readonly MetadataContext metadataContext;
     private bool isCommandParserConfigured;
     private EventHandler<UnhandledApplicationExceptionEventArgs> unhandledExceptionHandler;
 
     private ApplicationBuilder()
     {
         containerBuilder = new ContainerBuilder();
-        executionContext = new ExecutionContext();
+        metadataContext = new MetadataContext();
 
         ConfigureDefaultServices();
         LoadDefaultCommands();
@@ -49,14 +51,14 @@ public class ApplicationBuilder
         containerBuilder.RegisterType<CommandRouter>().AsSelf();
         containerBuilder.RegisterType<CommandFactory>().As<ICommandFactory>();
 
-        containerBuilder.RegisterInstance(executionContext).AsSelf().SingleInstance();
+        containerBuilder.RegisterInstance(metadataContext).AsSelf().SingleInstance();
 
         containerBuilder.RegisterType<Application>().AsSelf().SingleInstance();
     }
 
     private void LoadDefaultCommands()
     {
-        executionContext.LoadFromAssemblyContaining<ExecutionContext>();
+        metadataContext.LoadFromAssemblyContaining<MetadataContext>();
     }
 
     public ApplicationBuilder RegisterCommandsFrom(Func<Assembly> assemblyProvider)
@@ -64,7 +66,7 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly assembly = assemblyProvider();
-        executionContext.LoadFrom(assembly);
+        metadataContext.LoadFrom(assembly);
 
         return this;
     }
@@ -74,14 +76,14 @@ public class ApplicationBuilder
         if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
 
         Assembly[] assemblies = assemblyProvider().ToArray();
-        executionContext.LoadFrom(assemblies);
+        metadataContext.LoadFrom(assemblies);
 
         return this;
     }
 
     public ApplicationBuilder RegisterCommandsFrom(params Assembly[] assemblies)
     {
-        executionContext.LoadFrom(assemblies);
+        metadataContext.LoadFrom(assemblies);
 
         return this;
     }
@@ -90,7 +92,7 @@ public class ApplicationBuilder
     {
         if (type == null) throw new ArgumentNullException(nameof(type));
 
-        executionContext.LoadFrom(type.Assembly);
+        metadataContext.LoadFrom(type.Assembly);
 
         return this;
     }
@@ -98,7 +100,7 @@ public class ApplicationBuilder
     public ApplicationBuilder RegisterCommandsFromCurrentAssembly()
     {
         Assembly assembly = Assembly.GetCallingAssembly();
-        executionContext.LoadFrom(assembly);
+        metadataContext.LoadFrom(assembly);
 
         return this;
     }
@@ -106,7 +108,7 @@ public class ApplicationBuilder
     public ApplicationBuilder RegisterCommandsFromEntryAssembly()
     {
         Assembly assembly = Assembly.GetEntryAssembly();
-        executionContext.LoadFrom(assembly);
+        metadataContext.LoadFrom(assembly);
 
         return this;
     }
@@ -165,12 +167,12 @@ public class ApplicationBuilder
         if (!isCommandParserConfigured)
             containerBuilder.RegisterType<CommandParser>().As<ICommandParser>();
 
-        executionContext.Freeze();
+        metadataContext.Freeze();
 
-        foreach (Type type in executionContext.Commands.GetCommandTypes())
+        foreach (Type type in metadataContext.Commands.GetCommandTypes())
             containerBuilder.RegisterType(type).AsSelf();
 
-        foreach (Type type in executionContext.Views.GetViewTypes())
+        foreach (Type type in metadataContext.Views.GetViewTypes())
             containerBuilder.RegisterType(type).AsSelf();
 
         return containerBuilder.Build();

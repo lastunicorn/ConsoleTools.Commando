@@ -1,7 +1,7 @@
-﻿using DustInTheWind.ConsoleTools.Commando.MetadataModel;
+﻿using DustInTheWind.ConsoleTools.Commando.Metadata;
 using DustInTheWind.ConsoleTools.Commando.RequestModel;
 
-namespace DustInTheWind.ConsoleTools.Commando.CommandAnalyzing;
+namespace DustInTheWind.ConsoleTools.Commando.Analysis;
 
 internal class CommandAnalysis
 {
@@ -20,7 +20,7 @@ internal class CommandAnalysis
 
         commandRequest.Reset();
 
-        parameterMatches = commandMetadata.Parameters
+        parameterMatches = commandMetadata.EnumerateParameters()
             .Select(x => new ParameterMatch(x, commandRequest))
             .ToList();
 

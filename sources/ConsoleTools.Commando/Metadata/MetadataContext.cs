@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 
-namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
+namespace DustInTheWind.ConsoleTools.Commando.Metadata;
 
-public class ExecutionContext
+public class MetadataContext
 {
     private bool isFrozen;
 

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
+namespace DustInTheWind.ConsoleTools.Commando.Metadata;
 
 [Serializable]
 public class ObjectFrozenException : Exception

@@ -46,7 +46,7 @@ public class CommandParser_HavingOnlyVerb_Tests
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
 
-        commandRequest.Options.Should().BeEmpty();
+        commandRequest.NamedArguments.Should().BeEmpty();
     }
 
     [Theory]
@@ -59,6 +59,6 @@ public class CommandParser_HavingOnlyVerb_Tests
         CommandParser commandParser = new();
         CommandRequest commandRequest = commandParser.Parse(args);
 
-        commandRequest.Operands.Should().BeEmpty();
+        commandRequest.UnnamedArguments.Should().BeEmpty();
     }
 }

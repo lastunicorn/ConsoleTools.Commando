@@ -1,57 +1,75 @@
 # Console Tools Commando
 
-This is an MVVM presentation layer framework that helps you create a CLI (command line interface).
+This is a presentation layer framework that helps you create a CLI (command line interface) applications.
 
-## How to use (with Autofac)
+## Quick Start (with Autofac)
 
-### 1) Include the nuget package:
+### 1) Include the NuGet package:
 
 - `ConsoleTools.Commando.Setup.Autofac`
 - Note:
   - The `ConsoleTools.Commando` package will be automatically included.
 
-### 2) Build and run the `Application`.
+### 2) Create your command
 
-```c#
-Application application = ApplicationBuilder.Create()
-    .RegisterCommandsFrom(typeof(ReadCommand).Assembly) // Provide here the assembly containing your commands.
-    .Build();
+#### Command Class
 
-await application.RunAsync(args);
-```
+The public properties are automatically populated by the router with arguments from the user's CLI command.
 
-### 3) Create your commands.
+When executed, the command returns a View Model instance.
 
 ```c#
 [NamedCommand("read", Description = "Display the content of a text file.")]
-internal class ReadCommand : ICommand
+internal class ReadFileCommand : IConsoleCommand<ReadFileViewModel>
 {
     [NamedParameter("file", ShortName = 'f', Description = "The full path of the file.")]
     public string FilePath { get; set; }
     
-	public Task Execute()
+	public Task<ReadFileViewModel> Execute()
 	{
 		...
 	}
 }
 ```
 
-## Discussions and Suggestions
+#### View Model Class
 
-https://github.com/lastunicorn/ConsoleTools.Commando/discussions
+The View Model class is a POCO containing the data to be displayed by the View.
 
-I appreciate any opinion or suggestion:
+```c#
+internal class ReadFileViewModel
+{
+    public string FilePath { get; set; }
 
-- Did you feel the need for a specific feature?
-- Did you like or dislike something?
-- Do you have questions?
-- etc...
+    public string Content { get; set; }
+}
+```
 
-I'm looking forward to hearing from you.
+#### View Class
 
-# Donations
+The View Class must implement the `IView<TViewModel>` interface.
 
-If you like my work and want to support me, you can buy me a coffee:
+Alternatively, it may implement the base class `ViewBase<TViewModel>` which provide a number of helper methods to help display data in the console.
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y62EZ8H)
+```c#
+internal class ReadFileView : ViewBase<ReadFileViewModel>
+{
+    public override void Display(ReadFileViewModel viewModel)
+    {
+        ...
+    }
+}
+```
+
+### 3) Run the `Application`
+
+```c#
+Application application = ApplicationBuilder.Create()
+    .RegisterCommandsFrom(typeof(ReadFileCommand).Assembly) // Provide the assembly containing your commands.
+    .Build();
+
+await application.RunAsync(args);
+```
+
+
 

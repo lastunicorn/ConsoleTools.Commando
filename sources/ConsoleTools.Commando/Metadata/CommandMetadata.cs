@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
 
-namespace DustInTheWind.ConsoleTools.Commando.MetadataModel;
+namespace DustInTheWind.ConsoleTools.Commando.Metadata;
 
 /// <summary>
-/// The metadata model is used to store information about all the available commands that can be
-/// executed. This includes the default commands, provided by the library itself, and, also, the
-/// custom commands created by the consumer of the library.
+/// Provides metadata about a command, like its name, description, etc.
 /// </summary>
 public class CommandMetadata
 {
@@ -26,25 +24,6 @@ public class CommandMetadata
     public bool IsEnabled => commandAttribute?.Enabled ?? true;
 
     public bool IsHelpCommand { get; private set; }
-
-    public IEnumerable<ParameterMetadata> Parameters
-    {
-        get
-        {
-            return Type.GetProperties()
-                .Select(x =>
-                {
-                    CommandParameterAttribute customAttribute = x.GetCustomAttributes<CommandParameterAttribute>()
-                        .SingleOrDefault();
-
-                    return customAttribute == null
-                        ? null
-                        : new ParameterMetadata(x, customAttribute);
-                })
-                .Where(x => x != null)
-                .ToArray();
-        }
-    }
 
     public CommandMetadata(Type commandType)
     {
@@ -110,9 +89,25 @@ public class CommandMetadata
         return lines;
     }
 
+    public IEnumerable<ParameterMetadata> EnumerateParameters()
+    {
+        return Type.GetProperties()
+            .Select(x =>
+            {
+                CommandParameterAttribute customAttribute = x.GetCustomAttributes<CommandParameterAttribute>()
+                    .SingleOrDefault();
+
+                return customAttribute == null
+                    ? null
+                    : new ParameterMetadata(x, customAttribute);
+            })
+            .Where(x => x != null)
+            .ToArray();
+    }
+
     public IEnumerable<ParameterMetadata> EnumerateNamedParameters()
     {
-        return Parameters
+        return EnumerateParameters()
             .Where(x => x.Name != null || x.ShortName != 0);
     }
 

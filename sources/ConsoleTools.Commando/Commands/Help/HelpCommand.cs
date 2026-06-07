@@ -1,21 +1,20 @@
 ﻿using System.Globalization;
-using DustInTheWind.ConsoleTools.Commando.MetadataModel;
-using ExecutionContext = DustInTheWind.ConsoleTools.Commando.MetadataModel.ExecutionContext;
+using DustInTheWind.ConsoleTools.Commando.Metadata;
 
 namespace DustInTheWind.ConsoleTools.Commando.Commands.Help;
 
 [HelpCommand("help", Description = "Display more details about the available commands.")]
 internal class HelpCommand : IConsoleCommand<HelpViewModel>
 {
-    private readonly ExecutionContext executionContext;
+    private readonly MetadataContext metadataContext;
     private readonly Application application;
 
     [AnonymousParameter(DisplayName = "command name", Order = 1, IsMandatory = false, Description = "The name of the command for which to display detailed help information.")]
     public string CommandName { get; set; }
 
-    public HelpCommand(ExecutionContext executionContext, Application application)
+    public HelpCommand(MetadataContext metadataContext, Application application)
     {
-        this.executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
+        this.metadataContext = metadataContext ?? throw new ArgumentNullException(nameof(metadataContext));
         this.application = application ?? throw new ArgumentNullException(nameof(application));
     }
 
@@ -38,7 +37,7 @@ internal class HelpCommand : IConsoleCommand<HelpViewModel>
 
     private CommandFullInfo GetCommandFullInfo(string commandName)
     {
-        CommandMetadata commandMetadata = executionContext.Commands.GetByName(commandName);
+        CommandMetadata commandMetadata = metadataContext.Commands.GetByName(commandName);
 
         if (commandMetadata == null)
             throw new CommandNotFoundException(commandName);
@@ -48,11 +47,11 @@ internal class HelpCommand : IConsoleCommand<HelpViewModel>
             Name = commandMetadata.Name,
             Description = commandMetadata.DescriptionLines.ToList(),
             ApplicationName = application.Name,
-            OptionsInfo = commandMetadata.Parameters
+            OptionsInfo = commandMetadata.EnumerateParameters()
                 .Where(x => x.Order == null)
                 .Select(x => new CommandParameterInfo(x))
                 .ToList(),
-            OperandsInfo = commandMetadata.Parameters
+            OperandsInfo = commandMetadata.EnumerateParameters()
                 .Where(x => x.Order != null)
                 .Select(x => new CommandParameterInfo(x))
                 .ToList()
@@ -64,10 +63,10 @@ internal class HelpCommand : IConsoleCommand<HelpViewModel>
         return new CommandsOverviewInfo
         {
             ApplicationName = application.Name,
-            NamedCommands = executionContext.Commands.GetNamed()
+            NamedCommands = metadataContext.Commands.GetNamed()
                 .Select(x => new CommandShortInfo(x))
                 .ToList(),
-            AnonymousCommands = executionContext.Commands.GetAllAnonymous()
+            AnonymousCommands = metadataContext.Commands.GetAllAnonymous()
                 .Select(x => new CommandShortInfo(x))
                 .ToList()
         };
